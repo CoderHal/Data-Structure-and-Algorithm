@@ -2946,3 +2946,171 @@ class KthLargest{
 }
 ```
 
+# BinarySearch
+
+## 69. Sqrt(x)
+
+### 1. Binary Search
+
+```java
+class Solution {
+  public int mySqrt(int x) {
+    if (x < 2) return x;
+
+    long num;
+    int pivot, left = 2, right = x / 2;
+    while (left <= right) {
+      pivot = left + (right - left) / 2;
+      num = (long)pivot * pivot;
+      if (num > x) right = pivot - 1;
+      else if (num < x) left = pivot + 1;
+      else return pivot;
+    }
+
+    return right;
+  }
+  //Time O(logn)
+  //Space O(1)
+}
+```
+
+Let's go back to the interview context. For x \ge 2*x*≥2 the square root is always smaller than x / 2*x*/2 and larger than 0 : 0 < a < x / 20<*a*<*x*/2.
+Since a is an integer, the problem goes down to the iteration over the sorted set of integer numbers. Here the binary search enters the scene.
+
+When the loop end, the left should >right,  no matter in the last loop this right=mid-1 or left=mid+1.
+
+1) if the right=mid-1, and the loop end. which means the mid*mid >x, so the (mid-1) is the answer.
+2) if the left=mid+1, which means mid*mid<x, right=mid, so the mid is the answer
+
+Therefore, we should return right;
+
+**Algorithm**
+
+- If x < 2, return x.
+- Set the left boundary to 2, and the right boundary to x / 2.
+- While left <= right:
+  - Take num = (left + right) / 2 as a guess. Compute num * num and compare it with x:
+    - If num * num > x, move the right boundary right = pivot -1
+    - Else, if num * num < x, move the left boundary left = pivot + 1
+    - Otherwise num * num == x, the integer square root is here, let's return it
+- Return right
+
+### 2. Newton's Method
+
+```java
+class Solution {
+  public int mySqrt(int x) {
+    if(x<2)return x;
+    double x0=x;
+    double x1=(x1+x0/x1)/2;
+    while(Math.abs(x1-x0)>=1){
+      x0=x1;
+      x1=(x0+x/x0)/2.0;
+    }
+    return (int)x1;
+  }
+  //Time O(logn)
+  //Space O(1)
+}
+```
+
+![image-20220309155027781](/Users/youhao/Library/Application Support/typora-user-images/image-20220309155027781.png)
+
+## 704. Binary Search
+
+### Binary Search
+
+```java
+class Solution{
+  public int search(int[] nums, int target){
+    int left=0;
+    int right=nums.length-1;
+    int mid=0;
+    while(left<=right){
+      mid=left+(right-left)/2;
+      if(nums[mid]>target){
+        right=mid-1;
+      }
+      else if(nums[mid]<target){
+        left=mid+1;
+      }
+      else{
+        return mid;
+      }
+    }
+    return -1;
+    //Time O(logN)
+    //Space O(1)
+  }
+}
+```
+
+## 349. Intersection of Two Arrays
+
+### 1. Two Sets (HashSet)
+
+```java
+class Solution{
+  public int[] intersection(int[] nums1,int[] nums2){
+    HashSet<Integer> s1=new HashSet<>();
+    HashSet<Integer> s2=new HashSet<>();
+    for(int c: nums1){
+      s1.add(c);
+    }
+    for(int c: nums2){
+      s2.add(c);
+    }
+    if(s1.size()>s2.size()){
+      return help(s1,s2);
+    }else{
+      return help(s2,s1);
+    }
+  }
+  public int[] help(HashSet<Integer> s1, HashSet<Integer> s2){
+    int[] res=new int[s2.size()];
+    int index=0;
+    for(int c: s2){
+      if(s1.contains(c)){
+        res[index++]=c;
+      }
+    }
+    return Arrays.copyOf(res,index);
+  }
+  //Time O(m+n)
+  //Space O(m+n)
+}
+```
+
+### 2. Built-in Set Intersection
+
+```java
+class Solution{
+  public int[] intersection(int[] n1, int[] n2){
+    HashSet<Integer> s1=new HashSet<>();
+    HashSet<Integer> s2=new HashSet<>();
+    for(int c:n1){
+      s1.add(c);
+    }
+    for(int c:n2){
+      s2.add(c);
+    }
+    s1.retainAll(s2);
+    int[] res=new int[s1.size()];
+    int index=0;
+    for(int c: s1){
+      res[index++]=c;
+    }
+    return res;
+  }
+  //Time O(m+n) Worst O(m*n)
+  //Space O(m+n)
+}
+```
+
+### Time Analysis
+
+![image-20220313184100416](/Users/youhao/Library/Application Support/typora-user-images/image-20220313184100416.png)
+
+### HashSet
+
+https://cloud.tencent.com/developer/article/1415388
