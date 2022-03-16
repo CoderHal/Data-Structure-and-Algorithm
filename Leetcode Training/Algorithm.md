@@ -3114,3 +3114,57 @@ class Solution{
 ### HashSet
 
 https://cloud.tencent.com/developer/article/1415388
+
+## 167. Two Sum II - Input Array Is Sorted
+
+### 1. Two Pointer
+
+```java
+class Solution{
+  public int[] twoSum(int[] n, int target){
+    int i=0;
+    int j=n.length-1;
+    while(i<j){
+      int sum=n[i]+n[j];
+      if(sum>target){
+        j--;
+      }
+      else if(sum<target){
+        i++;
+      }else{
+        return new int[]{i+1,j+1};
+      }
+    }
+    return new int[]{-1,-1};
+    //Time O(n)
+    //Space O(1)
+  }
+}
+```
+
+### 2. Binary Search
+
+```java
+class Solution{
+  public int[] twoSum(int[] n,int target){
+    for(int i=0;i<n.length;i++){
+      int left=i+1;
+      int right=n.length-1;
+      while(left<=right){
+        int mid=left+(right-left)/2;
+        if(n[mid]+n[i]>target){
+          right=mid-1;
+        }else if(n[mid]+n[i]<target){
+          left=mid+1;
+        }else{
+          return new int[] {i+1,mid+1};
+        }
+      }
+    }
+    return new int[] {-1,-1};
+    //Time O(nlogn)
+    //Space O(1)
+  }
+}
+```
+
