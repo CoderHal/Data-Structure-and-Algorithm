@@ -3192,3 +3192,71 @@ public class Solution extends VersionControl{
 }
 ```
 
+# Bit Operation
+
+## 136. Single Number
+
+### 1. HashSet
+
+```java
+class Solution{
+  public int singleNumber(int[] nums){
+    int sum=0,sumSet=0;
+    Set<Integer> set=new HashSet<>();
+    for(int c:nums){
+      if(!set.contains(c)){
+        set.add(c);
+        sum+=c;
+      }
+      sumSet+=c;
+    }
+    return sum*2-sumSet;
+    //Time O(n)
+    //Space O(n)
+  }
+}
+```
+
+![image-20220317162611367](/Users/youhao/Library/Application Support/typora-user-images/image-20220317162611367.png)
+
+### 2. List
+
+```java
+class Solution{
+  public int singleNumber(int[] nums){
+    List<Integer> res=new ArrayList<Integer>();
+    for(int c: nums){
+      if(!res.contains(c)){
+        res.add(c);
+      }else{
+        res.remove(new Integer(c));
+      }
+    }
+    return res.get(0);
+    //Time O(1)
+    //Space O(n)
+  }
+}
+```
+
+Be careful! If you want to remove the Integer "c", you need to be on this way: res.remove(new Integer(c));
+
+
+
+### 3. Bit Operation
+
+```java
+class Solution{
+  public int singleNumber(int[] nums){
+    int a=0;
+    for(int b: nums){
+      a^=b;
+    }
+    return a;
+    //Time O(n)
+    //Space O(1)
+  }
+}
+```
+
+![image-20220317163415468](/Users/youhao/Library/Application Support/typora-user-images/image-20220317163415468.png)
