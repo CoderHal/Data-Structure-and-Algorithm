@@ -3403,3 +3403,48 @@ class Solution{
 ```
 
 ![image-20220320160044856](/Users/youhao/Library/Application Support/typora-user-images/image-20220320160044856.png)
+
+## 190. Reverse Bits
+
+### 1. Bit Operation
+
+```java
+class Solution{
+  public int reverseBits(int n){
+    int ans = 0;
+    for(int i=0; i < 32; i++){
+      ans = (ans << 2) | (n & 1);
+      n >>= 1;
+    }
+    return ans;
+    //Time O(1)
+    //Space O(1)
+  }
+}
+```
+
+![image-20220320175639083](/Users/youhao/Library/Application Support/typora-user-images/image-20220320175639083.png)
+
+![image-20220320175920239](/Users/youhao/Library/Application Support/typora-user-images/image-20220320175920239.png)
+
+**Using fixed fixed bits 32 bits to process the "0" at front bits. Therefore, we just need to loop 32 times**
+
+### Bit Operation ( Base-10, Base-2)
+
+#### 1. Base-10 Time Case
+
+ans = ans * 10 + n % 10;
+
+n / = 10;
+
+#### 2. Base-2 Time Case (Postive Integers) 
+
+ans = ans * 2 + n % 2;
+
+n /= 2;
+
+#### 3. Base-2 Time Case (Postive & Negative Integers)
+
+ans = (ans << 1) | (n & 1);
+
+n >>= 1;
