@@ -3417,7 +3417,7 @@ class Solution{
       n >>= 1;
     }
     return ans;
-    //Time O(1)
+    //Time O(logn)
     //Space O(1)
   }
 }
@@ -3448,3 +3448,54 @@ n /= 2;
 ans = (ans << 1) | (n & 1);
 
 n >>= 1;
+
+## 231. Power of Two
+
+### 1. Using Loop
+
+```java
+class Solution{
+  public boolean isPowerOfTwo(int n){
+    if(n <= 0){return false;}
+    int count=0;
+    for(int i = 0; i < 32; i++){
+      if((n & 1) == 1){
+        count++;
+      }
+      n >>= 1;
+    }
+    return (count > 1) ? false : true;
+    //Time O(logn)
+    //Space O(1)
+  }
+}
+```
+
+### 2. Bitwise Operators : Get the Rightmost 1-bit
+
+```java
+class Solution{
+  public boolean isPowerOfTwo(int n){
+    return (n > 0) && ((n * (-n)) == n);
+    //Time O(1)
+    //Space O(1)
+  }
+}
+```
+
+![image-20220320185209718](/Users/youhao/Library/Application Support/typora-user-images/image-20220320185209718.png)
+
+### 3. Bitwise operators : Turn off the Rightmost 1-bit
+
+```java
+class Solution{
+  public boolean isPowerOfTwo(int n){
+    return (n > 0) && ((n & (n-1)) == 0);
+    //Time O(1)
+    //Space O(1)
+  }
+}
+```
+
+![image-20220320190011750](/Users/youhao/Library/Application Support/typora-user-images/image-20220320190011750.png)
+
