@@ -3260,3 +3260,146 @@ class Solution{
 ```
 
 ![image-20220317163415468](/Users/youhao/Library/Application Support/typora-user-images/image-20220317163415468.png)
+
+## 191. Number of 1 Bits
+
+### 1. Bits Operating 
+
+``` java
+class Solution{
+  public int hammingWeight(int n){
+    int mask=1;
+    int bits=0;
+    for(int i=0;i<32;i++){
+      if((mask & n)!=0){
+        bits++;
+      }
+      mask<<=1;
+    }
+    return bits;
+    //Time O(1)
+    //Space O(1)
+  }
+}
+```
+
+![image-20220318134158716](/Users/youhao/Library/Application Support/typora-user-images/image-20220318134158716.png)
+
+### 2. Bit Manipulation Trick 
+
+```java
+class Solution{
+  public int hammingWeight(int n){
+    int sum=0;
+    while(n!=0){
+      sum++;
+      n = & (n-1);
+    }
+    return sum;
+    //Time O(1)
+    //Space O(1)
+  }
+}
+```
+
+![image-20220318135839692](/Users/youhao/Library/Application Support/typora-user-images/image-20220318135839692.png)
+
+## 169. Majority Element
+
+## 1. Array Sort
+
+```java
+class Solution{
+  public int majorityElement(int[] nums){
+    Arrays.sort(nums);
+    return nums[nums.length/2];
+    //Time O(nlogn);
+    //Space O(1);
+  }
+}
+```
+
+Time complexity of Arrays.sort() is O(nlogn) in Java and Python.
+
+### 2. HashMap
+
+```java
+class Solution{
+  public int majorityElement(int[] nums){
+    HashMap<Integer, Integer> map = new HashMap<>();
+    HashSet<Integer> set=new HashSet<>();
+    for(int c : nums){
+      if(map.containsKey(c)){
+        int i = map.get(c);
+        map.put(c, ++i);
+      }else{
+        map.put(c, 1);
+      }
+      set.add(c);
+    }
+    for(int c : set){
+      if(map.get(c) > nums.length/2){
+        return c;
+      }
+    }
+    return -1;
+    //Time O(n)
+    //Space O(n)
+  }
+}
+```
+
+### 3. Randomization
+
+```java
+class Solution{
+  public int randomIndex(Random random, int min, int max){
+    return random.nextInt(max-min)+min;
+  }
+  public int numCount(int index, int[] nums){
+    int c=0;
+    for(int i=0; i < nums.length; i++){
+      if(nums[i] == nums[index]){
+        c++;
+      }
+    }
+    return c;
+  }
+  public int majorityElement(int[] nums){
+    Random random = new Random();
+    int midCount = nums.length/2;
+    while(true){
+      int index = randomIndex(random, 0, nums.length);
+      if(numCount(index, nums) > midCount){
+        return nums[index];
+      }
+    }
+    // Time O(∞)
+    // Space O(1)
+  }
+}
+```
+
+![image-20220320160257920](/Users/youhao/Library/Application Support/typora-user-images/image-20220320160257920.png)
+
+### 4. Boyer- Moore Voting 
+
+```java
+class Solution{
+  public int majorityElement(int[] nums){
+    int count = 0;
+    Integer candidateNum = null;
+    for(int c : nums){
+      if(count == 0){
+        candidateNum = c;
+      }
+      count += (c == candidateNum) ? 1 : -1;
+    }
+    return candidateNum;
+  }
+  // Time O(n);
+  // Space O(1);
+}
+```
+
+![image-20220320160044856](/Users/youhao/Library/Application Support/typora-user-images/image-20220320160044856.png)
