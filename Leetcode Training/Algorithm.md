@@ -3622,3 +3622,26 @@ class Solution{
 ```
 
 ![image-20220321123433179](/Users/youhao/Library/Application Support/typora-user-images/image-20220321123433179.png)
+
+## 405. Convert a Number to Hexadecimal
+
+```java
+class Solution{
+  public String toHex(int num){
+    if(num == 0) return "0";
+    char[] map={'0','1','2','3','4','5','6','7',
+                '8','9','a','b','c','d','e','f'};
+    StringBuilder sb = new StringBuilder();
+    while(num != 0){
+      int hex = 15;
+      hex &= num;
+      sb.append(map[hex]);
+      num >>>= 4;
+    }
+    return sb.reverse().toString();
+    //Time O(1);
+    //Space O(1);
+  }
+}
+```
+
