@@ -3708,3 +3708,31 @@ class Solution{
 ```
 
 ![image-20220321144110903](/Users/youhao/Library/Application Support/typora-user-images/image-20220321144110903.png)
+
+
+
+# Two Pointers and Sliding Window
+
+## 387. First Unique Character in a String
+
+```java
+class Solution{
+  public int firstUniqChar(String s){
+    HashMap<Character, Integer> map = new HashMap<>();
+    int n = s.length();
+    for(char c : s.toCharArray()){
+      map.put(c, map.getOrDefault(c, 0)+1);
+    }
+    for(int i = 0; i < n; i++){
+      char cur = s.charAt(i);
+      if(map.get(cur) == 1){
+        return i;
+      }
+    }
+    return -1;
+    //Time O(n)
+    //Space O(1)
+  }
+}
+```
+
