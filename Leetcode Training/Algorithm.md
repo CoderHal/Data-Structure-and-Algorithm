@@ -3645,3 +3645,66 @@ class Solution{
 }
 ```
 
+### 268. Missing Number
+
+### 1. Sorting
+
+```java
+class Solution{
+  public int missingNumber(int[] nums){
+    int n = nums.length;
+    int[] numSorted = nums;
+    Arrays.sort(numSorted);
+    for(int i = 0; i < n+1; i++){
+      if(i == n){
+        return i;
+      }else{
+        if(numSorted[i] != i){
+          return i;
+        }
+      }
+    }
+    return -1;
+    //Time O(nlogn)
+    //Space O(n)
+  }
+}
+```
+
+### 2. Bit Manipulation
+
+```java
+class Solution{
+  public int missingNumber(int[] nums){
+    int n = nums.length;
+    int res = 0;
+    int i = 0;
+    for(i = 0; i < n; i++){
+      res = res ^ i ^ nums[i];
+    }
+    return res ^ i;
+    //Time O(n)
+    //Space O(1)
+  }
+}
+```
+
+### 3. Gauss' Formula 
+
+```java
+class Solution{
+  public int missingNumber(int[] nums){
+    int n = nums.length;
+    int sumN = n * (n+1) / 2;
+    int sumNum = 0;
+    for(int i = 0; i < n; i++){
+      sumNum += nums[i];
+    }
+    return sumN - sumNum;
+    //Time O(n)
+    //Space O(1)
+  }
+}
+```
+
+![image-20220321144110903](/Users/youhao/Library/Application Support/typora-user-images/image-20220321144110903.png)
