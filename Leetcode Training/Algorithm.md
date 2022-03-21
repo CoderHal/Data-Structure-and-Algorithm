@@ -3499,3 +3499,85 @@ class Solution{
 
 ![image-20220320190011750](/Users/youhao/Library/Application Support/typora-user-images/image-20220320190011750.png)
 
+## 389. Find the Difference
+
+### 1. Sorting
+
+```java
+class Solution{
+  public char findTheDifference(String s, String t){
+    char[] sortedS = s.toCharArray();
+    char[] sortedT = t.toCharArray();
+    Arrays.sort(sortedS);
+    Arrays.sort(sortedT);
+    int i=0;
+    for(i=0; i < s.length(); i++){
+      if(sortedS[i] != sortedT[i]){
+        return sortedT[i];
+      }
+    }
+    return sortedT[i];
+    //Time O(nlogn)
+    //Space O(n) sort function will occupy O(n)
+  }
+}
+```
+
+![image-20220320201610850](/Users/youhao/Library/Application Support/typora-user-images/image-20220320201610850.png)
+
+### 2. HashMap
+
+```java
+class Solution{
+  public char findTheDifference(String s, String t){
+    HashMap<Character,Integer> map = new HashMap<>();
+    for(char c : s.toCharArray()){
+      if(!map.containsKey(c)){
+        map.put(c, 1);
+      }else{
+        int i = map.get(c);
+        map.put(c, ++i);
+      }
+    }
+    for(char c : t.toCharArray()){
+      if(map.containsKey(c)){
+        if(map.get(c) == 0){
+          return c;
+        }else{
+          int i = map.get(c);
+          map.put(c, --i);
+        }
+      }else{
+        return c;
+      }
+    }
+    return 0;
+    //Time O(n)
+    //Space O(1) Because the map space is fixed. We only have 26 lowercase letter. Therefore the HashMap space isn't relate with String's length;
+  }
+}
+```
+
+![image-20220320201620293](/Users/youhao/Library/Application Support/typora-user-images/image-20220320201620293.png)
+
+### 3. Bits Manipulation
+
+```java
+class Solution{
+  public char findTheDifference(String s, String t){
+    char c = 0;
+    for(char cur : s.toCharArray()){
+      c ^= cur;
+    }
+    for(char cur : t.toCharArray()){
+      c ^= cur;
+    }
+    return c;
+    //Time O(n)
+    //Space O(1)
+  }
+}
+```
+
+![image-20220320201631621](/Users/youhao/Library/Application Support/typora-user-images/image-20220320201631621.png)
+
