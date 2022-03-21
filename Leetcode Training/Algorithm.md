@@ -3581,3 +3581,44 @@ class Solution{
 
 ![image-20220320201631621](/Users/youhao/Library/Application Support/typora-user-images/image-20220320201631621.png)
 
+## 461. Hamming Distance
+
+### 1. Bit Shift
+
+```java
+class Solution{
+  public int hammingDistance(int x, int y){
+    int s = x ^ y;
+    int count = 0;
+    for(int i = 0; i < 32; i++){
+      if((s & 1) == 1){
+        count++;
+      }
+      s >>= 1;
+    }
+    return count;
+    //Time O(1)
+    //Space O(1)
+  }
+}
+```
+
+### 2. Brian Kernighan's Algorithm
+
+```java
+class Solution{
+  public int hammingDistance(int x, int y){
+    int xor = x ^ y;
+    int count = 0;
+    while(xor != 0){
+      xor &= (xor - 1);
+      count++;
+    }
+    return count;
+    // Time O(1)
+    // Space O(1)
+  }
+}
+```
+
+![image-20220321123433179](/Users/youhao/Library/Application Support/typora-user-images/image-20220321123433179.png)
