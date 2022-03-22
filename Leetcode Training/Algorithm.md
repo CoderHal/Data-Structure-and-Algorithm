@@ -3645,6 +3645,8 @@ class Solution{
 }
 ```
 
+In java, >>>  is operated to unsigned Integer, >> is operated to signed Integer
+
 ### 268. Missing Number
 
 ### 1. Sorting
@@ -3736,3 +3738,80 @@ class Solution{
 }
 ```
 
+## 3. Longest Substring Without Repeating Characters
+
+### 1. Sliding Window
+
+```java
+class Solution{
+  public int lengthOfLongestSubstring(String s){
+    int left = 0, right = 0;
+    int lg = 0; // largest lenght
+    HashMap<Character, Integer> map = new HashMap<>();
+    while(right < s.length()){
+      char cur = s.charAt(right);
+      map.put(cur, map.getOrDefault(cur, 0)+1);
+      while(map.get(cur) > 1){
+        char pre = s.charAt(left);
+        map.put(pre, map.get(pre)-1);
+        left++;
+      }
+      lg = Math.max(lg, right - left + 1);
+      right++;
+    }
+    return lg;
+    //Time O(2n)=O(n)
+    //Space O(min(m,n))
+  }
+}
+```
+
+```java
+class Solution{
+  public int lengthOfLongestSubstring(String s){
+    int left = 0, right = 0;
+    int lg = 0;
+    char[] charSet = new char[128];
+    while(right < s.length()){
+      char cur = s.charAt(right);
+      charSet[cur]++;
+      while(charSet[cur] > 1){
+        char pre = s.charAt(left);
+        charSet[pre]--;
+        left++;
+      }
+      lg = Math.max(lg, right - left + 1);
+      right++;
+    }
+    return lg;
+    //Time O(2n) = O(n)
+    //Space O(min(m, n)) charSet: m   s: n
+  }
+}
+```
+
+![image-20220322150943795](/Users/youhao/Library/Application Support/typora-user-images/image-20220322150943795.png)
+
+### 2. Sliding Window Optimized
+
+```java
+class Solution{
+  public int lengthOfLongestSubstring(String s){
+    int ans = 0;
+    HashMap<Character, Integer> map = new HashMap<>();
+    for(int i = 0, j = 0; j < s.length(); j++){
+      char cur = s.charAt(j);
+      if(map.containsKey(cur)){
+        i = Math.max(i, map.get(cur));
+      }
+      ans = Math.max(ans, j - i + 1);
+      map.put(cur, j+1);
+    }
+    return ans;
+    //Time O(n)
+    //Space O(min(m,n))
+  }
+}
+```
+
+![image-20220322151423110](/Users/youhao/Library/Application Support/typora-user-images/image-20220322151423110.png)
