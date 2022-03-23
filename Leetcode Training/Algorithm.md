@@ -3944,3 +3944,73 @@ Creating a sliding window. The criteria are:
 1. if k>=0, left pointer keep still, move the right pointer to next number.
 2. if k<0, keep the window's space still. You need to move the left pointer to next number, when you move the right pointer. If left pointer point to '0', k++. If k > 0 again, it means that you can continue increasing your space of window.
 
+## 567. Permutation in String
+
+### 1. Sliding Window with HashMap
+
+```java
+class Solution{
+  public boolean checkInclusion(String s1, String s2){
+    int n1 = s1.length();
+    int n2 = s2.length();
+    // If s1 is longer than s2, s2 cannot exist the permutation of s1
+    if (n1 > n2) return false;
+    HashMap<Character, Integer> map1 = new HashMap<>();
+    HashMap<Character, Integer> map2 = new HashMap<>();
+    for(char c : s1.toCharArray()){
+      map1.put(c, map1.getOrDefault(c, 0) + 1);
+    }
+    for (int i = 0, j = 0; j < n2; j++){
+      char cur = s2.charAt(j);
+      map2.put(cur, map2.getOrDefault(cur, 0) + 1);
+      if (j >= n1){
+        char pre = s2.charAt(i);
+        if (map2.get(pre) == 1){
+          map2.remove(pre);
+        }else{
+          map2.put(pre, map2.get(pre) - 1);
+        }
+        i++;
+      }
+      if (map1.equals(map2)){
+        return true;
+      }
+    }
+    return false;
+    //Time O(Ns2)
+    //Space O(K) K means the word that exist in s2, s1. K<=26
+  }
+}
+```
+
+### 2. Sliding Window with Arrays
+
+```java
+class Solution{
+  public boolean checkInclusion(String s1, String s2){
+    int n1 = s1.length();
+    int n2 = s2.length();
+    if (n1 > n2) return false;
+    int[] a1 = new int[26];
+    int[] a2 = new int[26];
+    for (char c : s1.toCharArray()){
+      a1[c - 'a']++;
+    }
+    for(int i = 0; j = 0; j < n2; j++){
+      char cur = s2.charAt(j);
+      a2[cur - 'a']++;
+      if (j >= n1){
+        char pre = s2.charAt(i);
+        a2[pre - 'a']--;
+        i++;
+      }
+      if (Arrays.equals(a1, a2)){
+        return true;
+      }
+    }
+    return false;
+  }
+}
+```
+
+The solution is same with<< 438. Find All Anagrams in a String>>
