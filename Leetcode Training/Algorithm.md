@@ -3915,3 +3915,32 @@ class Solution {
 ![image-20220322193914762](/Users/youhao/Library/Application Support/typora-user-images/image-20220322193914762.png)
 
 ![image-20220322193931136](/Users/youhao/Library/Application Support/typora-user-images/image-20220322193931136.png)
+
+## 1004. Max Consecutive Ones III
+
+### 1. Sliding Window
+
+```java
+class Solution{
+  public int longestOnes(int[] nums, int k){
+    int left = 0, right = 0;
+    while(right < nums.length){
+      if (nums[right] == 0) k--;
+      if (k < 0){
+        if (nums[left] == 0) k++;
+        left++;
+      }
+      right++;
+    }
+    return right - left;
+    // Time O(n)
+    // Space O(1)
+  }
+}
+```
+
+Creating a sliding window. The criteria are: 
+
+1. if k>=0, left pointer keep still, move the right pointer to next number.
+2. if k<0, keep the window's space still. You need to move the left pointer to next number, when you move the right pointer. If left pointer point to '0', k++. If k > 0 again, it means that you can continue increasing your space of window.
+
