@@ -4075,3 +4075,34 @@ public class Solution {
 }
 ```
 
+## 125. Valid Palindrome
+
+### 1. Two Pointer
+
+```java
+class Solution{
+  public boolean isPalindrome(String s){
+    s = s.toLowerCase();
+    int left = 0, right = s.length() - 1; // set two pointer
+    // Iterate until left meet right
+    while (left < right){
+      //Make the left pointer point the lowercase letter or numbers
+      while ((left < right) && (!Character.isLetterOrDigit(s.charAt(left)))){
+        left++;
+      }
+      //Make the right pointer point the lowercase letter or numbers
+      while ((left < right) && (!Character.isLetterOrDigit(s.charAt(right)))){
+        right--;
+      }
+      //Judge the left pointer whether if is equal to right
+      if (s.charAt(left) != s.charAt(right)){
+        return false;
+      }
+      left++;
+      right--;
+    }
+    return true;
+  }
+}
+```
+
