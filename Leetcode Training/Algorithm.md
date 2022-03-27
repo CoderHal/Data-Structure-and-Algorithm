@@ -3192,6 +3192,50 @@ public class Solution extends VersionControl{
 }
 ```
 
+## 34. Find First and Last Position of Element in Sorted Array
+
+### 1. Binary Search
+
+```java
+class Solution{
+  public int[] searchRange(int[] nums, int target){
+    int left = 0, right = nums.length - 1;
+    int[] res = new int[]{-1, -1};
+    // Binary Search
+    while (left <= right){
+      // Find the mid index
+      int mid = left + (right - left) / 2;
+      int midN = nums[mid];
+      if (midN == target){
+        int f = mid - 1;//find the first target
+        int l = mid + 1;// find the last target;
+        while (f >= 0 && nums[f] == target){//f must >= 0
+          f--;
+        }
+        while (l <= nums.length - 1 && nums[l] ==target){//l must <= nums.length - 1
+          l++;
+        }
+        res[0] = f + 1;
+        res[1] = l - 1;
+        return res;
+      }else if (midN > target){
+        right = mid - 1;
+      }else {
+        left = mid + 1;
+      }
+    }
+    // If don't find the target, return -1
+    return res;
+    // Time O(logn)
+    // Space O(1)
+  }
+}
+```
+
+
+
+
+
 # Bit Operation
 
 ## 136. Single Number
@@ -4039,6 +4083,8 @@ class Solution{
       }
     }
     return maxA;
+    // Time O(n)
+    // Space O(1)
   }
 }
 ```
@@ -4102,6 +4148,8 @@ class Solution{
       right--;
     }
     return true;
+    // Time O(n)
+    // SPace O(1)
   }
 }
 ```
