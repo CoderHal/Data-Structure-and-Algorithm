@@ -4015,6 +4015,36 @@ class Solution{
 
 The solution is same with<< 438. Find All Anagrams in a String>>
 
+
+
+## 11. Container With Most Water
+
+### 1. Two Pointer
+
+```java
+class Solution{
+  public int maxArea(int[] height){
+    int maxA = 0; 
+    int left = 0, right = height.length - 1;// set two pointers to traversal.
+    // The loop doesn't end until left == right
+    while (left < right){
+      // height must be chosed the smaller one, otherwise the water will overflow.
+      // compare each square, store the bigger one
+      maxA = Math.max(maxA, Math.min(height[left], height[right]) * (right - left));
+      // find the taller height
+      if (height[left] > height[right]){
+        right--;
+      }else{
+        left++;
+      }
+    }
+    return maxA;
+  }
+}
+```
+
+
+
 # Math
 
 ## 9. Palindrome Number
