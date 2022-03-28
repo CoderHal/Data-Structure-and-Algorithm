@@ -3261,6 +3261,46 @@ class Solution {
 
 ![image-20220327194802720](/Users/youhao/Library/Application Support/typora-user-images/image-20220327194802720.png)
 
+## 74. Search a 2D Matrix
+
+###   1. Binary Search
+
+```java
+class Solution{
+  public boolean searchMatrix(int[][] matrix, int target){
+    int l1 = 0, r1 = matrix.length - 1; // set two pointers to determine the range in which target is located
+    while (l1 <= r1){
+      int mid1 = l1 + (r1 - l1) / 2;
+      int n2 = matrix[mid1].length - 1;
+      if (target < matrix[mid1][0]){
+        r1 = mid1 - 1;
+      }
+      else if (target > matrix[mid1][n2]){
+        l1 = mid1 + 1;
+      }
+      else{
+        int l2 = 0, r2 = matrix[mid1].length - 1;// set two pointers to deteremine the accurate location of target
+        while (l2 <= r2){
+          int mid2 = l2 + (r2 - l2) / 2;
+          if (target < matrix[mid1][mid2]){
+            r2 = mid2 - 1;
+          }
+          else if (target > matrix[mid1][mid2]){
+            l2 = mid2 + 1;
+          }else{
+            return true;
+          }
+        }
+        return false;
+      }
+    }
+    return false;
+    //Time O(log(m*n) log(m*n) = log(m) + log(n)
+    //Space O(1)
+  }
+}
+```
+
 
 
 # Bit Operation
