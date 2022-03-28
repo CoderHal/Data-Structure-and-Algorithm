@@ -3301,6 +3301,38 @@ class Solution{
 }
 ```
 
+## 153. Find Minimum in Rotated Sorted Array
+
+### 1. Binary Search
+
+```java
+class Solution{
+  public int findMin(int[] nums) {
+    int l = 0, r = nums.length - 1; // set two pointer 
+    if (nums[l] <= nums[r]) return nums[l];
+    while (l <= r){
+      int mid = l + (r - l) / 2;
+      if (nums[mid] > nums[mid + 1]){
+        return nums[mid + 1];
+      }
+      if (nums[mid - 1] > nums[mid]){
+        return nums[mid];
+      }
+      // if midN > nums[0],which means they are in the same list, and the minimum is located in another list.
+      // make the l = mid + 1 so as to close to the minimum
+      if (nums[mid] >= nums[0]){
+        l = mid + 1;
+      } else { // midN, nums[0] are not in the same order，make r = mid - 1 to close to the minimum
+        r = mid - 1;
+      }
+    }
+    return -1;
+    //Time O(logn)
+    //Space O(1)
+  }
+}
+```
+
 
 
 # Bit Operation
