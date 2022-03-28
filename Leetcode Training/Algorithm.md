@@ -3333,7 +3333,34 @@ class Solution{
 }
 ```
 
+## 162. Find Peak Element
 
+### 1. Binary Search
+
+```java
+class Solution{
+  public int findPeakElement(int[] nums) {
+    int l = 0, r = nums.length - 1;
+    while (l + 1 < r) { // Make the left and right nodes adjacent numbers
+      int mid = l + (r - l) / 2;
+      if (nums[mid] > nums[mid + 1]){//l < r - 1, so mid < nums.length - 1
+        r = mid; //descend list, find the left part which may have the increasing list
+      }else{
+        l = mid; // increasing list, find the right part which may have the descend list
+      }
+    }
+    if (nums[l] > nums[r]){
+      return l;
+    }else {
+      return r;
+    }
+    // Time O(logN)
+    // Space O(1)
+  }
+}
+```
+
+![image-20220328132248105](/Users/youhao/Library/Application Support/typora-user-images/image-20220328132248105.png)
 
 # Bit Operation
 
