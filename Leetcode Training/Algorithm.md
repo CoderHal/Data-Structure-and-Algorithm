@@ -4258,6 +4258,82 @@ class Solution {
 }
 ```
 
+## 15. 3Sum
+
+### 1. Two Pointers
+
+```java
+class Solution {
+  public List<List<Integer>> threeSum(int[] nums) {
+    int n = nums.length;
+    List<List<Integer>> res = new ArrayList<>();
+    Arrays.sort(nums);
+    //The result must have 3 num, so we just loop to the last third number
+    // only find nums[i] <= 0
+    for (int i = 0; i < n - 2 && nums[i] <= 0; i++){
+      // Only if i== 0 or nums[i] != nums[i-1] to prevent the duplicate triplets
+      if (i == 0 || nums[i] != nums[i-1]) {
+        // set two pointers
+        int f = i + 1;
+        int e = n - 1;
+        while (f < e){
+          int sum = nums[i] + nums[f] + nums[e];
+          if (sum == 0){
+            res.add(Arrays.asList(nums[i], nums[f++], nums[e--]));// after add the res, we need to continue finding the possible answer
+            // if first node is equals to the last one, it may have the same result, so we need to avoid the duplicate triplets
+            while(f < e && nums[f] == nums[f - 1]){
+              f++;
+            }
+          }
+          else if (sum > 0) {
+            e--; // sum > 0, means nums[e] is bigger than what we want to find
+          }else {
+            f++; // sum < 0, means nums[f] is smaller than what we want to find
+          }
+        }
+      }
+    }
+    return res;
+    // Time O(n^2) --> nlogn + n*n
+    // Space O(logN) to O(n), it depends on the sort algorithm
+  }
+}
+```
+
+### 2. HashSet
+
+```java
+class Solution {
+  public List<List<Integer>> threeSum (int[] nums) {
+    Arrays.sort(nums);
+    int n = nums.length;
+    List<List<Integer>> res = new ArrayList<>();
+    for (int i = 0; i < n - 2 && nums[i] <= 0; i++) {
+      if (i == 0 || nums[i] != nums[i - 1]) {
+        Set<Integer> set = new HashSet<>();
+        for (int j = i + 1; j < n; j++){
+          int sum = - nums[i] - nums[j];
+          // if exist the sum, which means the result is nums[j], nums[i], sum
+          if (set.contains(sum)){
+            res.add(Arrays.asList(nums[i], sum, nums[j]));
+            //In order to avoid finding the duplicate triplets, we need to find: nums[j] != nums[j+1]
+            //In the Iteration, the current j will add 1 to the next number and next number is not equal to the current nums[j]
+            while (j + 1 < n && nums[j] == nums[j + 1]){
+              j++;
+            }
+          }
+          //store the nums[j] in order to find the result, when continue looping
+          set.add(nums[j]);
+        }
+      }
+    }
+    return res;
+    // Time O(n * n) nlogn + n * n;
+    // Space O(n) sort is logn and Hashset is n, N > logN so the space --> O(n)
+  }
+}
+```
+
 
 
 # Math
