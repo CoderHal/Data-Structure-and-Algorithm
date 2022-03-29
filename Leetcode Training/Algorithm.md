@@ -4215,6 +4215,49 @@ class Solution{
 }
 ```
 
+## 82. Remove Duplicates from Sorted List II
+
+### 1. Sentinel Head + Predecessor (Two Pointers)
+
+```java
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+  public ListNode deleteDuplicates(ListNode head) {
+    if (head == null) return null;
+    // set a sentinel node, which can solve the prolem that the first node is duplicates
+    ListNode slow = new ListNode(0, head);
+    ListNode fast = head;
+    ListNode res = slow;
+    while (fast != null) {
+      // compare the value of slow.next and fast.next
+      if (fast.next != null && fast.next.val == slow.next.val) {
+        // Until the slow.next != fast.next, slow.next can point to the fast.next so as to remove the duplicates
+        while (fast.next !=null && fast.next.val == slow.next.val) {
+          fast = fast.next;
+        }
+        fast = fast.next;
+        slow.next = fast;
+      }else {
+        slow = slow.next;
+        fast = fast.next;
+      }
+    }
+    return res.next;
+    // Time O(n)
+    // Space O(1)
+  }
+}
+```
+
 
 
 # Math
