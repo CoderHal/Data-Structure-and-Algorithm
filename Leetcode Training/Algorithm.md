@@ -4334,6 +4334,38 @@ class Solution {
 }
 ```
 
+## 986. Interval List Intersections
+
+## 1. Merge two Arrays ( Two Pointers)
+
+```java
+class Solution {
+  public int[][] intervalIntersection(int[][] A, int[][] B) {
+    int i = 0;
+    int j = 0; //set two pinters to loop the A, B arrays
+    List<int[]> res = new ArrayList<>();
+    while (i < A.length && j < B.length) {
+      int lf = Math.max(A[i][0], B[j][0]);
+      int le = Math.min(A[i][1], B[j][1]);
+      // Find the intersection of A and B. The way is to find the max of first number, min of end number
+      // lf <= le, which means they have intersections, else they don't have intersections
+      if (lf <= le) {
+        res.add(new int[]{lf, le});
+      }
+      // make the pointers move to next range
+      if (le < B[j][1]){
+        i++;
+      }else {
+        j++;
+      }
+    }
+    return res.toArray(new int[res.size()][]);
+    //Time O(M + N)
+    //Space O(M + N)
+  }
+}
+```
+
 
 
 # Math
