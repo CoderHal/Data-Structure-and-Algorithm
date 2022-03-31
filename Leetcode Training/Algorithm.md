@@ -3885,6 +3885,37 @@ class Solution{
 
 # Two Pointers and Sliding Window
 
+## 713. Subarray Product Less Than K
+
+### 1. Sliding Window
+
+```java
+class Solution {
+    public int numSubarrayProductLessThanK(int[] nums, int k) {
+        if (k <= 1) return 0;
+        int prod = 1, ans = 0, left = 0;
+        for (int right = 0; right < nums.length; right++) {
+            prod *= nums[right];
+            while (prod >= k) prod /= nums[left++];
+            ans += right - left + 1;
+        }
+        return ans;
+      //Time O(n)
+      // Space O(1)
+    }
+}
+```
+
+**Intuition**
+
+For each `right`, call `opt(right)` the smallest `left` so that the product of the subarray `nums[left] * nums[left + 1] * ... * nums[right]` is less than `k`. `opt` is a monotone increasing function, so we can use a sliding window.
+
+**Algorithm**
+
+Our loop invariant is that `left` is the smallest value so that the product in the window `prod = nums[left] * nums[left + 1] * ... * nums[right]` is less than `k`.
+
+For every right, we update `left` and `prod` to maintain this invariant. Then, the number of intervals with subarray product less than `k` and with right-most coordinate `right`, is `right - left + 1`. We'll count all of these for each value of `right`.
+
 ## 387. First Unique Character in a String
 
 ```java
