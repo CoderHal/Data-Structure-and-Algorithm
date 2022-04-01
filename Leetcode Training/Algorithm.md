@@ -4019,7 +4019,7 @@ class Solution{
 
 ## 438. Find All Anagrams in a String
 
-### 1. Sliding Window with Array
+### 1. Sliding Window with Map
 
 ```java
 class Solution {
@@ -4393,6 +4393,31 @@ class Solution {
     return res.toArray(new int[res.size()][]);
     //Time O(M + N)
     //Space O(M + N)
+  }
+}
+```
+
+## 209. Minimum Size Subarray Sum
+
+### 1. Two Pointer (Sliding Window) 
+
+```java
+class Solution {
+  public int minSubArrayLen(int target, int[] nums) {
+    int left = 0;
+    int right = 0;
+    int sum = 0;
+    int res = Integer.MAX_VALUE;
+    for(right = 0; right < nums.length; right++) {
+      sum += nums[right];
+      while (sum >= target && left <= right) {
+        res = Math.min(res, right - left + 1);
+        sum -= nums[left++];
+      }
+    }
+    return res == Integer.MAX_VALUE ? 0 : res;
+    //Time O(n)
+    //Space O(1)
   }
 }
 ```
