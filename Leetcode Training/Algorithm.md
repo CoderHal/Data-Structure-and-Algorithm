@@ -4487,3 +4487,94 @@ class Solution{
 }
 ```
 
+# DFS & BFS
+
+## 200. Number of Islands
+
+### 1. DFS
+
+``` java
+class Solution {
+  public int numIslands(char[][] grid) {
+    int nr = grid.length;
+    int nc = grid[0].length;
+    if (grid == null || nr == 0) {
+      return 0;
+    }
+    int numL = 0;
+    for (int i = 0; i < nr; i++) {
+      for (int j = 0; j < nc; j++) {
+        if (grid[i][j] == '1') {
+          numL++;
+          dfs(grid, i, j);
+        }
+      }
+    }
+    return numL;
+  }
+  public void dfs (char[][] grid, int r, int c) {
+    int nr = grid.length;
+    int nc = grid[0].length;
+    if (r < 0 || c < 0 || r >= nr || c >= nc || grid[r][c] == '0') {
+      return;
+    }
+    grid[r][c] = '0'; // change it to '0' in order to mark this location has been traversed 
+    dfs(grid, r - 1, c);
+    dfs(grid, r + 1, c);
+    dfs(grid, r, c - 1);
+    dfs(grid, r, c + 1);
+    // Time O(m * n)
+    // Space O(m * n)
+  }
+}
+```
+
+## 2. BFS
+
+```java
+class Solution {
+  public int numIslands(char[][] grid) {
+    if (grid == null || grid.length == 0) {
+      return 0;
+    }
+    int nr = grid.length; 
+    int nc = grid[0].length;
+    int numL = 0;
+    for (int i = 0; i < nr; i++) {
+      for (int j = 0; j < nc; j++) {
+        if (grid[i][j] == '1') {
+          numL++;
+          Queue<int[]> queue = new LinkedList<>();//store the adjacent nodes value of '1'
+          grid[i][j] = 0;
+          queue.add(new int[]{i, j});
+          while (!queue.isEmpty()) {
+            int[] cur = queue.remove();
+            int r = cur[0];
+            int c = cur[1];
+            if (r - 1 >= 0 && grid[r - 1][c] == '1') {
+                          queue.add(new int[]{r - 1, c});
+                          grid[r - 1][c] = '0';
+            }
+            if (r + 1 < nr && grid[r + 1][c] == '1') {
+              queue.add(new int[]{r + 1, c});
+              grid[r + 1][c] = '0';
+            }
+            if (c - 1 >= 0 && grid[r][c - 1] == '1') {
+              queue.add(new int[]{r, c - 1});
+              grid[r][c - 1] = '0';
+            }
+            if (c + 1 < nc && grid[r][c + 1] == '1') {
+              queue.add(new int[]{r, c + 1});
+              grid[r][c + 1] = '0';
+            }
+          }
+        }
+      }
+    }
+    return numL;
+    //Time O(m * n)
+    //Space O(min (m, n))
+  }
+}
+```
+
