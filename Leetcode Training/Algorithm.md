@@ -4529,7 +4529,7 @@ class Solution {
 }
 ```
 
-## 2. BFS
+### 2. BFS
 
 ```java
 class Solution {
@@ -4574,6 +4574,72 @@ class Solution {
     return numL;
     //Time O(m * n)
     //Space O(min (m, n))
+  }
+}
+```
+
+
+
+## 547. Number of Provinces
+
+### 1. DFS
+
+```java
+class Solution {
+  public int findCircleNum(int[][] M) {
+    int n = M.length;
+    int numP = 0;
+    int[] visited = new int[n];
+    for (int i = 0; i < n; i++) {
+      if (visited[i] == 0) {
+        dfs(M, visited, i);
+        numP++;
+      }
+    }
+    return numP;
+  }
+  public void dfs(int[][] M, int[] visited, int i) {
+    for (int j = 0; j < M.length; j++) {
+      if (M[i][j] == 1 && visited[j] == 0) {
+        visited[j] = 1;
+        dfs(M, visited, j);
+      }
+    }
+    //Time O(n * n)
+    // Space O(n)
+  }
+}
+```
+
+![image-20220404163341286](/Users/youhao/Library/Application Support/typora-user-images/image-20220404163341286.png)
+
+### 2. BFS
+
+```java
+class Solution {
+  public int findCircleNum(int[][] M) {
+    int n = M.length;
+    int[] visit = new int[n];
+    int numP = 0;
+    for (int i = 0; i < n; i++) {
+      if (visit[i] == 0) {
+        Queue<Integer> queue = new LinkedList<>();
+        queue.add(i);
+        while (!queue.isEmpty()) {
+          int cur = queue.remove();
+          visit[cur] = 1;
+          for (int j = 0; j < n; j++) {
+            if (M[cur][j] == 1 && visit[j] == 0) {
+              queue.add(j);
+            }
+          }
+        }
+        numP++;
+      }
+    }
+    return numP;
+    //Time O(n * n)
+    //Space O(n)
   }
 }
 ```
