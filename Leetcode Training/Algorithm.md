@@ -4672,3 +4672,50 @@ class Solution {
 }
 ```
 
+
+
+## 117.  Populating Next Right Pointers in Each Node II
+
+### BFS
+
+```java
+class Solution {
+  public Node connect(Node root) {
+    Node cur = root; 
+    Node head = null;// record the first node of each link
+    Node pre = null;// pre node is used to connect the link
+    while (cur != null) {
+      while (cur != null) {
+        if (cur.left != null) {
+          if (head == null) { // we haven't found the first node in this level yet
+            head = cur.left;
+            pre = cur.left;
+          } else { // we have fount the first node in this level
+            pre.next = cur.left;// just connect the pre and cur.left
+            pre = pre.next;
+          }
+        }
+        if (cur.right != null) {// same with cur.left
+          if (head == null) {
+            head = cur.right;
+            pre = cur.right;
+          } else {
+            pre.next = cur.right;
+            pre = pre.next; // keep the pre alway being the last node of this link
+          }
+        }
+        cur = cur.next;
+      }
+      cur = head; // the next level's first node is head, so we just need to make the cur equal to the head
+      head = null; // initial the head & pre node, in order to operate the next level node.
+      pre = null;
+      
+    }
+    return root;
+    // Time O(n)
+    // Space O(1)
+  }
+}
+```
+
+![image-20220407130700485](/Users/youhao/Library/Application Support/typora-user-images/image-20220407130700485.png)
