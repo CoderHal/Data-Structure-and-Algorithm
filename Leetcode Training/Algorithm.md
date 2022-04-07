@@ -4644,3 +4644,31 @@ class Solution {
 }
 ```
 
+
+
+## 116. Populating Next Right Pointers in Each Node
+
+### BFS 
+
+```java
+class Solution {
+  public Node connect(Node root) {
+    Node cur = root;// record the current node
+    while (cur != null) {
+      Node head = cur; //Using head node to help cur node keep the origin state, when it finishes its traversal
+      if (cur.left != null) {//Because it is a balanced tree, so if it has left node, it must have right node
+        cur.left.next = cur.right;
+      }
+      if (cur.right != null && cur.next != null) { // we need to promise the cur.next is not null
+        cur.right.next = cur.next.left;// populating next right pointer
+      }
+      cur = cur.next; // move to next node to continue connecting the link
+    }
+    cur = head.left; // Use head node to move to the next level
+  }
+  return root;
+  // Time O(n) traversal each node
+  // Space O(1)
+}
+```
+
