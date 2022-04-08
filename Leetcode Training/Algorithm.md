@@ -4719,3 +4719,36 @@ class Solution {
 ```
 
 ![image-20220407130700485](/Users/youhao/Library/Application Support/typora-user-images/image-20220407130700485.png)
+
+## 572. Subtree of Another Tree
+
+### 1. DFS
+
+```java
+class Solution {
+  public boolean isSubTree(TreeNode root, TreeNode subRoot) {
+    if (root == null) {
+      return false; //the root has been traversed, and cannot find the subRoot
+    }
+    if (checkSub(root, subRoot)) {
+      return true; // check the current root whether if it is same as the subRoot
+    }
+    return isSubTree(root.left, subRoot) || isSubTree(root.right, subRoot);// PreOrder Traversal to find the subTree
+  }
+  public boolean checkSub(TreeNode root, TreeNode subRoot) {
+    if (root == null && subRoot == null) {
+      return true;
+    }
+    if (root == null || subRoot == null) {
+      return false;
+    }
+    if (root.val != subRoot.val) {
+      return false;
+    }
+    return checkSub(root.left, subRoot.left) && checkSub(root.right, subRoot.right);
+    //Time O(m * n)
+    //Space O(1)
+  }
+}
+```
+
