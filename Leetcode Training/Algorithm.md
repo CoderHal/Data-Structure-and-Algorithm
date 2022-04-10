@@ -5012,3 +5012,30 @@ class Solution {
   }
 ```
 
+## 797. All Paths From Source to Target
+
+### 1. DFS
+
+```java
+class Solution {
+  public List<List<Integer>> allPathsSourceTarget(int[][] graph) {
+    List<List<Integer>> res = new ArrayList<>();
+    List<Integer> path = new ArrayList<>();
+    path.add(0);
+    dfs(graph, res, path, 0);
+    return res;
+  }
+  public void dfs(int[][] graph, List<List<Integer>> res, List<Integer> path, int node) {
+    if (node == graph.length - 1){// arrive at the terminal node
+      res.add(new ArrayList<>(path));
+      return;
+    }
+    for(int cur : graph[node]) {
+      path.add(cur); // increase the path
+      dfs(graph, res, path, cur);
+      path.remove(path.size() - 1);// remove all the node except the start node
+    }
+  }
+}
+```
+
