@@ -4886,3 +4886,129 @@ class Solution {
 }
 ```
 
+## 130. Surrounded Regions
+
+### 1. DFS
+
+```java
+class Solution {
+  public void solve(char[][] board) {
+    int n = board.length;
+    int m = board[0].length;
+    /*---find out the border which have the 'O' and find its neighbor 'O'--*/
+    for (int i = 0; i < n; i++) {
+      if (board[i][0] == 'O') {
+        dfs(board, i, 0);
+      }
+      if (board[i][m - 1] == 'O') {
+        dfs(board, i, m - 1);
+      }
+    }
+    for (int j = 0; j < m; j++) {
+      if (board[0][j] == 'O'){
+        dfs(board, 0, j);
+      }
+      if (board[n - 1][j] == 'O') {
+        dfs(board, n - 1, j);
+      }
+    }
+    /*---------------------------------------------------------------------*/
+    /*---the rest of 'O' can be captured-----------------------------------*/
+    for (int i = 0; i < n; i++) {
+      for (int j = 0; j < m; j++) {
+        if (board[i][j] == 'O') {
+          board[i][j] = 'X';
+        }
+        if (board[i][j] == 'V') {
+          board[i][j] = 'O';
+        }  
+      }
+    }
+    return;
+  }
+  public void dfs(char[][] board, int row, int col) {
+    int n = board.length;
+    int m = board[0].length;
+    if (row < 0 || col < 0 || row >= n || col >= m || board[row][col] == 'X' || board[row][col] == 'V') {
+      return;
+    }
+    board[row][col] = 'V';
+    dfs(board, row - 1, col);
+    dfs(board, row + 1, col);
+    dfs(board, row, col - 1);
+    dfs(board, row, col + 1);
+    return;
+    // Time O(N) N = m * n
+    // Space O(N) N = m * n
+  }
+}
+```
+
+### 2. BFS
+
+```java
+class Solution {
+  public void solve(char[][] board) {
+    int n = board.length;
+    int m = board[0].length;
+    for (int i = 0; i < n; i++) {
+      if (board[i][0] == 'O') {
+        bfs(board, i, 0);
+      }
+      if (board[i][m - 1] == 'O') {
+        bfs(board, i, m - 1);
+      }
+    }
+    for (int j = 0; j < m; j++) {
+      if (board[0][j] == 'O') {
+        bfs(board, 0, j);
+      }
+      if (board[n - 1][j] == 'O') {
+        bfs(board, n - 1, j);
+      }
+    }
+    for (int i = 0; i < n; i++) {
+      for (int j = 0; j < m; j++) {
+        if (board[i][j] == 'O') {
+          board[i][j] = 'X';
+        }
+        if (board[i][j] == 'V') {
+          board[i][j] = 'O';
+        }  
+      }
+    }
+  }
+  public void bfs(char[][] board, int row, int col) {
+    int n = board.length;
+    int m = board[0].length;
+    Queue<int[]> res = new LinkedList<>();
+    res.add(new int[]{row, col});
+    board[row][col] = 'V';
+    while (!res.isEmpty()) {
+      int[] cell = res.remove();
+      int newR = cell[0];
+      int newC = cell[1];
+      if (newR - 1 >= 0 && board[newR - 1][newC] == 'O') {
+        res.add(new int[]{newR - 1, newC});
+        board[newR - 1][newC] = 'V';
+      }
+      if (newR + 1 < n && board[newR + 1][newC] == 'O') {
+        res.add(new int[]{newR + 1, newC});
+        board[newR + 1][newC] = 'V';
+      }
+      if (newC - 1 >= 0 && board[newR][newC - 1] == 'O') {
+        res.add(new int[]{newR, newC - 1});
+        board[newR][newC - 1] = 'V';
+      }
+      if (newC + 1 < m && board[newR][newC + 1] == 'O') {
+        res.add(new int[]{newR, newC + 1});
+        board[newR][newC + 1] = 'V';
+      }
+    }
+    return;
+    }
+  //Time O(N) N = m * n
+  //Space O(N) N = m * n
+  }
+```
+
