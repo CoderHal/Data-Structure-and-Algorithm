@@ -5039,3 +5039,60 @@ class Solution {
 }
 ```
 
+
+
+# Backtracking 
+
+## 78. Subsets
+
+## 1. Cascading 
+
+```java
+class Solution {
+  public List<List<Integer>> subsets(int[] nums) {
+    List<List<Integer>> res = new ArrayList<>();
+    res.add(new ArrayList<Integer>());
+    for (int num : nums) {
+      List<List<Integer>> newSubsets = new ArrayList<>();
+      for (List<Integer> cur : res) {
+        newSubsets.add(new ArrayList<Integer>(cur){{add(num)}}));
+      }
+      for (List<Integer> curr : newSubsets) {
+        res.add(new ArrayList<>(curr));	
+      }
+    }
+    return res;
+    // Time O(n * 2^n)
+    // Space O(n * 2^n)
+  }
+}
+```
+
+![image-20220411181205504](/Users/youhao/Library/Application Support/typora-user-images/image-20220411181205504.png)
+
+### 2. Backtracking
+
+```java
+class Solution {
+  public List<List<Integer>> subsets(int[] nums) {
+    List<List<Integer>> res = new ArrayList<>();
+    List<Integer> temp = new ArrayList<>();
+    backtrack(nums, res, temp, 0);
+    return res;
+  }
+  public void backtrack(int[] nums, List<List<Integer>> res, List<Integer> temp, int index) {
+    res.add(new ArrayList<>(temp));
+    for (int i = index; i < nums.length; i++) {
+      temp.add(nums[i]);
+      backtrack(nums, res, temp, i + 1);
+      temp.remove(temp.size() - 1);
+    }
+    //Time O(n * 2^n);
+    //Space O(n) We are using O(N) space to maintain curr, and are modifying curr in-place with backtracking. Note that for space complexity analysis, we do not count space that is only used for the purpose of returning output, so the output array is ignored.
+  }
+}
+```
+
+![image-20220411181911963](/Users/youhao/Library/Application Support/typora-user-images/image-20220411181911963.png)
+
+![image-20220411181925632](/Users/youhao/Library/Application Support/typora-user-images/image-20220411181925632.png)
