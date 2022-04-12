@@ -5096,3 +5096,62 @@ class Solution {
 ![image-20220411181911963](/Users/youhao/Library/Application Support/typora-user-images/image-20220411181911963.png)
 
 ![image-20220411181925632](/Users/youhao/Library/Application Support/typora-user-images/image-20220411181925632.png)
+
+
+
+## 90. Subsets II
+
+### 1. Cascading
+
+```java
+class Solution {
+  public List<List<Integer>> subsetsWithDup(int[] nums) {
+    Arrays.sort(nums); 
+    List<List<Integer>> res = new ArrayList<>();
+    res.add(new ArrayList<Integer>());
+    int subsetsSize = 0;
+    for (int i = 0; i < nums.length; i++) {
+      int startIndex = (i > 0 && nums[i] == nums[i - 1]) ? subsetsSize : 0; // record the pre size of res
+      subsetSize = res.size();
+      for (int j = startIndex; j < subsetSize; j++) {
+        List<Integer> path = new ArrayList<>(res.get(j));
+        path.add(nums[i]);
+        res.add(path);
+      }  
+    }
+    return res;
+    // Time O(n * 2^n) // n * 2^n + nlogn
+    // Space O(logn) // Sort logN
+  }
+}
+```
+
+The space complexity of the sorting algorithm depends on the implementation of each programming language. For instance, in Java, the Arrays.sort() for primitives is implemented as a variant of quicksort algorithm whose space complexity is O*(log*n*). 
+
+## 2. Backtracking
+
+```java
+class Solution {
+  public List<List<Integer>> subsetsWithDup(int[] nums) {
+    Arrays.sort(nums);
+    List<List<Integer>> res = new ArrayList<>();
+    backtracking(nums, res, new ArrayList<Integer>(), 0);
+    return res;
+  }
+  public void backtracking(int[] nums, List<List<Integer>> res, List<Integer> path, int index) {
+    res.add(new ArrayList<Integer>(path));
+    for (int i = index; i < nums.length; i++) {
+      if (i != index && nums[i] == nums[i - 1]) {
+        continue;
+      }
+      path.add(nums[i]);
+      backtracking(nums, res, path, i + 1);
+      path.remove(path.size() - 1);
+    }
+    //Time O(n * 2^n)
+    //Space O(n)
+  }
+}
+```
+
+The space complexity of the sorting algorithm depends on the implementation of each programming language. For instance, in Java, the Arrays.sort() for primitives is implemented as a variant of quicksort algorithm whose space complexity is O*(log*n*). 
