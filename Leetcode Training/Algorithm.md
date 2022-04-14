@@ -5221,5 +5221,45 @@ In each recursion, after swap the index, we need to swap again in order to keep 
 
 
 
+## 47. Permutations II
 
+### 1. Backtracking
 
+```java
+class Solution {
+  public List<List<Integer>> permuteUnique(int[] nums) {
+    List<List<Integer>> res = new ArrayList<>();
+    Arrays.sort(nums);
+    backtrack(nums, res, 0);
+    return res;
+  }
+  public void backtrack(int[] nums, List<List<Integer>> res, int index) {
+    if (index == nums.length) {
+      List<Integer> permutation = new ArrayList<>();
+      for (int c : nums) {
+        permutation.add(c);
+      }
+      res.add(new ArrayList<>(permutation));
+    }
+    HashSet<Integer> set = new HashSet<>();
+    for (int i = index; i < nums.length; i++) {
+      swap(nums, index, i);
+      if (set.add(nums[index])) {
+        backtrack(nums, res, index + 1);
+      }
+      swap(nums, index, i);
+    }
+  }
+  public void swap(int[] nums, int i, int j) {
+    int temp = nums[i];
+    nums[i] = nums[j];
+    nums[j] = temp;
+    //Time O(n * n!)
+    // Space O(n * n!)
+  }
+}
+```
+
+When  we find all possiblities in  i = [(index), n),  we can use hashset to check out the same element whether if it has been used for many times. If we find the same element, we neet to skip current process.
+
+![image-20220413213242044](/Users/youhao/Library/Application Support/typora-user-images/image-20220413213242044.png)
