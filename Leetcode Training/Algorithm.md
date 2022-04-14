@@ -5043,6 +5043,20 @@ class Solution {
 
 # Backtracking 
 
+## Template of Backtracking
+
+Backtrack( )
+
+1. Base Case
+
+2. For each possibility p
+
+   ​	a. Memorize current state
+
+   ​	b. Backtrack(next_state)
+
+   ​	c. Restore current state
+
 ## 78. Subsets
 
 ## 1. Cascading 
@@ -5155,3 +5169,57 @@ class Solution {
 ```
 
 The space complexity of the sorting algorithm depends on the implementation of each programming language. For instance, in Java, the Arrays.sort() for primitives is implemented as a variant of quicksort algorithm whose space complexity is O*(log*n*). 
+
+
+
+## 46. Permutations
+
+### 1. Backtracking
+
+```java
+class Solution {
+  public List<List<Integer>> permute(int[] nums) {
+    List<List<Integer>> res = new ArrayList<>();
+    Arrays.sort(nums);
+    backtracking(nums, res, 0);
+    return res;
+  }
+  public void backtracking(int[] nums, List<List<Integer>> res, int index) {
+    if (index == nums.length) {
+      List<Integer> permutation = new ArrayList<>();
+      for (int c : nums) {
+        permutation.add(c);
+      }
+      res.add(new ArrayList<>(permutation));
+      return;
+    }
+    for (int i = index; i < nums.length; i++) {
+      swap(nums, index, i);
+      backtracking(nums, res, index + 1);
+      swap(nums, index, i);
+    }
+  }
+  public void swap(int[] nums, int i, int j) {
+    int temp = nums[i];
+    nums[i] = nums[j];
+    nums[j] = temp;
+  }
+  // Time O(n * n!)
+  // Space O(n * n!)
+}
+```
+
+index = 0， it has n possibilities. And then, based on the specific permutation, index move to next index.
+
+index = index + 1, the previous index has been fixed, so you need to focus on the follow number and find all possibilities at this index.
+
+The recursion will stop until the index beyond the length
+
+In each recursion, after swap the index, we need to swap again in order to keep the order original.
+
+![image-20220413210829540](/Users/youhao/Library/Application Support/typora-user-images/image-20220413210829540.png)
+
+
+
+
+
