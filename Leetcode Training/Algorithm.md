@@ -5263,3 +5263,35 @@ class Solution {
 When  we find all possiblities in  i = [(index), n),  we can use hashset to check out the same element whether if it has been used for many times. If we find the same element, we neet to skip current process.
 
 ![image-20220413213242044](/Users/youhao/Library/Application Support/typora-user-images/image-20220413213242044.png)
+
+## 39. Combination Sum
+
+### 1. Backtraking
+
+```java
+class Solution {
+  public List<List<Integer>> combinationSum(int[] candidates, int target) {
+    Arrays.sort(candidates);
+    List<List<Integer>> res = new ArrayList<>();
+    backtracking(candidates, res, new ArrayList<>(), 0, target);
+    return res;
+  }
+  public void backtracking(int[] candidates, List<List<Integer>> res, List<Integer> path, int index, int remain) {
+    if (remain == 0) {
+      res.add(new ArrayList<>(path));
+      return;
+    }
+    else if (index == candidates.length || remain < 0) {
+      return;
+    } else {
+      for (int i = index; i < candidates.length; i++) {
+        path.add(candidates[i]);
+        backtracking(candidates, res, path, i, remain - candidates[i]);
+        path.remove(path.size() - 1);
+      }
+    }
+  }
+}
+```
+
+![image-20220414125526451](/Users/youhao/Library/Application Support/typora-user-images/image-20220414125526451.png)
