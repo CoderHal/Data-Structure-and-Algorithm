@@ -5295,3 +5295,52 @@ class Solution {
 ```
 
 ![image-20220414125526451](/Users/youhao/Library/Application Support/typora-user-images/image-20220414125526451.png)
+
+Time Complexity :
+
+![image-20220414130615042](/Users/youhao/Library/Application Support/typora-user-images/image-20220414130615042.png)
+
+Space Complexity : 
+
+![image-20220414130644749](/Users/youhao/Library/Application Support/typora-user-images/image-20220414130644749.png)
+
+## 40. Combination Sum II
+
+### 1. Backtracking
+
+```java
+class Solution {
+  public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+    List<List<Integer>> res = new ArrayList<>();
+    List<Integer> path = new ArrayList<>();
+    Arrays.sort(candidates);
+    backtracking(candidates, res, path, 0, target);
+    return res;
+  }
+  public void backtracking(int[] candidates, List<List<Integer>> res, List<Integer> path, int index, int remain) {
+    if (remain == 0) {
+      res.add(new ArrayList<Integer>(path));
+      return;
+    }
+    else if (remain < 0 || index == candidates.length) {
+      return;
+    }
+    else {
+      for (int i = index; i < candidates.length; i++) {
+        if (i != index && candidates[i] == candidates[i - 1]) {
+          continue;
+        }
+        path.add(candidates[i]);
+        backtracking(candidates, res, path, i + 1, remain - candidates[i]);
+        path.remove(path.size() - 1);
+      }
+    }
+		// Time O(2^n) == 2^n + nlogn
+    // Space O(N) 
+  }
+}
+```
+
+![image-20220415150635290](/Users/youhao/Library/Application Support/typora-user-images/image-20220415150635290.png)
+
+![image-20220415150652691](/Users/youhao/Library/Application Support/typora-user-images/image-20220415150652691.png)
