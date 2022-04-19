@@ -5381,3 +5381,41 @@ class Solution {
 ```
 
 ![image-20220419135925097](/Users/youhao/Library/Application Support/typora-user-images/image-20220419135925097.png)
+
+## 22. Generate Parentheses
+
+### 1. Backtracking
+
+```java
+class Solution {
+  public List<String> generateParenthesis(int n){
+    List<String> res = new ArrayList<>();
+    if (n == 0) {
+      return res;
+    }
+    StringBuilder sb = new StringBuilder();
+    backtrack(res, sb, n, n);
+    return res;
+  }
+  public void backtrack(List<String> res, StringBuilder sb, int left, int right) {
+    if (left == 0 && right == 0) {
+      res.add(sb);
+      return;
+    }
+    if (left > 0) {
+      sb.append('(');
+      backtrack(res, sb, left - 1, right);
+      sb.deleteCharAt(sb.length() - 1);
+    }
+    if (right > left && right > 0) {
+      sb.append(')');
+      backtrack(res, sb, left, right - 1);
+      sb.deleteCharAt(sb.length() - 1);
+    }
+  }
+}
+```
+
+In the recursion solution, the first thing is add a '(' into sb, and the number of '(' will minus 1. Based on this, we can backtrack this method, only if the number of '(' is bigger than the number of ')', we can add the ')' in to sb. When the number of '(' and ')' are all equal to 0, we can add the result into res.
+
+![image-20220419153558277](/Users/youhao/Library/Application Support/typora-user-images/image-20220419153558277.png)
