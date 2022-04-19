@@ -5419,3 +5419,46 @@ class Solution {
 In the recursion solution, the first thing is add a '(' into sb, and the number of '(' will minus 1. Based on this, we can backtrack this method, only if the number of '(' is bigger than the number of ')', we can add the ')' in to sb. When the number of '(' and ')' are all equal to 0, we can add the result into res.
 
 ![image-20220419153558277](/Users/youhao/Library/Application Support/typora-user-images/image-20220419153558277.png)
+
+## 79. Word Search 
+
+### 1. Backtracking
+
+```java
+class Solution {
+  boolean[][] visited;
+  public boolean exist(char[][] board, String word) {
+    int n = board.length;
+    int m = board[0].length;
+    visited = new boolean[n][m];
+    for (int i = 0; i < n; i++) {
+      for(int j = 0; j < m; j++) {
+        if (board[i][j] == word.charAt(0) && searchWord(i, j, board, word, 0)) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+  public boolean searchWord(int i, int j, char[][] board, String word, int index) {
+    if (index == word.length()) {
+      return true;
+    }
+    if (i < 0 || i >= board.length || j < 0 || j >= board[0].length || visited[i][j] == true || word.charAt(index) != board[i][j]) {
+      return false;
+    }
+    visited[i][j] = true;
+    if (searchWord(i + 1, j, board, word, index + 1) ||
+       	searchWord(i - 1, j, board, word, index + 1) ||
+       	searchWord(i, j + 1, board, word, index + 1) ||
+       	searchWord(i, j - 1, board, word, index + 1)) {
+      return true;
+    }
+    visited[i][j] = false;
+    return false;
+  }
+  //Time O(N * 3 ^ l) l : the length of word
+  // Space O(L)
+}
+```
+
