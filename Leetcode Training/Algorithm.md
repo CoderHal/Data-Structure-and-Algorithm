@@ -5344,3 +5344,40 @@ class Solution {
 ![image-20220415150635290](/Users/youhao/Library/Application Support/typora-user-images/image-20220415150635290.png)
 
 ![image-20220415150652691](/Users/youhao/Library/Application Support/typora-user-images/image-20220415150652691.png)
+
+## 17. Letter Combinations of a Phone Number
+
+### 1. Backtracking 
+
+```java 
+class Solution {
+  public List<String> letterCombinations(String digits) {
+    Map<Character, String> map = Map.of('2', "abc", '3', "def", '4', "ghi",
+                                        '5', "jkl", '6', "mno", '7', "pqrs",
+                                        '8', "tuv", '9', "wxyz");
+    List<String> res = new ArrayList<>();
+    if (digits.length() == 0) {
+      return res;	
+    }
+    StringBuilder sb = new StringBuilder();
+    backtrack(digits, res, sb, 0, map);
+    return res;
+  }
+  public void backtrack(String digits, List<String> res, StringBuilder sb, int index, Map<Character, String> map) {
+    if (sb.length() == digits.length()) {
+      res.add(sb.toString());
+      return;
+    }
+    String letter = map.get(digits.charAt(index));
+    for (char c : letter.toCharArray()) {
+      sb.append(c);
+      backtrack(digits, res, sb, index + 1, map);
+      sb.deleteCharAt(sb.length() - 1);
+    }
+    // Time O(4^N*N) 
+    // Space O(n)
+  }
+}
+```
+
+![image-20220419135925097](/Users/youhao/Library/Application Support/typora-user-images/image-20220419135925097.png)
