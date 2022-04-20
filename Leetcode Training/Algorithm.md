@@ -5462,3 +5462,34 @@ class Solution {
 }
 ```
 
+
+
+## 77. Combinations
+
+### 1. Backtracking
+
+```java
+class Solution {
+  public List<List<Integer>> combine(int n, int k) {
+    List<List<Integer>> res = new ArrayList<>();
+    List<Integer> path = new ArrayList<>();
+    combination(res, path, n, k, 1);
+    return res;
+  }
+  public void combination(List<List<Integer>> res, List<Integer> path, int n, int k, int index) {
+    if (path.size() == k) {
+      res.add(new ArrayList<>(path));
+      return;
+    }
+    for (int i = index; i <= n; i++) {
+      path.add(i);
+      combination(res, path, n, k, i + 1);
+      path.remove(path.size() - 1);
+    }
+  }
+}
+```
+
+![image-20220420151107219](/Users/youhao/Library/Application Support/typora-user-images/image-20220420151107219.png)
+
+![image-20220420151919307](/Users/youhao/Library/Application Support/typora-user-images/image-20220420151919307.png)
