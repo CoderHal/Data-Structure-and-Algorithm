@@ -5652,3 +5652,115 @@ class Solution {
 ```
 
 ![image-20220421160609071](/Users/youhao/Library/Application Support/typora-user-images/image-20220421160609071.png)
+
+## 36. Valid Sudoku
+
+### 1. HashSet
+
+```java
+class Solution {
+  public boolean isValidSudoku(char[][] board) {
+    int n = 9;
+    Set<Character>[] row = new HashSet[n];
+    Set<Character>[] col = new HashSet[n];
+    Set<Character>[] box = new HashSet[n];
+    for (int i = 0; i < n; i++) {
+      row[i] = new HashSet<Character>();
+      col[i] = new HashSet<Character>();
+      box[i] = new HashSet<Character>();
+    }
+    for (int i = 0; i < n; i++) {
+      for (int j = 0; j < n; j++) {
+        if (board[i][j] == '.') {
+          continue;
+        }
+    		if (!row[i].add(board[i][j])) {
+          return false;
+        }
+        if (!col[j].add(board[i][j])) {
+          return false;
+        }
+        if (!box[(i / 3) * 3 + j / 3].add(board[i][j])){
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+}
+```
+
+![image-20220421172929429](/Users/youhao/Library/Application Support/typora-user-images/image-20220421172929429.png)
+
+###  2. Array of Fixed Length
+
+```java
+class Solution {
+  public boolean isValidSudoku(char[][] board) {
+    int n = 9;
+    int[][] row = new int[n][n];
+    int[][] col = new int[n][n];
+    int[][] box = new int[n][n];
+    for (int i = 0; i < n; i++) {
+      for (int j = 0; j < n; j++) {
+        if (board[i][j] == '.') {
+          continue;
+        }
+        int cur = board[i][j] - '1';
+        if (row[i][cur] == 1) {
+          return false;
+        }
+        row[i][cur] = 1;
+        if (col[j][cur] == 1) {
+          return false;
+        }
+        col[j][cur] = 1;
+        if (box[(i / 3) * 3 + (j / 3)][cur] == 1) {
+          return false;
+        }
+        box[(i / 3) * 3 + (j / 3)][cur] = 1;
+      }
+    }
+    return true;
+  }
+}
+```
+
+![image-20220421190517796](/Users/youhao/Library/Application Support/typora-user-images/image-20220421190517796.png)
+
+### 3. BitMasking 
+
+```java
+class Solution {
+  public boolean isValidSudoku(char[][] board) {
+    int n = board.length;
+    int[] row = new int[n];
+    int[] col = new int[n];
+    int[] box = new int[n];
+    for (int i = 0; i < n; i++) {
+      for (int j = 0; j < n; j++) {
+        if (board[i][j] == '.') {
+          continue;
+        }
+        int cur = Integer.valueOf(board[i][j]);
+        int cel = 1 << (cur - 1);
+        if ((row[i] & cel) > 0) {
+          return false;
+        }
+        row[i] |= cel;
+        if ((col[j] & cel) > 0) {
+          return false;
+        }
+        col[j] |= cel;
+        if ((box[(i / 3) * 3 + (j / 3)] & cel) > 0) {
+          return false;
+        } 
+        box[(i / 3) * 3 + (j / 3)] |= cel;
+      }
+    }
+    return true;
+  }
+}
+```
+
+![image-20220421192136536](/Users/youhao/Library/Application Support/typora-user-images/image-20220421192136536.png)
