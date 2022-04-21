@@ -5533,3 +5533,63 @@ Time Complexity :  27
 Space: 19
 
 ![image-20220421135656446](/Users/youhao/Library/Application Support/typora-user-images/image-20220421135656446.png)
+
+# Matrix
+
+## 48. Rotate Image
+
+### 1. Rotate only 1/4
+
+```java
+class Solution {
+  public void rotate(int[][] matrix) {
+    int n = matrix.length;
+    for (int i = 0; i < (n + 1) / 2; i++) {
+      for (int j = 0; j < n / 2; j++) {
+        int temp = matrix[j][n - i - 1];
+        matrix[j][n - i - 1] = matrix[i][j];
+        matrix[i][j] = matrix[n - 1 -j][i];
+        matrix[n - 1 - j][i] = matrix[n - i - 1][n - 1 -j];
+        matrix[n - i - 1][n - 1 - j] = temp;
+      }
+    }
+    // Time O(M) n * n
+    // Space O(1)
+  }
+}
+```
+
+![image-20220421144647277](/Users/youhao/Library/Application Support/typora-user-images/image-20220421144647277.png)
+
+### 2. Reverse on Diagonal and then Reverse Left to Right
+
+Rotate = Transposed(Reverse on Diagonal) + Reversed
+
+```java
+class Solution {
+  public void rotate(int[][] matrix) {
+    int n = matrix.length;
+    // Transposed (Rverse on Diagonal)
+    for (int i = 0; i < n; i++) {
+      for (int j = i; j < n; j++) {
+        int temp = matrix[i][j];
+        matrix[i][j] = matrix[j][i];
+        matrix[j][i] = temp;
+      }
+    }
+    // Reversed 
+    for (int i = 0; i < n; i++) {
+      for (int j = 0; j < n / 2; j++) {
+        int temp = matrix[i][j];
+        matrix[i][j] = matrix[i][n - 1 - j];
+        matrix[i][n - 1 - j] = temp;
+      }
+    }
+    // Time O(M); 
+    // Space O(1)
+  }
+}
+```
+
+![image-20220421145052810](/Users/youhao/Library/Application Support/typora-user-images/image-20220421145052810.png)
+
