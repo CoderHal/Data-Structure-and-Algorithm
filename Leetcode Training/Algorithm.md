@@ -5593,3 +5593,62 @@ class Solution {
 
 ![image-20220421145052810](/Users/youhao/Library/Application Support/typora-user-images/image-20220421145052810.png)
 
+
+
+## 54. Spiral Matrix
+
+### 1. Using direction flag
+
+```java
+class Solution {
+  public List<Integer> spiralOrder(int[][] matrix) {
+    int n = matrix.length;
+    int m = matrix[0].length;
+    List<Integer> res = new ArrayList<>();
+    int row = 0, col = 0, up = 0, down = 0, left = 0. right = 1;
+    while (res.size() != n * m) {
+      if (matrix[row][col] != -101){
+        res.add(matrix[row][col]);
+        matrix[row][col] = -101;
+      }
+      if (right == 1) {
+        if(col < m && col + 1 < m && matrix[row][col + 1] != -101){
+          col++;
+        }else {
+          down = 1;
+          right = 0;
+        }
+      }
+      if (down == 1) {
+        if(row < n && row + 1 < n && matrix[row + 1][col] != -101){
+          row++;
+        }else {
+          left = 1;
+          down = 0;
+        }
+      }
+      if (left == 1) {
+        if(col >= 0 && col - 1 >= 0 && matrix[row][col - 1] != -101){
+          col--;
+        }else {
+          up = 1;
+          left = 0;
+        }
+      }
+      if (up == 1) {
+        if(row >= 0 && row - 1 >= 0 && matrix[row - 1][col] != -101){
+          row--;
+        }else {
+          right = 1;
+          up = 0;
+        }
+      }
+    }
+    return res;
+    // Time O(M) m * n
+    // Space O(1)
+  }
+}
+```
+
+![image-20220421160609071](/Users/youhao/Library/Application Support/typora-user-images/image-20220421160609071.png)
