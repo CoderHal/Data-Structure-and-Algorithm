@@ -5059,7 +5059,7 @@ Backtrack( )
 
 ## 78. Subsets
 
-## 1. Cascading 
+### 1. Cascading
 
 ```java
 class Solution {
@@ -5142,7 +5142,7 @@ class Solution {
 
 The space complexity of the sorting algorithm depends on the implementation of each programming language. For instance, in Java, the Arrays.sort() for primitives is implemented as a variant of quicksort algorithm whose space complexity is O*(log*n*). 
 
-## 2. Backtracking
+### 2. Backtracking
 
 ```java
 class Solution {
@@ -5493,3 +5493,43 @@ class Solution {
 ![image-20220420151107219](/Users/youhao/Library/Application Support/typora-user-images/image-20220420151107219.png)
 
 ![image-20220420151919307](/Users/youhao/Library/Application Support/typora-user-images/image-20220420151919307.png)
+
+
+
+## 93. Restore IP Address
+
+### 1. Backtracking
+
+```java
+class Solution {
+  public List<String> restoreIpAddresses(String s) {
+    List<String> res = new ArrayList<>();
+    storeIp(s, res, 4, 0, "");
+    return res;
+  }
+  public void storeIp(String s, List<String> res, int remain, int index, String sb) {
+    if (remain == 0) {
+      if (sb.size() == s.length()) {
+        res.add(sb);
+      }
+    }
+    for (int i = 1; i <= 3; i++) {
+      if (i + index > s.length()) break;
+      if (i != 1 && sb.charAt(index) == '0') break;
+      String cur = s.subString(index, index + i);// starting index is inclusive, ending index is exclusive
+      int curN = Integer.valueOf(cur);
+      if (curN <= 255) {
+        storeIp(s, res, remain - 1, index + i, sb + cur + (remain == 1 ? "" : "."));
+      }
+    }
+  }
+}
+```
+
+Time Complexity :  27
+
+![image-20220421135350778](/Users/youhao/Library/Application Support/typora-user-images/image-20220421135350778.png)
+
+Space: 19
+
+![image-20220421135656446](/Users/youhao/Library/Application Support/typora-user-images/image-20220421135656446.png)
