@@ -5764,3 +5764,63 @@ class Solution {
 ```
 
 ![image-20220421192136536](/Users/youhao/Library/Application Support/typora-user-images/image-20220421192136536.png)
+
+## 59. Spiral MatrixII
+
+```java
+class Solution {
+  public int[][] generateMatrix(int n) {
+    int[][] res = new int[n][n];
+    int step = 1;
+    int right = 1, left = 0, up = 0, down = 0;
+    int col = 0, row = 0;
+    int change = 0;
+    while(step <= n * n) {
+      res[row][col] = step;
+      if (step == n * n) return res;
+      if (right == 1) {
+        if (col < n && col + 1 < n && res[row][col + 1] == 0) {
+          col++;
+          step++;
+        }
+        else {
+          down = 1;
+          right = 0;
+        }
+      }
+      if (down == 1) {
+        if (row < n && row + 1 < n && res[row + 1][col] == 0) {
+          row++;
+          step++;
+        }
+        else {
+          down = 0;
+          left = 1;
+        }
+      }
+      if (left == 1) {
+        if (col >= 0 && col - 1 >= 0 && res[row][col - 1] == 0) {
+          col--;
+          step++;
+        }
+        else {
+          left = 0;
+          up = 1;
+        }
+      }
+      if (up == 1) {
+        if (row >= 0 && row - 1 >= 0 && res[row - 1][col] == 0) {
+          row--;
+          step++;
+        }
+        else {
+          up = 0;
+          right = 1;
+        }
+      }
+    }
+      return res;
+  }
+}
+```
+
