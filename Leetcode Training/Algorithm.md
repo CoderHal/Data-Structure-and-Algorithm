@@ -5824,3 +5824,38 @@ class Solution {
 }
 ```
 
+
+
+# Arrays
+
+## 56. Merge Intervals
+
+```java
+class Solution {
+  public int[][] merge(int[][] intervals) {
+    if (intervals.length <= 1) {
+      return intervals;
+    }
+    Arrays.sort(intervals, (a, b) -> Integer.compare(a[0], b[0]));
+    List<int[]> output = new ArrayList<>();
+    int[] cur = intervals[0];
+    output.add(cur);
+    for (int[] inter : intervals) {
+      int curF = cur[0];
+      int curE = cur[1];
+      int nextF = inter[0];
+      int nextE = inter[1];
+      if (curE >= nextF) {
+        cur[1] = Math.max(curE, nextE);//while cur changed, the List will changed
+      } else {
+        cur = inter;
+        output.add(cur);
+      }
+    }
+    return output.toArray(new int[output.size()][]);
+    // Time O(nlog + n) --> n: the size of intervals
+    // Space O(logn)
+  }
+}
+```
+
