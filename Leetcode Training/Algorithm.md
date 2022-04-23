@@ -5886,3 +5886,27 @@ class Solution {
 
 ![image-20220423164459752](/Users/youhao/Library/Application Support/typora-user-images/image-20220423164459752.png)
 
+## 121. Best Time to Buy and Sell Stock
+
+### 1. Find the largest Peak and smallest valley
+
+```java
+class Solution {
+  public int maxProfit(int prices[]) {
+    int maxProfit = 0;
+    int minPrice = Integer.MAX_VALUE;
+    for (int i = 0; i < prices.length; i++) {
+      if (prices[i] < minPrice) {// if this index of prices is the minPrice, we just make this index as the smallest value, and then jump to next index.
+        // we don't need to figure out the maxProfits
+        minPrice = prices[i];
+      }
+      else if(maxProfit < prices[i] - minPrice) {// if this index is not the smallest price, we need to figure out the current profit
+        maxProfit = prices[i] - minPrice;
+      }
+    }
+    return maxProfit;
+  }
+}
+```
+
+![image-20220423171400798](/Users/youhao/Library/Application Support/typora-user-images/image-20220423171400798.png)
