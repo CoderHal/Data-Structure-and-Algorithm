@@ -5940,7 +5940,7 @@ class Solution {
 public class Solution {
     public int findKthLargest(int[] nums, int k) {
         int start = 0, end = nums.length - 1, index = nums.length - k;
-        while (start < end) {
+        while (true) {
             int pivot = partion(nums, start, end);
             if (pivot < index) start = pivot + 1; 
             else if (pivot > index) end = pivot - 1;
@@ -5969,3 +5969,4 @@ public class Solution {
 }
 ```
 
+<img src="/Users/youhao/Library/Application Support/typora-user-images/image-20220423211434231.png" alt="image-20220423211434231" style="zoom:50%;" />
