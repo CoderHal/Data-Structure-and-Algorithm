@@ -5970,3 +5970,37 @@ public class Solution {
 ```
 
 <img src="/Users/youhao/Library/Application Support/typora-user-images/image-20220423211434231.png" alt="image-20220423211434231" style="zoom:50%;" />
+
+## 811. Subdomain Visit Count
+
+### 1. HashMap
+
+```java
+class Solution {
+  public List<String> subdomainVisits(String[] cpdomains) {
+    List<String> res = new ArrayList<>();
+    if (cpdomains.length == 0) {
+      return res;
+    }
+    Map<String, Integer> map = new HashMap<>();
+    for (String cur : cpdomains) {
+      String[] splited = cur.split("\\s+");
+      String[] level = splited[1].split("\\.");
+      String currentDom = "";
+      int count = Integer.valueOf(splited[0]);
+      for (int i = level.length - 1; i >= 0; i--) {
+        currentDom = (i < level.length - 1 ? level[i] + "." + currentDom : level[i] + currentDom);
+        map.put(currentDom, map.getOrDefault(currentDom, 0) + count);
+      }
+    }
+    for (String dom : map.keySet()) {
+      res.add(map.get(dom) + " " + dom);
+    }
+    return res;
+    // Time O(N) N is cpdomains.length()
+    // SPace O(N)
+  }
+}
+```
+
+### Java String 的空格分割方法 str.split("\\\s+")  "."的分割方法 str.split("\\\\.")
