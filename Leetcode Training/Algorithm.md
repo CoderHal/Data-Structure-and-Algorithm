@@ -737,6 +737,33 @@ class Solution{
 }
 ```
 
+
+
+## 160. Intersection of Two Linked List
+
+### Solution
+
+```java
+public class Solution {
+  public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+    if (headA == null || headB == null) {
+      return null;
+    }
+    ListNode currentA = headA;
+    ListNode currentB = headB;
+    while (currentA != currentB) {
+      currentA = (currentA == null ? headB : currentA.next);
+      currentB = (currentB == null ? headA : currentB.next);
+    }
+    return currentA;
+    // Time O(N)
+    // Space O(1)
+  }
+}
+```
+
+currentA and currentB are all loop for A + B times. If they have the intersection, they will meet at the process. If they have not the intersection, they all point to the null, currentA  == currentB. The result will return the null.
+
 # Tree Traversal
 
 ## 145. Binary Tree Postorder Traversal
@@ -6004,3 +6031,63 @@ class Solution {
 ```
 
 ### Java String 的空格分割方法 str.split("\\\s+")  "."的分割方法 str.split("\\\\.")
+
+# OODS
+
+## 1396. Design Underground System
+
+### 1. HashTable
+
+```java
+class UndergroundSystem {
+  private Map<Integer, Event> arrivals;
+  private Map<String, Average> averages;
+  public UndergroundSystem() {
+    arrivals = new HashMap<>();
+    averages = new HashMap<>();
+  }
+    
+  public void checkIn(int id, String stationName, int t) {
+    arrivals.add(id, new Event(id, stationName, t));
+  }
+    
+  public void checkOut(int id, String stationName, int t) {
+    Event arrivalEvent = arrivals.get(id);
+    arrivals.remove(id);
+    int diff = t - arrivalsEvent.time;
+    String key = arrivalsEvent.stationName + stationName;
+    Average average = average.containsKey(key) ? averages.get(key) : new Average();
+    average.updateAverage(diff);
+    averages.put(key, average);
+  }
+    
+  public double getAverageTime(String startStation, String endStation) {
+    String key = startStation + endStation;
+    return average.get(key).caculateAverage();
+ 	}
+  class Event {
+    public int id;
+    public int time;
+    public String stationName;
+    public void Event(int id, int time, String stationName) {
+      id = this.id;
+      t = this.time;
+      stationName = this.stationName;
+    }
+  }
+  class Average {
+    public double total = 0;
+    public int count = 0;
+    public void updateAverage(int diff) {
+      count++;
+      total += diff;
+    }
+    public double caculateAverage() {
+      return total / count;
+    }
+  }
+}
+
+
+```
+
