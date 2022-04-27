@@ -6034,7 +6034,7 @@ class Solution {
 
 # OODS
 
-## 1396. Design Underground System
+## 1396. Design Underground System (unsolved)
 
 ### 1. HashTable
 
@@ -6089,5 +6089,137 @@ class UndergroundSystem {
 }
 
 
+```
+
+
+
+# Dynamic Programming
+
+## 509. Fibonacci Number
+
+### 1. Recursion 
+
+```java
+class Solution {
+  public int fib(int n) {
+    if (n <= 1) {
+      return n;
+    }
+    return fib(n - 1) + fib(n - 2);
+  }
+  // O(2 ^ n) 
+  // Space O(N)
+}
+```
+
+
+
+### 2. DP: Bottom-Up Approach using Tabulation(制表)
+
+```java
+class Solution {
+  public int fib(int n) {
+    if (n <= 1) {
+      return n;
+    }
+    int[] cache = new int[n + 1];
+    cache[1] = 1;
+    for (int i = 2; i < cache.length; i++) {
+      cache[i] = cache[i - 1] + cache[i - 2];
+    }
+    return cache[n];
+    // O(N)
+    // O(N)
+  }
+}
+```
+
+
+
+### 3. DP: Top - down Appraoch using Memoization(记忆)
+
+```java
+class Solution {
+  private Map<Integer, Integer> map = new HashMap<>(Map.of(0, 0, 1, 1));
+  public int fib(int n) {
+    if (map.containsKey(n)) {
+      return map.get(n);
+    }
+    return fib(n - 1) + fib(n - 2);
+  }
+}
+```
+
+- Time complexity: O(N). Each number, starting at 2 up to and including `N`, is visited, computed and then stored for *O*(1) access later on.
+
+Space complexity: O(n)
+
+
+
+### 4. Iterative Bottom - up Approach
+
+```java
+class Solution {
+  public int fib(int n) {
+    if (n <= 1) {
+      return n;
+    }
+    int pre1 = 1;
+    int pre2 = 0;
+    int fib = 0;
+    for (int i = 2; i <= n; i++) {
+      fib = pre1 + pre2;
+      pre2 = pre1;
+      pre1 = fib;
+    }
+    return fib;
+  }
+  //Time O(n)
+  // Space O(1) 
+}
+```
+
+
+
+## 1137. N - th Tribonacci Number
+
+### 1. Recursion (Time Limit Exceeded)
+
+```java
+class Solution {
+  public int tribonacci(int n) {
+    if (n <= 1) {
+      return n;
+    }
+    else if (n == 2) {
+      return 1;
+    }
+    return tribonacci(n - 3) + tribonacci(n - 2) + tribonacci(n - 1);
+  }
+}
+```
+
+### 2. DP: Bottom - up Approach using Tabulation
+
+```java
+class Solution {
+  public int tribonacci(int n) {
+    if (n <= 1) {
+      return n;
+    }
+    else if (n == 2) {
+      return 1;
+    }
+    int[] cache = new int[n + 1];
+    cache[1] = 1;
+    cache[2] = 1;
+    for (int i = 3; i < cache.length; i++) {
+      cache[i] = cache[i - 3] + cache[i - 2] + cache[i - 1];
+    }
+    return cache[n];
+    //Time O(n)
+    //Space O(n)
+  }
+}
 ```
 
