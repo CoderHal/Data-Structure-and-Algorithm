@@ -6145,7 +6145,9 @@ class Solution {
     if (map.containsKey(n)) {
       return map.get(n);
     }
-    return fib(n - 1) + fib(n - 2);
+    int result = fib(n - 1) + fib(n - 2);
+    map.put(n, result);
+    return map.get(n);
   }
 }
 ```
@@ -6219,6 +6221,52 @@ class Solution {
     return cache[n];
     //Time O(n)
     //Space O(n)
+  }
+}
+```
+
+### 3. DP: Top - down Appraoch 
+
+```java
+class Solution {
+  private Map<Integer, Integer> map = new HashMap<>(Map.of(0, 0, 1, 1, 2, 1));
+  public int tribonacci(int n) {
+    if (map.containsKey(n)) {
+      return map.get(n);
+    }
+    int result = tribonacci(n - 3) + tribonacci(n - 2) + tribonacci(n - 1);
+    map.put(n, result);
+    return map.get(n);
+  }
+  // Time O(n)
+  // Space O(n)
+}
+```
+
+### 4. DP: Bottom - up Approach (Space Optimization)
+
+```java
+class Solution {
+  public int tribonacci(int n) {
+    if (n <= 1) {
+      return n;
+    }
+    else if (n == 2) {
+      return 1;
+    }
+    int pre1 = 1;
+    int pre2 = 1;
+    int pre3 = 0;
+    int trib = 0;
+    for (int i = 3; i <= n; i++) {
+      trib = pre1 + pre2 + pre3;
+      pre3 = pre2;
+      pre2 = pre1;
+      pre1 = trib;
+    }
+    return trib;
+    //Time O(N)
+    //Space O(1)
   }
 }
 ```
