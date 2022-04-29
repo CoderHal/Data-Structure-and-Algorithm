@@ -6364,29 +6364,25 @@ class Solution {
 
 ```java
 class Solution {
-    private HashMap<Integer, Integer> memo = new HashMap<Integer, Integer>();
-
-    public int minCostClimbingStairs(int[] cost) {
-        return minimumCost(cost.length, cost);
+  private HashMap<Integer, Integer> map = new HashMap<>();
+  public int minCostClimbingStairs(int[] cost) {
+    int n = cost.length;
+    return helper(n, cost);
+  }
+  public int helper(int n, int[] cost) {
+    if(n <= 1) {
+      return 0;
     }
-
-    private int minimumCost(int i, int[] cost) {
-        // Base case, we are allowed to start at either step 0 or step 1
-        if (i <= 1) {
-            return 0;
-        }
-
-        // Check if we have already calculated minimumCost(i)
-        if (memo.containsKey(i)) {
-            return memo.get(i);
-        }
-
-        // If not, cache the result in our hash map and return it
-        int downOne = cost[i - 1] + minimumCost(i - 1, cost);
-        int downTwo = cost[i - 2] + minimumCost(i - 2, cost);
-        memo.put(i, Math.min(downOne, downTwo));
-        return memo.get(i);
+    if(map.containsKey(n)) {
+      return map.get(n);
     }
+    // helper(n - 1, cost) return the downOne stair's cost
+    // helper(n - 2, cost) return the downTwo stair's cost
+    // each of them add their own cost
+    // Compare their cost
+    map.put(n, Math.min(helper(n - 1, cost) + cost[n - 1], helper(n - 2, cost) + cost[n - 2]));
+    return map.get(n);
+  }
 }
 ```
 
