@@ -6271,3 +6271,181 @@ class Solution {
 }
 ```
 
+
+
+## 70. Climbing Stairs
+
+### 1. Dynamic Programming Bottom - Up with Tabulation
+
+```java
+class Solution {
+  public int climbStairs(int n) {
+    if (n <= 0) {
+      return 0;
+    }
+    if (n == 1) {
+      return 1;
+    }
+    if (n == 2) {
+      return 2;
+    }
+    int[] dp = new int[n + 1];
+    dp[1] = 1;
+    dp[2] = 2;
+    for (int i = 3; i <= n; i++) {
+      dp[i] = dp[i - 1] + dp[i - 2];
+    }
+    return dp[n];
+    //Time O(n)
+    //SPace O(n)
+  }
+}
+```
+
+ ### 2. Fibonacci
+
+```java
+class Solution {
+  public int climbStairs(int n) {
+    if (n <= 0) {
+      return 0;
+    }
+    if (n == 1) {
+      return 1;
+    }
+    if (n == 2) {
+      return 2;
+    }
+    int numStep = 0;
+    int firstStairs = 1;
+    int secondStairs = 2;
+    for (int i = 3; i <= n; i++) {
+      numStep = firstStairs + secondStairs;
+      firstStairs = secondStairs;
+      secondStairs = numStep;
+    }
+    return numStep;
+    //Time O(n)
+    //Space O(1)
+  }
+}
+```
+
+![image-20220428161935620](/Users/youhao/Library/Application Support/typora-user-images/image-20220428161935620.png)
+
+### 3. Recursion with Memoization
+
+```java
+class Solution { 
+  public int climbStairs(int n) {
+    return helper(0, n , new int[n + 1]);
+  }
+  public int helper(int i, int n, int[] memo) {
+    if (i > n) {
+      return 0;
+    }
+    if (i == n) {
+      return 1;
+    }
+    if (memo[i] > 0) {
+      return memo[i];
+    }
+    memo[i] = helper(i + 1, n, memo) + helper(i + 2, n, memo);
+    return memo[i];
+    // Time O(n)
+    // Space O(n)
+  }
+}
+```
+
+## 746. Min Cost Climbing Stairs
+
+### 1. Recursion with Memoization
+
+```java
+class Solution {
+    private HashMap<Integer, Integer> memo = new HashMap<Integer, Integer>();
+
+    public int minCostClimbingStairs(int[] cost) {
+        return minimumCost(cost.length, cost);
+    }
+
+    private int minimumCost(int i, int[] cost) {
+        // Base case, we are allowed to start at either step 0 or step 1
+        if (i <= 1) {
+            return 0;
+        }
+
+        // Check if we have already calculated minimumCost(i)
+        if (memo.containsKey(i)) {
+            return memo.get(i);
+        }
+
+        // If not, cache the result in our hash map and return it
+        int downOne = cost[i - 1] + minimumCost(i - 1, cost);
+        int downTwo = cost[i - 2] + minimumCost(i - 2, cost);
+        memo.put(i, Math.min(downOne, downTwo));
+        return memo.get(i);
+    }
+}
+```
+
+### 2. DP: Bottom- up with Tabulation
+
+```java
+class Solution {
+  public int minCostClimbingStairs(int[] cost) {
+    int n = cost.length;
+    if (n <= 0) {
+      return 0;
+    }
+    if (n == 1) {
+      return cost[0];
+    }
+    if (n == 2) {
+      return Math.min(cost[0], cost[1]);
+    }
+    int[] dp = new int[n + 1];
+    for (int i = 2; i <= n; i++) {
+      int oneStep = dp[i - 1] + cost[i - 1];
+      int twoStep = dp[i - 2] + cost[i - 2];
+      dp[i] = Math.min(oneStep, twoStep);
+    }
+    return dp[n];
+    //Time O(n)
+    //Space O(n)
+  }
+}
+```
+
+### 3. DP: Bottom - up with Constant Space
+
+```java
+class Solution {
+  public int minCostClimbingStairs(int[] cost) {
+    int n = cost.length;
+    if (n <= 0) {
+      return 0;
+    }
+    if (n == 1) {
+      return cost[0];
+    }
+    if (n == 2) {
+      return Math.min(cost[0], cost[1]);
+    }
+    int downOne = 0;
+    int downTwo = 0;
+    int res = 0;
+    for (int i = 2; i <= n; i++){
+      res = Math.min(downOne + cost[i - 1], downTwo + cost[i - 2]);
+      downTwo = downOne;
+      downOne = res;
+    }
+    return res;
+    //O(n)
+    //O(1)
+  }
+}
+```
+
+![image-20220428200937640](/Users/youhao/Library/Application Support/typora-user-images/image-20220428200937640.png)
