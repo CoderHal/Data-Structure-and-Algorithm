@@ -6630,3 +6630,57 @@ class Solution {
 ```
 
 ![image-20220430161436865](/Users/youhao/Library/Application Support/typora-user-images/image-20220430161436865.png)
+
+## 55. Jump Game
+
+### 1. Backtracking(Time Limit Exceeded)
+
+```java
+class Solution {
+  public boolean canJump(int[] nums) {
+    return backtrack(nums, 0);
+  }
+  public boolean backtrack(int[] nums,int index) {
+    if(index + nums[index] >= nums.length - 1) {
+      return true;
+    }
+    else if(nums[index] == 0) {
+      return false;
+    }
+    int step = nums[index];
+    for (int i = 1; i <= step; i++) {
+      if(backtrack(nums, index + i)){
+        return true;
+      }
+    }
+      return false;
+  }
+}
+```
+
+### 2. Greedy
+
+```java
+class Solution {
+  public boolean canJump(int[] nums) {
+    int n = nums.length;
+    if (n == 0) {
+      return false;
+    }
+    if (n == 1) {
+      return true;
+    }
+    int max = 0;
+    for (int i = 0; i < n; i++) {
+      if (i > max) {
+        return false;
+      }
+      max = Math.max(max, nums[i] + i);
+    }
+    return true;
+    // Time O(n)
+    //Space O(1)
+  }
+}
+```
+
