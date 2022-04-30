@@ -6684,3 +6684,65 @@ class Solution {
 }
 ```
 
+
+
+## 45. Jump Game II
+
+### 1. Greedy
+
+```java
+class Solution {
+  public int jump(int[] nums) {
+    int max = 0;
+    int curMax = 0;
+    int step = 0;
+    int n = nums.length;
+    if (n == 0) {return 0;}
+    for(int i = 0; i < n - 1; i++) {
+      max = Math.max(max, i + nums[i]);
+      if (i == curMax){
+        curMax = max;
+        step++;
+      }
+    }
+    return step++;
+    //Time O(n)
+    //Space O(1)
+  }
+}
+```
+
+![image-20220430180854697](/Users/youhao/Library/Application Support/typora-user-images/image-20220430180854697.png)
+
+### 2. BFS
+
+```java
+class Solution{
+  public int jump(int[] nums) {
+    int n = nums.length;
+    if (n <= 1) {
+      return 0;
+    }
+    int level = 0;
+    int curLength = 0;
+    int nextLength = 0;
+    int index = 0;
+    while (curLength - index >= 0) {
+      level++;
+      for(; index <= curLength; index++) {
+        nextLength = Math.max(index + nums[index], nextLength);
+        if (nextLength >= n - 1) {
+          return level;
+        }
+      }
+     index = curLength + 1;
+     curLength = nextLength;
+    }
+    return 0;
+    //Time O(n)
+    //Space O(1)
+  }
+}
+```
+
+![image-20220430182858062](/Users/youhao/Library/Application Support/typora-user-images/image-20220430182858062.png)
