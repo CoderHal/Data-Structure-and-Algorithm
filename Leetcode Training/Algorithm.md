@@ -6564,3 +6564,69 @@ class Solution {
 ```
 
 ![image-20220430145813062](/Users/youhao/Library/Application Support/typora-user-images/image-20220430145813062.png)
+
+### 213. House Robber II
+
+### 1. DP with Memoization
+
+```java
+class Solution {
+  public int rob(int[] nums) {
+    if (nums.length == 0) {
+      return 0;
+    }
+    int n = nums.length;
+    if (n == 1) {
+        return nums[0];
+    }
+    int[] dp1 = new int[n];
+    int[] dp2 = new int[n];
+    dp1[0] = 0;
+    dp1[1] = nums[0];
+    dp2[0] = 0;
+    dp2[1] = nums[1];
+    for (int i = 2; i < n; i++) {
+      dp1[i] = Math.max(dp1[i - 1], dp1[i - 2] + nums[i - 1]);
+      dp2[i] = Math.max(dp2[i - 1], dp2[i - 2] + nums[i]);
+    }
+    return Math.max(dp1[n -1], dp2[n - 1]);
+    //Time O(n)
+    //Space O(n)
+  }
+}
+```
+
+### 2. DP with Optimized Space
+
+```java
+class Solution {
+  public int rob(int[] nums) {
+    int n = nums.length;
+    if (n == 0) {
+      return 0;
+    }
+    if (n == 1) {
+      return 1;
+    }
+    int oneBack1 = nums[0];
+    int twoBack1 = 0;
+    int oneBack2 = nums[1];
+    int twoBack2 = 0;
+    int rob1 = nums[0];
+    int rob2 = nums[1];
+    for (int i = 2; i < nums.length; i++) {
+      rob1 = Math.max(oneBack1, twoBack1 + nums[i - 1]);
+      rob2 = Math.max(oneBack2, twoBack2 + nums[i]);
+      twoBack1 = oneBack1;
+      oneBack1 = rob1;
+      twoBack2 = oneBack2;
+      oneBack2 = rob2;
+    }
+    return Math.max(rob1, rob2);
+  }
+  //Time O(n)
+  //Space O(1)
+}
+```
+
+![image-20220430161436865](/Users/youhao/Library/Application Support/typora-user-images/image-20220430161436865.png)
