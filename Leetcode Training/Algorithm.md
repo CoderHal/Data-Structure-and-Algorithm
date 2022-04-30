@@ -6492,3 +6492,75 @@ class Solution {
 // Space O(1)
 ```
 
+
+
+## 740. Delete and Earn
+
+### 1. DP with Memoization 
+
+```java
+class Solution {
+  public int deleteAndEarn(int[] nums) {
+    if (nums.length == 0) {
+      return 0;
+    }
+    Map<Integer, Integer> map = new HashMap<>();
+    for (int num : nums) {
+      map.put(num, map.getOrDefault(num, 0) + num);
+    }
+    int[] arr = new int[map.size()];
+    int index = 0;
+    for(int num : map.keySet()) {
+        arr[index] = num;
+        index++;
+    }
+    Arrays.sort(arr);
+    int twoBack = 0;
+    int oneBack = map.get(arr[0]);
+    int current = oneBack;
+    for (int i = 2; i <= arr.length; i++) {
+      int element = arr[i - 1];
+      int preElement = arr[i - 2];
+      if (element == preElement + 1) {
+        current = Math.max(oneBack, twoBack + map.get(element));
+      } else {
+        current = oneBack + map.get(element);
+      }
+      twoBack = oneBack;
+      oneBack = current;
+    }
+    return current;
+    // Time Complexity O(N*log(N))
+    // Space Complexity O(N)
+  }
+}
+```
+
+###  2. DP with Bucket
+
+```java
+class Solution {
+  public int deleteAndEarn(int[] nums) {
+    if(nums.length == 0) {
+      return 0;
+    }
+    int[] bucket = new int[10001];
+    for (int num : nums) {
+      bucket[num] += num;
+    }
+    int oneBack = bucket[1];
+    int twoBack = bucket[0];
+    int res = bucket[1];
+    for (int i = 2; i < bucket.length; i++) {
+      res = Math.max(twoBack + bucket[i - 1], oneBack);
+      twoBack = oneBack;
+      oneBack = res;
+    }
+    return res;
+    // Time O(n);
+    // Space O(n);
+  }
+}
+```
+
+![image-20220430145813062](/Users/youhao/Library/Application Support/typora-user-images/image-20220430145813062.png)
