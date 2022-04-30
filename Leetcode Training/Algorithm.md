@@ -6445,3 +6445,50 @@ class Solution {
 ```
 
 ![image-20220428200937640](/Users/youhao/Library/Application Support/typora-user-images/image-20220428200937640.png)
+
+## 198. House Robber
+
+### 1. DP with Memoization
+
+```java
+class Solution {
+  public int rob(int[] nums) {
+    int n = nums.length;
+    if(n == 0){return 0;}
+    int[] dp = new int[n + 1];
+    dp[0] = 0;
+    dp[1] = nums[0];
+    for (int i = 2; i <= n; i++) {
+      dp[i] = Math.max(dp[i - 1], dp[i - 2] + nums[i - 1]);
+    }
+    return dp[n];
+  }
+}
+```
+
+![image-20220429195521897](/Users/youhao/Library/Application Support/typora-user-images/image-20220429195521897.png)
+
+### 2. Optimized DP
+
+```java
+class Solution {
+  public int rob(int[] nums) {
+    int n = nums.length;
+    if (n == 0) {
+      return 0;
+    }
+    int first = 0;
+    int second = nums[0];
+    int robMax = nums[0];
+    for(int i = 1; i < n; i++) {
+      robMax = Math.max(second, first + nums[i]);
+      first = second;
+      second = robMax;
+    }
+    return robMax;
+  }
+}
+// Time O(n)
+// Space O(1)
+```
+
