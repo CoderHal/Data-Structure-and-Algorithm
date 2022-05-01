@@ -2481,9 +2481,9 @@ class Solution{
 
 ![image-20220228124032479](/Users/youhao/Library/Application Support/typora-user-images/image-20220228124032479.png)
 
-# 682. Baseball Game
+## 682. Baseball Game
 
-## 1. Stack 
+### 1. Stack 
 
 ```java
 class Solution{
@@ -2514,13 +2514,7 @@ class Solution{
 }
 ```
 
-
-
-
-
-
-
-## 2. Deque Solution
+### 2. Deque Solution
 
 ```java
 class Solution{
@@ -2551,7 +2545,7 @@ class Solution{
 }
 ```
 
-## 3. Deque VS Stack
+### 3. Deque VS Stack
 
 https://blog.csdn.net/qq_44013629/article/details/106461200
 
@@ -4445,6 +4439,31 @@ class Solution {
     return res == Integer.MAX_VALUE ? 0 : res;
     //Time O(n)
     //Space O(1)
+  }
+}
+```
+
+## 633. Sum of Square Numbers
+
+### 1. Two Pointers
+
+```java
+class Solution {
+  public boolean judgeSquareSum(int c) {
+    long i = 0;
+    long j = (long) Math.sqrt(c);
+    while (i <= j) {
+      long sum = i * i + j * j;
+      if (sum > c) {
+        j--;
+      }
+      else if (sum < c) {
+        i++;
+      } else {
+        return true;
+      }
+    }
+    return false;
   }
 }
 ```
@@ -6705,7 +6724,7 @@ class Solution {
         step++;
       }
     }
-    return step++;
+    return step;
     //Time O(n)
     //Space O(1)
   }
@@ -6746,3 +6765,12 @@ class Solution{
 ```
 
 ![image-20220430182858062](/Users/youhao/Library/Application Support/typora-user-images/image-20220430182858062.png)
+
+
+
+# Array
+
+## T
+
+### 2
+
