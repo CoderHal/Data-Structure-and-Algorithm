@@ -6768,9 +6768,121 @@ class Solution{
 
 
 
-# Array
+## 53. Maximum  Subarray
 
-## T
+### 1. DP 
 
-### 2
+```java
+class Solution {
+  public int maxSubArray(int[] nums) {
+    int n = nums.length;
+    if (n == 1) {
+      return nums[0];
+    }
+    int[] dp = new int[n];
+    dp[0] = nums[0];
+    int res = 0;
+    for (int i = 1; i < n; i++) {
+      dp[i] = nums[i] + (dp[i - 1] < 0 ? 0 : dp[i - 1]);
+      res = Math.max(res, dp[i]);
+    }
+    return res;
+  }
+}
+```
 
+### 2. DP with Constant Space
+
+```java
+class Solution {
+  public int maxSubArray(int[] nums) {
+    int n = nums.length;
+    if (n == 1) {
+      return nums[0];
+    }
+    int curMax = 0;
+    int max = nums[0];
+    int preMax = nums[0];
+    for (int i = 1; i < n; i++) {
+      curMax = nums[i] + (preMax < 0 ? 0 : preMax);
+      max = Math.max(max, curMax);
+      preMax = curMax;
+    }
+    return max;
+  }
+}
+```
+
+![image-20220501163459150](/Users/youhao/Library/Application Support/typora-user-images/image-20220501163459150.png)
+
+Thinking Process
+
+copy from https://leetcode.com/problems/maximum-subarray/discuss/20193/DP-solution-and-some-thoughts
+
+```
+My thought process:
+Array: [-2,1,-3,4,-1,2,1,-5,4]
+
+If all elements were positive, the answer would be the total sum.
+
+But here we have negative numbers, so we should avoid them.
+So, we could have sums of positive numbers on left and right of each negative number. And maximum of these sums is the answer.
+
+But there is this hidden case when including a negative number helps: when the elements or sum of elements left or right to the negative element is greater than the negative element itself. **This is the key observation of this problem.**
+eg: [2 -1 3]: here including -1 would only help me in getting better answer by adding 2 and 3 while subtracting just -1.
+
+Now as I got an idea of the problem, i would start solving step by step considering 1 element at a time.
+
+Considered if the array had only 1 element: [-2]
+Since array now has only 1 element I could only choose -2.
+
+Considered if the array had 2 elements: [-2, 1]
+ans:
+
+is the new element (1) greater than the previous ans: YES
+is prev element (-2) + new element (1) greater than the new element (1): NO
+So since new element (1) is greater than than both the cumulative sum(new element, previous element) and prev ans -2, I would choose the new element 1. (Also I would update cumulative sum to be this new element 1, for future incoming elements. **This is the key lesson of this pattern**)
+[-2,1,-3]
+ans: I would use the previous logic:
+Is the new element (-3) greater than the previous ans (1): NO
+Is the new cumulative sum(prev cumulative sum, new element) > new element: NO
+So I choose prev ans: 1
+..... so on
+```
+
+## 918. Maximum Sum Circular Subarray
+
+### 1. DP
+
+```java
+class Solution {
+  public int maxSubarraySumCircular(int[] nums) {
+    int n = nums.length;
+    if (n == 0) {return 0;}
+    int curMax = 0;
+    int preMax = 0;
+    int curMin = 0;
+    int preMin = 0;
+    int maxSub = nums[0];
+    int minSub = nums[0];
+    int total = 0;
+    for (int i = 0; i < n; i++) {
+      curMax = nums[i] + (preMax > 0 ? preMax : 0);
+      curMin = nums[i] + (preMin < 0 ? preMin : 0); 
+      maxSub = Math.max(maxSub, curMax);
+      minSub = Math.min(minSub, curMin);
+      total += nums[i];
+      preMax = curMax;
+      preMin = curMin;
+    }
+    return maxSub > 0 ? Math.max(maxSub, total - minSub) : maxSub;
+    //if all the numbers are negative, the maxSub = Math.max(nums), maxSub is the specific number which is negative,so the subArray cannot appear the case of "0".
+    // But the minSub = total, if total - minSub, the result is 0, which means we returen a empty subarray.
+    // Therefore, we need to split two case to discuss.
+    //Time O(n)
+    //SPace O(1)
+  }
+}
+```
+
+![image-20220501170514279](/Users/youhao/Library/Application Support/typora-user-images/image-20220501170514279.png)
