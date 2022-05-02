@@ -6886,3 +6886,33 @@ class Solution {
 ```
 
 ![image-20220501170514279](/Users/youhao/Library/Application Support/typora-user-images/image-20220501170514279.png)
+
+
+
+## 152. Maximum Product Subarray
+
+### 1. DP 
+
+```java
+class Solution {
+  public int maxProduct(int[] nums) {
+    int n = nums.length;
+    if (n == 0) {return 0;}
+    if (n == 1) {return nums[0];}
+    int curMax = nums[0];
+    int max = nums[0];
+    int curMin = nums[0];
+    for (int i = 1; i < n; i++) {
+      int temp = curMax;
+      curMax = Math.max(nums[i] * curMax, Math.max(nums[i], curMin * nums[i]));
+      curMin = Math.min(nums[i] * temp, Math.min(nums[i], curMin * nums[i]));
+      max = Math.max(max, curMax);
+    }
+    return max;
+  }
+  // Time O(n)
+  // SPace O(1)
+}
+```
+
+![image-20220502154730231](/Users/youhao/Library/Application Support/typora-user-images/image-20220502154730231.png)
