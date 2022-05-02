@@ -6880,7 +6880,7 @@ class Solution {
     // But the minSub = total, if total - minSub, the result is 0, which means we returen a empty subarray.
     // Therefore, we need to split two case to discuss.
     //Time O(n)
-    //SPace O(1)
+    //Space O(1)
   }
 }
 ```
@@ -6916,3 +6916,42 @@ class Solution {
 ```
 
 ![image-20220502154730231](/Users/youhao/Library/Application Support/typora-user-images/image-20220502154730231.png)
+
+
+
+## 1567. Maximum Length of Subarray With Positive Product
+
+### 1. DP
+
+```java
+class Solution {
+  public int getMaxLen(int[] nums) {
+    int n = nums.length;
+    if (n == 0) {
+      return 0;
+    }
+    int positive = 0;
+    int negative = 0;
+    int ans = 0;
+    for (int i = 0; i < n; i++) {
+      if (nums[i] == 0) {
+        //restart the count
+        positive = 0;
+        negative = 0;
+      }
+      else if (nums[i] > 0) {
+        positive++;
+        negative = negative == 0 ? 0 : negative + 1;
+      } else {
+        int temp = positive;
+        positive = negative == 0 ? 0 : negative + 1;
+        negative = temp + 1;
+      }
+      ans = Math.max(positive, ans);
+    }
+    return ans;
+  }
+}
+```
+
+![image-20220502174612072](/Users/youhao/Library/Application Support/typora-user-images/image-20220502174612072.png)
