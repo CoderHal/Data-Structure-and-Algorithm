@@ -7007,3 +7007,33 @@ class Solution {
 ```
 
 ![image-20220503151948468](/Users/youhao/Library/Application Support/typora-user-images/image-20220503151948468.png)
+
+## 122. Best Time to Buy and Sell Stock II
+
+### 1. DP 
+
+```java
+class Solution {
+  public int maxProfit(int[] prices) {
+    int n = prices.length;
+    if (n <= 1) {
+      return 0;
+    }
+    int pre = 0;
+    int cur = 0;
+    int sum = 0;
+    for (int i = 1; i < n; i++) {
+      cur = prices[i];
+      pre = prices[i - 1];
+      if (cur > pre) {
+        sum += (cur - pre);
+      }
+    }
+    return sum;
+    // Time O(n)
+    // Space O(1)
+  }
+}
+```
+
+![image-20220503155348568](/Users/youhao/Library/Application Support/typora-user-images/image-20220503155348568.png)
