@@ -5957,6 +5957,28 @@ class Solution {
 
 ![image-20220423171400798](/Users/youhao/Library/Application Support/typora-user-images/image-20220423171400798.png)
 
+### 2. DP
+
+```java
+class Solution {
+  public int maxProfit(int prices[]) {
+    int n = prices.length;
+    if (n == 0) {
+      return 0;
+    }
+    int preMin = prices[0];
+    int res = 0;
+    for (int i = 1; i < n; i++) {
+      res = Math.max(res, prices[i] - preMin);
+      preMin = Math.min(preMin, prices[i]);
+    }
+    return res;
+  }
+}
+```
+
+
+
 ## 215. Kth Largest Element in an Array
 
 ### 1. Heap
@@ -6955,3 +6977,33 @@ class Solution {
 ```
 
 ![image-20220502174612072](/Users/youhao/Library/Application Support/typora-user-images/image-20220502174612072.png)
+
+negative 存储的永远是在当前位置中，只有一个负数情况下最长的序列（序列中包括了偶数个负数，因为两个负数✖️大于0，所以把序列中的负数看成正数。
+
+##  1014. Best Sightseeing Pair
+
+### 1. DP
+
+```java
+class Solution {
+  public int maxScoreSightseeingPair(int[] values) {
+    int n = values.length;
+    if (n <= 1) {
+      return 0;
+    }
+    int preId = 0;
+    int res = 0;
+    for (int i = 1; i < n; i++) {
+      res = Math.max(res, values[preId] + preId + values[i] - i);
+      if (preId + values[preId] <= values[i] + i) {
+        preId = i;
+      }
+    }
+    return res;
+    //Time O(n)
+    //Space O(1) 
+  }
+}
+```
+
+![image-20220503151948468](/Users/youhao/Library/Application Support/typora-user-images/image-20220503151948468.png)
