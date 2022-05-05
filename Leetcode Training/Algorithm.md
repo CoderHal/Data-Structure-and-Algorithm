@@ -7140,3 +7140,65 @@ class Solution {
 
 ![image-20220505152402816](/Users/youhao/Library/Application Support/typora-user-images/image-20220505152402816.png)
 
+## 42. Trapping Rain Water
+
+### 1. Finding the Heighest 
+
+```java
+class Solution {
+    public int trap(int[] height) {
+        int mostHeightIndex = 0;
+        int n = height.length;
+        for (int i = 0; i < n; i++) {
+            if (height[i] >= height[mostHeightIndex]) {
+                mostHeightIndex = i;
+            }
+        }
+        int leftTrap = 0;
+        int leftMost = 0;
+        for (int i = 0; i < mostHeightIndex; i++) {
+            leftMost = Math.max(leftMost, height[i]);
+            leftTrap += leftMost - height[i];
+        }
+        int rightMost = 0;
+        int rightTrap = 0;
+        for (int j = n - 1; j > mostHeightIndex; j--) {
+            rightMost = Math.max(rightMost, height[j]);
+            rightTrap += rightMost - height[j];
+        }
+        return rightTrap + leftTrap;
+      //Time O(n) 
+      //Space O(1)
+    }
+}
+```
+
+![image-20220505160317702](/Users/youhao/Library/Application Support/typora-user-images/image-20220505160317702.png)
+
+### 2. Monotonous Stack
+
+```java
+class Solution {
+  public int trap(int[] height) {
+    int current = 0;
+    int res = 0;
+    Stack<Integer> stack = new Stack<>();
+    while (current < height.length) {
+      while (!stack.isEmpty() && height[stack.peek()] < height[current]) {
+        int pre = stack.pop();
+        if (stack.isEmpty()) {
+          break;
+        }
+        int pre2 = stack.peek();
+        res += (Math.min(height[pre2], height[current]) - height[pre]) * (current - pre2 - 1);
+      }
+      stack.push(current++);
+    }
+    return res;
+    // Time O(n)
+    // Space O(n)
+  }
+}
+```
+
+![image-20220505164353209](/Users/youhao/Library/Application Support/typora-user-images/image-20220505164353209.png)
