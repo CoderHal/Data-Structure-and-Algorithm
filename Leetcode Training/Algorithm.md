@@ -7114,3 +7114,29 @@ Sold: hold - p
 
 Stay: 
 
+## 139. Word Break
+
+### 1. DP
+
+```java
+class Solution {
+  public boolean wordBreak(String s, List<String> wordDict) {
+    Set<String> set = new HashSet<>(wordDict);
+    boolean[] dp = new boolean[s.length() + 1];
+    dp[0] = true;
+    for (int i = 1; i <= s.length(); i++){
+      for (int j = 0; j < i; j++) {
+        if (dp[j] && set.contains(s.substring(j, i))) {
+          dp[i] = true;
+          break;
+        }
+      }
+    }
+    return dp[s.length()];
+    //O(n^3) 2loops and the substring is the 3rd loops
+  }
+}
+```
+
+![image-20220505152402816](/Users/youhao/Library/Application Support/typora-user-images/image-20220505152402816.png)
+
