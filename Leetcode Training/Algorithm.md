@@ -7037,3 +7037,80 @@ class Solution {
 ```
 
 ![image-20220503155348568](/Users/youhao/Library/Application Support/typora-user-images/image-20220503155348568.png)
+
+
+
+## 309. Best Time to Buy and Sell Stock with Cooldown
+
+### 1. DP
+
+```java
+class Solution {
+  public int maxProfit(int[] prices) {
+    int n = prices.length;
+    int hold = Integer.MIN_VALUE;// this value is important! If this hold is bigger than prices[i], the first hold is not correct
+    int cooled = 0;
+    int sold = 0;
+    for (int i = 0; i < n; i++) {
+      int hold2 = hold, cooled2 = cooled, sold2 = sold;
+      int p = prices[i];
+      hold = Math.max(hold2, cooled - p);
+      sold = hold2 + p;
+      cooled = Math.max(cooled2, sold2);
+    }
+    return Math.max(sold, hold);
+  }
+}
+```
+
+the current state  only has three case: 
+
+Hold:  max(hold, cooled - p)
+
+Sold:  hold + p
+
+Cooled: max(cooled, hold)
+
+
+
+### 714. Best Time to Buy and Sell Stock with Transaction Fee
+
+### 1. DP
+
+```java
+class Solution {
+  public int maxProfit(int[] prices, int fee) {
+    int n = prices.length;
+    if(n <= 1) {return 0;}
+    int cash = 0;
+    int hold = -p[0];// this value is important! this value is important! If this hold is bigger than prices[i], the first hold is not correct
+    for (int i = 0; i < n; i++) {
+      int p = prices[i];
+      int cash2 = cash;
+      int hold2 = hold;
+      cash = Math.max(cash2, hold2 + p - fee);
+      hold = Math.max(hold2, cash2 - p);
+    }
+    return cash;
+  }
+}
+```
+
+The current state only has two cases: 
+
+Cash : max(cash,  hold + p - fee)
+
+hold: max(hold, cash - p)
+
+cash stands who the value we have now
+
+hold stands how the stock we have bought
+
+
+
+Hold: max(hold, stay, sold + p - fee)
+
+Sold: hold - p
+
+Stay: 
+
