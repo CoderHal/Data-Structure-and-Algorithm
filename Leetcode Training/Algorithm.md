@@ -7322,3 +7322,35 @@ class Solution {
 ```
 
 cur: index = i    Therefore, the value of this index: pre[j - 1] + pre[j] 
+
+
+
+## 119. Pascal's Triangle II
+
+### 1. DP
+
+```java
+class Solution {
+  public List<Integer> getRow(int rowIndex) {
+    List<Integer> res = new ArrayList<>();
+    if (rowIndex < 0) {
+      return res;
+    } 
+    List<Integer> pre = new ArrayList<>();
+    pre.add(1);
+    res = pre;
+    for (int i = 1; i <= rowIndex; i++) {
+      List<Integer> cur = new ArrayList<>();
+      cur.add(1);
+      for (int j = 1; j < i; j++) {
+        cur.add(pre.get(j - 1) + pre.get(j));
+      }
+      cur.add(1);
+      pre = cur;
+      res = cur;
+    }
+    return res;
+  }
+}
+```
+
