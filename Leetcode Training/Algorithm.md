@@ -7202,3 +7202,91 @@ class Solution {
 ```
 
 ![image-20220505164353209](/Users/youhao/Library/Application Support/typora-user-images/image-20220505164353209.png)
+
+
+
+## 413. Arithmetic Slices
+
+### 1. DP
+
+```java
+class Solution {
+  public int numberOfArithmeticSlices(int[] nums) {
+    int n = nums.length;
+    if (n <= 1) {
+      return 0;
+    }
+    int res = 0;
+    int[] dp = new int[n];
+    dp[0] = 0;
+    dp[1] = 0;
+    for (int i = 2; i < n; i++) {
+      if (nums[i] - nums[i - 1] == nums[i - 1] - nums[i - 2]) {
+        dp[i] = dp[i - 1] + 1;
+      }
+      res += dp[i];
+    }
+    return res;
+  }
+}
+```
+
+### 2. DP with constant space
+
+```java
+class Solution {
+  public int numberOfArithmeticSlices(int[] nums) {
+    int n = nums.length;
+    if (n <= 1) {
+      return 0;
+    }
+    int res = 0;
+    int pre = 0;
+    int cur = 0;
+    for (int i = 2; i < n; i++) {
+      if (nums[i] - nums[i - 1] == nums[i - 1] - nums[i - 2]) {
+        cur = pre + 1;
+      } else {
+          cur = 0;
+      }
+      pre = cur;
+      res += cur;
+    }
+    return res;
+  }
+}
+```
+
+![image-20220509210313599](/Users/youhao/Library/Application Support/typora-user-images/image-20220509210313599.png)
+
+## 91. Decode Ways
+
+### 1. DP
+
+```java
+class Solution {
+  public int numDecodings(String s) {
+    int n = s.length;
+    if (n == 0 && s.charAt(0) == '0') {
+      return 0;
+    }
+    int[] dp = new int[n];
+    int gap = 1;
+    for (int i = 1; i < n; i++) {
+      if (s.charAt(i) == '0') {
+        return 0;
+      }
+      int pre = s.charAt(i - 1);
+      int cur = pre * 10 + s.charAt(i);
+      if (cur <= 26) {
+        dp[i] = dp[i - 1] + gap;
+      } else {
+        dp[i] = dp[i - 1];
+        gap = dp[i - 1];
+      }
+    }
+    return dp[n - 1];
+  }
+}
+```
+
