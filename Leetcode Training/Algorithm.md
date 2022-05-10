@@ -7290,3 +7290,35 @@ class Solution {
 ```
 
 ![image-20220510170118998](/Users/youhao/Library/Application Support/typora-user-images/image-20220510170118998.png)
+
+## 118. Pascal's Triangle
+
+### 1. DP 
+
+```java
+class Solution {
+  public List<List<Integer>> generate(int numRows) {
+    List<List<Integer>> res = new ArrayList<>();
+    if (numRows == 0) {
+      return res;
+    }
+    List<Integer> pre = new ArrayList<>();
+    pre.add(1);
+    res.add(new ArrayList<>(pre));
+    for (int i = 1; i < numRows; i++) {
+      List<Integer> cur = new ArrayList<>();
+      cur.add(1);
+      for (int j = 1; j < i; j++) {
+        int curNode = pre.get(j - 1) + pre.get(j);
+        cur.add(curNode);
+      }
+      cur.add(1);
+      pre = cur;
+      res.add(new ArrayList<>(cur));
+    }
+    return res;
+  }
+}
+```
+
+cur: index = i    Therefore, the value of this index: pre[j - 1] + pre[j] 
