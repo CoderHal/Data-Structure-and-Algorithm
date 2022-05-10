@@ -7266,27 +7266,27 @@ class Solution {
 ```java
 class Solution {
   public int numDecodings(String s) {
-    int n = s.length;
-    if (n == 0 && s.charAt(0) == '0') {
+    int n = s.length();
+    if (n == 0 || s.charAt(0) == '0') {
       return 0;
     }
-    int[] dp = new int[n];
-    int gap = 1;
-    for (int i = 1; i < n; i++) {
-      if (s.charAt(i) == '0') {
-        return 0;
+    int[] dp = new int[n + 1];
+    dp[0] = 1;
+    dp[1] = 1;
+    for (int i = 2; i <= n; i++) {
+      if (s.charAt(i - 1) != '0') {
+        dp[i] += dp[i - 1];
       }
-      int pre = s.charAt(i - 1);
-      int cur = pre * 10 + s.charAt(i);
-      if (cur <= 26) {
-        dp[i] = dp[i - 1] + gap;
-      } else {
-        dp[i] = dp[i - 1];
-        gap = dp[i - 1];
+      int cur = Integer.valueOf(s.substring(i - 2, i));
+      if (cur >= 10 && cur <= 26) {
+        dp[i] += dp[i - 2];
       }
     }
-    return dp[n - 1];
+    return dp[n];
   }
+  // O(n)
+  // O(n)
 }
 ```
 
+![image-20220510170118998](/Users/youhao/Library/Application Support/typora-user-images/image-20220510170118998.png)
