@@ -6134,6 +6134,34 @@ class UndergroundSystem {
 
 
 
+## 49. Group Anagrams
+
+### 1. HashMap
+
+```java
+class Solution {
+  public List<List<String>> groupAnagrams(String[] strs) {
+    Map<String, List> map = new HashMap<>();
+    for (String s : strs) {
+      char[] newS = s.toCharArray();
+      Arrays.sort(newS);
+      String key = String.valueOf(newS);
+      if (map.containsKey(key)) {
+        map.get(key).add(s);
+      } else {
+        map.put(key, new ArrayList());
+        map.get(key).add(s);
+      } 
+    }
+    return new ArrayList(map.values()); // Map 转 List 
+    // Time O(Nklogk)
+    // Space O(NK)
+  }
+}
+```
+
+
+
 # Dynamic Programming
 
 ## 509. Fibonacci Number
