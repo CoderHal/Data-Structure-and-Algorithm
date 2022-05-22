@@ -6105,6 +6105,32 @@ class Solution {
 
 ### Java String 的空格分割方法 str.split("\\\s+")  "."的分割方法 str.split("\\\\.")
 
+## 1304. Find N Unique Integers Sum up to Zero
+
+```java
+class Solution {
+    public int[] sumZero(int n) {
+        int[] res = new int[n];
+        if (n == 1) {return res;}
+        if (n % 2 == 0) {
+            for (int i = 1; i <= n/2; i++) {
+                res[n/2 + i - 1] = i;
+                res[n/2 - i] = - i;
+            }
+        }
+        if (n % 2 != 0) {
+            for (int i = 0; i <= (n - 1) / 2; i++) {
+                res[n / 2 + i] = i;
+                res[n / 2 - i] = -i;
+            }
+        }
+        return res;
+    }
+}
+```
+
+
+
 # OODS
 
 ## 1396. Design Underground System (unsolved)
