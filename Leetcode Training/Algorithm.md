@@ -764,6 +764,38 @@ public class Solution {
 
 currentA and currentB are all loop for A + B times. If they have the intersection, they will meet at the process. If they have not the intersection, they all point to the null, currentA  == currentB. The result will return the null.
 
+### 2. Add Two Numbers
+
+### 1. LinkedList
+
+```java
+class Solution {
+  public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+    ListNode p = l1;
+    ListNode q = l2;
+    ListNode cur = new ListNode(0);
+    ListNode res = cur;
+    int add = 0;
+    while (p != null || q != null) {
+      int x = (p != null) ? p.val : 0;
+      int y = (q != null) ? q.val : 0;
+      int sum = x + y + add;
+      add = sum / 10;
+      cur.next = new ListNode(sum % 10);
+      p = (p != null) ? p.next : p;
+      q = (q != null) ? q.next : q;
+      cur = cur.next;
+    }
+    if (add > 0) {
+      cur.next = new ListNode(add);
+    }
+    return res.next;
+  }
+}
+```
+
+
+
 # Tree Traversal
 
 ## 145. Binary Tree Postorder Traversal
