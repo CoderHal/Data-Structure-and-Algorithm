@@ -1417,6 +1417,42 @@ class Solution{
 }
 ```
 
+## 24. Swap Nodes in Pairs
+
+```java
+class Solution {
+  public ListNode swapPairs(ListNode head) {
+    if (head == null || head.next == null) {
+      return head;
+    }
+    ListNode slow = head;
+    ListNode fast = head.next;
+    ListNode pre = new ListNode(0);
+    ListNode res = pre;
+    pre.next = head;
+    while (fast != null) {
+      pre.next = fast;
+      slow.next = fast.next;
+      fast.next = slow;
+      ListNode temp = fast;
+      fast = slow;
+      slow = temp;
+      pre = fast;
+      if (fast.next != null) {
+        fast = fast.next.next;
+      } 
+      else {
+        fast = fast.next;
+      }
+      slow = slow.next.next;
+    }
+    return res.next;
+  }
+}
+```
+
+
+
 # Tree Construct
 
 ## 108. Convert Sorted Array to Binary Search Tree
