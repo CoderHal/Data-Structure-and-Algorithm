@@ -4645,6 +4645,29 @@ class Solution {
 
 
 
+## 12. Integer to Roman
+
+### 1. Array
+
+```java
+class Solution {
+  public String intToRoman(int num) {
+    String[] ones =new String[]{"", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"};
+    String[] tens =new String[]{"", "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC"};
+    String[] hun =new String[]{"", "C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM"};
+    String[] tho =new String[]{"", "M", "MM", "MMM"};
+    
+    int t = num /1000;
+    int h = num % 1000 / 100;
+    int b = num % 100 / 10;
+    int a = num % 10;
+    return tho[t] + hun[h] + tens[b] + ones[a];
+  }
+}
+```
+
+
+
 # DFS & BFS
 
 ## 200. Number of Islands
