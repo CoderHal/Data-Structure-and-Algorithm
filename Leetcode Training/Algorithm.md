@@ -4666,6 +4666,43 @@ class Solution {
 }
 ```
 
+## 38. Count and Say
+
+### 1. String
+
+```java
+class Solution {
+  public String countAndSay(int n) {
+    String res = "1";
+    int say = 1;
+    for (int i = 2; i <= n; i++) {
+      int l = res.length();
+      int count = 1;
+      char pre = res.charAt(0);
+      StringBuilder newR = new StringBuilder();
+      for (int j = 1; j < l; j++) {
+        if (res.charAt(j) == pre) {
+          count++;
+        } else {
+          newR.append(count);
+          newR.append(pre);
+          pre =  res.charAt(j);
+          count = 1;
+        }
+      }
+      newR.append(count);
+      newR.append(pre);
+      res = newR.toString();
+    }
+    return res;
+  }
+}
+
+
+```
+
+
+
 
 
 # DFS & BFS
