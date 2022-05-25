@@ -4451,8 +4451,49 @@ class Solution {
     // Time O(n * n) nlogn + n * n;
     // Space O(n) sort is logn and Hashset is n, N > logN so the space --> O(n)
   }
+
+```
+
+## 16. 3 Sum Closet
+
+### 1. Two Pointer
+
+```java
+class Solution {
+  public int threeSumClosest(int[] nums, int target) {
+    if (nums.length < 3) {
+      return - 1;
+    }
+    Arrays.sort(nums);
+    int diff = Integer.MAX_VALUE;
+    int res = 0;
+    for (int i = 0; i < nums.length - 2; i++) {
+      int left = i + 1;
+      int right = nums.length - 1;
+      while (left < right) {
+        int sum = nums[i] + nums[left] + nums[right];
+        if (sum == target) {
+          return target;
+        }
+        else if (sum > target) {
+          right--;
+        }
+        else {
+          left++;
+        }
+        int interval = Math.abs(target - sum);
+        if (diff > interval) {
+          diff = interval;
+          res = sum;
+        }
+      }
+    }
+    return res;
+  }
 }
 ```
+
+
 
 ## 986. Interval List Intersections
 
