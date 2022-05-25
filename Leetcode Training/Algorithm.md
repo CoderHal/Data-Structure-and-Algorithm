@@ -4703,7 +4703,42 @@ class Solution {
 
 
 
+## 6. Zigzag Conversion
 
+### 1. String 
+
+```java
+class Solution {
+  public String convert(String s, int numRows) {
+    if (numRows == 1) {
+      return s;
+    }
+    StringBuilder sb = new StringBuilder();
+    int zig = 2 * numRows - 2;
+    int l = s.length();
+    int group = 0;
+    if (l % zig != 0) {
+      group = l / zig + 1;
+    } else {
+      group = l / zig;
+    }
+    for (int i = 0; i < numRows; i++) {
+      for (int j = 0; j < group; j++) {
+        if (j * zig + i >= l) {
+            continue;
+        }
+        sb.append(s.charAt(j * zig + i));
+        if (i != 0 && i != numRows - 1 && j * zig + zig - i < l) {
+           sb.append(s.charAt(j * zig + zig - i));
+        }
+      }
+    }
+    return sb.toString();
+  }
+}
+```
+
+![image-20220524205140955](/Users/youhao/Library/Application Support/typora-user-images/image-20220524205140955.png)
 
 # DFS & BFS
 
