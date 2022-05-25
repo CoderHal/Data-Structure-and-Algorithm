@@ -4495,6 +4495,34 @@ class Solution {
 
 
 
+## 27. Romove Element
+
+### 1. Two Pointer
+
+```java
+class Solution {
+  public int removeElement(int[] nums, int val) {
+    int n = nums.length;
+    if (n == 0) {
+      return 0;
+    }
+    int left = 0;
+    int right = n;
+    while (left < right) {
+     if (nums[left] == val) {
+       nums[left] = nums[right - 1];
+       right--;
+     } else {
+       left++;
+     }
+    }
+    return right;
+  }
+}
+```
+
+
+
 ## 986. Interval List Intersections
 
 ## 1. Merge two Arrays ( Two Pointers)
@@ -7652,6 +7680,36 @@ class Solution {
       res = cur;
     }
     return res;
+  }
+}
+```
+
+## 62. Unique Paths
+
+### 1. DP
+
+```java
+class Solution {
+  public int uniquePaths(int m, int n) {
+    int paths = 0;
+    int[][] matrix = new int[m][n];
+    matrix[0][0] = 1;
+    for (int i = 0; i < m; i++) {
+      for (int j = 0; j < n; j++) {
+        if (i + j != 0) {
+          if (i - 1 < 0) {
+            matrix[i][j] = matrix[i][j - 1];
+          }
+          else if (j - 1 < 0) {
+            matrix[i][j] = matrix[i - 1][j];
+          }
+          else {
+            matrix[i][j] = matrix[i - 1][j] + matrix[i][j - 1];
+          }
+        }
+      }
+    }
+    return matrix[m - 1][n - 1];
   }
 }
 ```
