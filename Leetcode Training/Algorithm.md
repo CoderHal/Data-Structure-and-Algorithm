@@ -3970,6 +3970,22 @@ class Solution{
 
 ![image-20220321144110903](/Users/youhao/Library/Application Support/typora-user-images/image-20220321144110903.png)
 
+## 89. Gray Code （死记硬背）
+
+### 1. Fomula
+
+```java
+class Solution {
+  public List<Integer> grayCode(int n) {
+    List<Integer> res = new ArrayList<>();
+    for(int i = 0; i < (1 << n); i++) {
+      res.add(i ^ (i >> 1));
+    }
+      return res;
+  } 
+}
+```
+
 
 
 # Two Pointers and Sliding Window
@@ -4334,6 +4350,56 @@ class Solution{
   }
 }
 ```
+
+## 26. Remove Duplicatss from Sorted Array
+
+### 1. Two Pointers
+
+```java
+class Solution {
+  public int removeDuplicates(int[] nums) {
+    int n = nums.length;
+    if (n <= 1) {
+      return n;
+    }
+    int count = 1;
+    for (int i = 1; i < n; i++) {
+      if (nums[i] != nums[count - 1]) {
+        nums[count++] = nums[i];
+      }
+    }
+    return count;
+  }
+}
+```
+
+
+
+## 80. Remove Duplicates from Sorted Array II
+
+### 1. Two Pointers
+
+```java
+class Solution {
+  public int removeDuplicates(int[] nums) {
+    int n = nums.length;
+    if (n <= 2) {
+      return n;
+    }
+    int p = 2;
+    for (int i = 2; i < n; i++) {
+      if(nums[p - 2] != nums[i]) {
+        nums[p++] = nums[i];
+      }
+    }
+    return p;
+  }
+}
+```
+
+### 总结
+
+无论是保证数字的重复次数是多少次，P的范围内永远是合理的。如果重复的数字超出了限制， p会停止在超出限制的第一位上，等待下一个合理的数字，然后进行置换。
 
 ## 82. Remove Duplicates from Sorted List II
 
