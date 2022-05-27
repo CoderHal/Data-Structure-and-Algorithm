@@ -4351,7 +4351,7 @@ class Solution{
 }
 ```
 
-## 26. Remove Duplicatss from Sorted Array
+## 26. Remove Duplicates from Sorted Array
 
 ### 1. Two Pointers
 
