@@ -6243,6 +6243,87 @@ class Solution {
 
 
 
+## 73. Set Metrix Zeroes
+
+### 1. HashTable
+
+```java
+class Solution {
+  public void setZeroes(int[][] matrix) {
+    int n = matrix.length;
+    int m = matrix[0].length;
+    Set<Integer> row = new HashSet<>();
+    Set<Integer> col = new HashSet<>();
+    for (int i = 0; i < n; i++) {
+      for (int j = 0; j < m; j++) {
+        if (matrix[i][j] == 0) {
+          row.add(i);
+          col.add(j);
+        }
+      }
+    }
+    for (int i = 0; i < n; i++) {
+      for (int j = 0; j < m; j++) {
+        if (row.contains(i) || col.contains(j)) {
+          matrix[i][j] = 0;
+        }
+      }
+    }
+    return;
+  }
+}
+```
+
+### 2. Constant Space 
+
+```java
+class Solution {
+  public void setZeroes(int[][] matrix) {
+    int n = matrix.length;
+    int m = matrix[0].length;
+    boolean col = false;
+    boolean row = false;
+    for (int i = 0; i < n; i++) {
+      if (matrix[i][0] == 0) {
+        col = true;
+      }
+    }
+    for (int j = 0; j < m; j++) {
+      if (matrix[0][j] == 0) {
+        row = true;
+      }
+    }
+    for (int i = 1; i < n; i++ ){
+      for (int j = 1; j < m; j++) {
+        if (matrix[i][j] == 0) {
+          matrix[i][0] = 0;
+          matrix[0][j] = 0;
+        }
+      }
+    }
+    for (int i = 1; i < n; i++ ){
+      for (int j = 1; j < m; j++) {
+        if (matrix[i][0] == 0 || matrix[0][j] == 0) {
+          matrix[i][j] = 0;
+        }
+      }
+    }
+    if (col == true) {
+      for (int i = 0; i < n; i++) {
+        matrix[i][0] = 0;
+      }
+    }
+    if (row == true) {
+      for (int j = 0; j < m; j++) {
+        matrix[0][j] = 0;
+      }
+    }
+  }
+}
+```
+
+![image-20220530184206011](/Users/youhao/Library/Application Support/typora-user-images/image-20220530184206011.png)
+
 # Arrays
 
 ## 56. Merge Intervals
@@ -7809,3 +7890,32 @@ class Solution {
 }
 ```
 
+
+
+# Graph
+
+## 733. Flood Fill
+
+```java
+class Solution {
+  public int[][] floodFill(int[][] image, int sr, int sc, int newColor) {
+    if (image[sr][sc] != newColor) {
+      DFS(image, sr, sc, newColor, image[sr][sc]);
+    }
+    return image;
+  }
+  public void DFS(int[][] image, int row, int col, int newColor, int target) {
+    if (row >= image.length || col >= image[0].length || row < 0 || col < 0 || image[row][col] != target) {
+      return;
+    }
+    image[row][col] = newColor;
+    DFS(image, row + 1, col, newColor, target);
+    DFS(image, row, col + 1, newColor, target);
+    DFS(image, row - 1, col, newColor, target);
+    DFS(image, row, col - 1, newColor, target);
+    return;
+  }
+}
+```
+
+Watch out the situation : image[sr] [sc] == newColor, in this case, you don't need to do anything, just return the original array. You must add this condition, cause it may lead to stackoverflow
