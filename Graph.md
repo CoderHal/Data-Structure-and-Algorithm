@@ -157,3 +157,66 @@ class Solution {
 }
 ```
 
+
+## 1254. Number of Closed Islands
+
+### 1. DFS
+
+```java
+class Solution {
+  public int closedIsland(int[][] grid) {
+    int n = grid.length;
+    int m = grid[0].length;
+    if (n == 0 || m == 0) {
+      return 0;
+    }
+    int num = 0;
+    for (int i = 0; i < n; i++) {
+      for (int j = 0; j < m; j++) {
+        if (grid[i][j] == 0) {
+          if (DFS(grid, i, j)) {
+            res++;
+          }
+        }
+      }
+    }
+    return res;
+  }
+  public void DFS(int[][] grid, int row, int col) {
+    int n = grid.length;
+    int m = grid[0].length;
+    if (row < 0 || row >= n || col < 0 || col >= m) {
+      return false;
+    } 
+    if (grid[row][col] == 1) {
+      return true;
+    }
+    grid[row][col] == 1;
+    boolean close = true;
+    return close && DFS(grid, row - 1, col) && DFS(grid, row + 1, col) && DFS(grid, row, col - 1) && DFS(grid, row, col + 1);
+  }
+}
+```
+
+"&" will evaluate both side even the left part is false
+"&&" will ignore the right part if the left part is false
+
+res = res && dfs(grid, x + d[0], y + d[1]);
+if res is false, the right dfs will not be evaluated.
+**for this question, we need to enter dfs(grid, x + d[0], y + d[1]) no matter what.** （important！！！）
+
+for example:
+111
+101
+100
+111
+think about if we are in the position of 0 at (2,1) - if dfs goes to right 0 (2, 2) first, res will be false
+in the meantime, we still want to dfs go to (1, 1)'s 0 to set it as 1 even res is false
+
+```java
+        for(int[] d : dir){
+            if(!dfs(grid, x + d[0], y + d[1])){
+                res = false;
+            }
+        }
+```
