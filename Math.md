@@ -1,0 +1,202 @@
+# Math
+
+## 9. Palindrome Number
+
+```java
+public class Solution {
+    public bool IsPalindrome(int x) {
+        // Special cases:
+        // As discussed above, when x < 0, x is not a palindrome.
+        // Also if the last digit of the number is 0, in order to be a palindrome,
+        // the first digit of the number also needs to be 0.
+        // Only 0 satisfy this property.
+        if(x < 0 || (x % 10 == 0 && x != 0)) {
+            return false;
+        }
+
+        int revertedNumber = 0;
+        while(x > revertedNumber) {
+            revertedNumber = revertedNumber * 10 + x % 10;
+            x /= 10;
+        }
+
+        // When the length is an odd number, we can get rid of the middle digit by revertedNumber/10
+        // For example when the input is 12321, at the end of the while loop we get x = 12, revertedNumber = 123,
+        // since the middle digit doesn't matter in palidrome(it will always equal to itself), we can simply get rid of it.
+        return x == revertedNumber || x == revertedNumber/10;
+    }
+}
+```
+
+## 125. Valid Palindrome
+
+### 1. Two Pointer
+
+```java
+class Solution{
+  public boolean isPalindrome(String s){
+    s = s.toLowerCase();
+    int left = 0, right = s.length() - 1; // set two pointer
+    // Iterate until left meet right
+    while (left < right){
+      //Make the left pointer point the lowercase letter or numbers
+      while ((left < right) && (!Character.isLetterOrDigit(s.charAt(left)))){
+        left++;
+      }
+      //Make the right pointer point the lowercase letter or numbers
+      while ((left < right) && (!Character.isLetterOrDigit(s.charAt(right)))){
+        right--;
+      }
+      //Judge the left pointer whether if is equal to right
+      if (s.charAt(left) != s.charAt(right)){
+        return false;
+      }
+      left++;
+      right--;
+    }
+    return true;
+    // Time O(n)
+    // SPace O(1)
+  }
+}
+```
+
+
+
+## 13. Roman to Integer
+
+### HashTable
+
+```java
+class Solution {
+  public int romanToInt(String s) {
+    Map<String, Integer> map = new HashMap<>();
+    map.put("I", 1);
+    map.put("V", 5);
+    map.put("X", 10);
+    map.put("L", 50);
+    map.put("C", 100);
+    map.put("D", 500);
+    map.put("M", 1000);
+    map.put("IV", 4);
+    map.put("IX", 9);
+    map.put("XL", 40);
+    map.put("XC", 90);
+    map.put("CD", 400);
+    map.put("CM", 900);
+    if (s.length() == 0) {
+      return 0;
+    }
+    int n = s.length();
+    int sum = 0;
+    int next = 0;
+    for (int i = 0; i < n; i++) {
+      if (i + 1 < n && map.containsKey(s.substring(i, i + 2))) {
+        sum += map.get(s.substring(i, i + 2));
+        i++;
+      } else {
+        sum += map.get(s.substring(i, i + 1));
+      }
+    }
+    return sum;
+  }
+}
+```
+
+
+
+## 12. Integer to Roman
+
+### 1. Array
+
+```java
+class Solution {
+  public String intToRoman(int num) {
+    String[] ones =new String[]{"", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"};
+    String[] tens =new String[]{"", "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC"};
+    String[] hun =new String[]{"", "C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM"};
+    String[] tho =new String[]{"", "M", "MM", "MMM"};
+    
+    int t = num /1000;
+    int h = num % 1000 / 100;
+    int b = num % 100 / 10;
+    int a = num % 10;
+    return tho[t] + hun[h] + tens[b] + ones[a];
+  }
+}
+```
+
+## 38. Count and Say
+
+### 1. String
+
+```java
+class Solution {
+  public String countAndSay(int n) {
+    String res = "1";
+    int say = 1;
+    for (int i = 2; i <= n; i++) {
+      int l = res.length();
+      int count = 1;
+      char pre = res.charAt(0);
+      StringBuilder newR = new StringBuilder();
+      for (int j = 1; j < l; j++) {
+        if (res.charAt(j) == pre) {
+          count++;
+        } else {
+          newR.append(count);
+          newR.append(pre);
+          pre =  res.charAt(j);
+          count = 1;
+        }
+      }
+      newR.append(count);
+      newR.append(pre);
+      res = newR.toString();
+    }
+    return res;
+  }
+}
+
+
+```
+
+
+
+## 6. Zigzag Conversion
+
+### 1. String 
+
+```java
+class Solution {
+  public String convert(String s, int numRows) {
+    if (numRows == 1) {
+      return s;
+    }
+    StringBuilder sb = new StringBuilder();
+    int zig = 2 * numRows - 2;
+    int l = s.length();
+    int group = 0;
+    if (l % zig != 0) {
+      group = l / zig + 1;
+    } else {
+      group = l / zig;
+    }
+    for (int i = 0; i < numRows; i++) {
+      for (int j = 0; j < group; j++) {
+        if (j * zig + i >= l) {
+            continue;
+        }
+        sb.append(s.charAt(j * zig + i));
+        if (i != 0 && i != numRows - 1 && j * zig + zig - i < l) {
+           sb.append(s.charAt(j * zig + zig - i));
+        }
+      }
+    }
+    return sb.toString();
+  }
+}
+```
+
+![image-20220524205140955](/Users/youhao/Library/Application Support/typora-user-images/image-20220524205140955.png)
+
