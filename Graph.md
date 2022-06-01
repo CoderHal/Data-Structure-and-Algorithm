@@ -115,3 +115,45 @@ class Solution {
 }
 ```
 
+
+
+## 695. Max Area of Island
+
+### 1. DFS
+
+```java
+class Solution {
+  public int c;
+  public int maxAreaOfIsland(int[][] grid) {
+    int n = grid.length;
+    int m = grid[0].length;
+    int res = 0;
+    if (n == 0 || m == 0) {
+      return 0;
+    }
+    for (int i = 0; i < n; i++) {
+      for (int j = 0; j < m; j++) {
+        c = 0;
+        DFS(grid, i, j);
+        res = Math.max(res, c);
+      }
+    }
+    return res;
+  }
+  public void DFS(int[][] grid, int row, int col) {
+    int n = grid.length;
+    int m = grid[0].length;
+    if (row < 0 || col < 0 || row >= n|| col >= m || grid[row][col] != 1) {
+      return;
+    }
+    grid[row][col] = 0;
+    c++;
+    DFS(grid, row - 1, col);
+    DFS(grid, row + 1, col);
+    DFS(grid, row, col - 1);
+    DFS(grid, row, col + 1);
+
+  }
+}
+```
+
