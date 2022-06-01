@@ -710,3 +710,79 @@ class Solution {
 
 ```
 
+
+
+## 75. Sort Color
+
+### 1. Two-Pass
+
+```java
+class Solution {
+    public void sortColors(int[] nums) {
+        int zero = 0;
+        int two = 0;
+        int one = 0;
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] == 0) {
+                zero++;
+            }
+            else if (nums[i] == 1) {
+                one++;
+            }
+            else {
+                two++;
+            }
+        }
+        for (int i = 0; i < nums.length; i++) {
+            if (zero != 0) {
+                zero--;
+                nums[i] = 0;
+            } 
+            else if (one != 0) {
+                one--;
+                nums[i] = 1;
+            }
+            else {
+                two--;
+                nums[i] = 2;
+            }
+        }
+        return;
+    }
+}
+
+```
+
+### 2. Two Pointers
+
+```java
+class Solution {
+  public void sortColors(int[] nums) {
+    int p0 = 0;
+    int p1 = nums.length - 1;
+    int i = 0;
+    while (p1 >= i) {
+      if (nums[i] == 0) {
+        swap(nums, i, p0);
+        i++;
+        p0++;
+      }
+      else if (nums[i] == 1) {
+        i++;
+      }
+      else {
+        swap(nums,i, p1);
+        p1--;
+      }
+    }
+    return;
+  }
+  public void swap(int[] nums, int i, int j) {
+    int temp = nums[i];
+    nums[i] = nums[j];
+    nums[j] = temp;
+  }
+}
+```
+
+![69421654046617_.pic](/Users/youhao/Library/Containers/com.tencent.xinWeChat/Data/Library/Application Support/com.tencent.xinWeChat/2.0b4.0.9/5c30e188b46dd764edba02dc2a7d8db0/Message/MessageTemp/debebe7def205d28f6eae426b86e9ea2/Image/69421654046617_.pic.jpg)
