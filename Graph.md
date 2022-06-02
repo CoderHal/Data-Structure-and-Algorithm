@@ -266,3 +266,77 @@ class Solution {
 
 ```
 
+
+
+## 1905. Count Sub Islands
+
+### 1. DFS
+
+```java
+class Solution {
+  public int countSubIslands(int[][] grid1, int[][] grid2) {
+    int n = grid1.length;
+    int m = grid1[0].length;
+    int count = 0;
+    for(int i = 0; i < n; i++) {
+      for(int j = 0; j < m; j++) {
+        if (grid2[i][j] == 1) {
+          count += DFS(grid1, grid2, i, j);
+        }
+      }
+    }
+    return count;
+  }
+  public int DFS(int[][] grid1, int[][] grid2, int row, int col) {
+    int n = grid1.length;
+    int m = grid1[0].length;
+    int res = 1;
+    if (row < 0 || row >= n || col < 0 || col >= m || grid2[row][col] == 0){
+      return 1;
+    }
+    grid2[row][col] = 0;
+    
+    res &= DFS(grid1, grid2, row - 1, col);
+    res &= DFS(grid1, grid2, row + 1, col);
+    res &= DFS(grid1, grid2, row, col - 1);
+    res &= DFS(grid1, grid2, row, col + 1);
+    return res & grid1[row][col];
+  }
+}
+```
+
+### 2. Using Boolean 
+
+```java
+class Solution {
+  public int countSubIslands(int[][] grid1, int[][] grid2) {
+    int n = grid1.length;
+    int m = grid1[0].length;
+    int count = 0;
+    for(int i = 0; i < n; i++) {
+      for(int j = 0; j < m; j++) {
+        if (grid2[i][j] == 1) {
+          if(DFS(grid1, grid2, i, j)) {
+              count++;
+          }
+        }
+      }
+    }
+    return count;
+  }
+  public boolean DFS(int[][] grid1, int[][] grid2, int row, int col) {
+    int n = grid1.length;
+    int m = grid1[0].length;
+    boolean res = true;
+    if (row < 0 || row >= n || col < 0 || col >= m || grid2[row][col] == 0){
+      return true;
+    }
+    grid2[row][col] = 0;
+    if (grid1[row][col] == 0){
+        res = false;
+    }
+    return res & DFS(grid1, grid2, row - 1, col) & DFS(grid1, grid2, row + 1, col) & DFS(grid1, grid2, row, col - 1) & res & DFS(grid1, grid2, row, col + 1);
+  }
+}
+```
+
