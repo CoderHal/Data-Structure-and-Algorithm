@@ -220,3 +220,49 @@ in the meantime, we still want to dfs go to (1, 1)'s 0 to set it as 1 even res i
             }
         }
 ```
+
+
+
+## 1020. Number of Enclaves
+
+### 1. DFS
+
+```java
+class Solution {
+  int count = 0;
+  public int numEnclaves(int[][] grid) {
+    int n = grid.length;
+    int m = grid[0].length;
+    if (n == 0 || m == 0) {
+      return 0;
+    }
+    for (int i = 0; i < n; i++) {
+      for (int j = 0; j < m; j++) {
+        int pre = count;
+        if (grid[i][j] == 1) {
+          if (DFS(grid, i, j)) {
+            count = pre;
+          }
+        }  
+      }
+    }
+    return count;
+  }
+  public boolean DFS(int[][] grid, int row, int col) {
+    int n = grid.length;
+    int m = grid[0].length;
+    if (row < 0 || row >= n || col < 0 || col >= m || grid[row][col] == 0) {
+      return false;
+    }
+    boolean res = false;
+    grid[row][col] = 0;
+    count++;
+    if (row == 0 || row == n - 1 || col == 0 || col == m - 1) {
+      res = true;
+    }
+    return res | DFS(grid, row - 1, col) | DFS(grid, row + 1, col) | DFS(grid, row, col - 1) | DFS(grid, row, col + 1);
+  }
+}
+
+```
+
