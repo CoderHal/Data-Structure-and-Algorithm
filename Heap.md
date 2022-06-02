@@ -123,4 +123,85 @@ class KthLargest{
 }
 ```
 
-# 
+
+
+## 1405. Longest Happy String
+
+### 1. Heap
+
+```java
+class Solution {
+  public String longestDiverseString(int a, int b, int c) {
+    StringBuilder sb = new StringBuilder();
+    PriorityQueue<Pair> heap = new PriorityQueue<Pair>(
+				(count1, count2) -> Integer.compare(count2.count, count1.count));
+    //Store the data into heap: nlogn
+    if (a > 0) {
+      heap.add(new Pair('a', a));
+    }
+		if (b > 0) {
+      heap.add(new Pair('b', b));      
+    }
+    if (c > 0) {
+      heap.add(new Pair('c', c));
+    }
+    if (heap.size() == 1) {
+        if (heap.peek().count >= 2) {
+            sb.append(heap.peek().ch);
+            sb.append(heap.peek().ch);
+        } else {
+            sb.append(heap.peek().ch);
+        }
+        return sb.toString();
+    }
+    while(heap.size() > 1){
+      Pair p1 = heap.poll();
+      if(p1.count >= 2) {
+        sb.append(p1.ch);
+        sb.append(p1.ch);
+        p1.count -= 2;
+      } else {
+        sb.append(p1.ch);
+        p1.count -= 1;
+      }
+      Pair p2 = heap.poll();
+      
+      if (p2.count >= 2 && p2.count > p1.count) {
+        sb.append(p2.ch);
+        sb.append(p2.ch);
+        p2.count -= 2;
+      } else {
+        sb.append(p2.ch);
+        p2.count -= 1;
+      }
+      
+      if (p1.count > 0) {
+        heap.add(new Pair(p1.ch, p1.count));
+      }
+      if (p2.count > 0) {
+        heap.add(new Pair(p2.ch, p2.count));
+      }
+    }
+    while (!heap.isEmpty()){
+      Pair p3 = heap.poll();
+      if(sb.charAt(sb.length() - 1) != p3.ch && p3.count >= 2) {
+        sb.append(p3.ch);
+        sb.append(p3.ch);
+      } else {
+          sb.append(p3.ch);
+      }
+    }
+    return sb.toString();
+  }
+   static class Pair {
+		public Character ch;
+		int count;
+     public Pair(Character ch, int count) {
+			this.ch = ch;
+			this.count = count;
+		}
+	}
+}
+```
+
+![69901654202105_.pic](/Users/youhao/Library/Containers/com.tencent.xinWeChat/Data/Library/Application Support/com.tencent.xinWeChat/2.0b4.0.9/5c30e188b46dd764edba02dc2a7d8db0/Message/MessageTemp/debebe7def205d28f6eae426b86e9ea2/Image/69901654202105_.pic.jpg)
