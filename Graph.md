@@ -340,3 +340,98 @@ class Solution {
 }
 ```
 
+
+
+## 1162. As Far from Land as Possible
+
+### 1. DFS (low speed)
+
+```java
+class Solution{
+  public int maxDistance(int[][] grid) {
+    int res = 0;
+    int n = grid.length;
+    int m = grid[0].length;
+    for (int i = 0; i < n; i++) {
+      for (int j = 0; j < m; j++) {
+        if (grid[i][j] == 1) {
+          grid[i][j] = 0;
+          DFS(grid, i, j, 1);
+        }
+      }
+    }
+    for (int i = 0; i < n; i++) {
+      for (int j = 0; j < m; j++) {
+        res = Math.max(res, grid[i][j] - 1);
+      }
+    }
+    return res;
+  }
+  public void DFS(int[][] grid, int row, int col, int dis) {
+    int n = grid.length;
+    int m = grid[0].length;
+    if (row < 0 || row = n || col < 0 || col = m || (grid[row][col] != 0 && grid[row][col] <= dis)) {
+      return;
+    }
+    grid[row][col] = dis;
+    DFS(grid, row - 1, col, dis + 1);
+    DFS(grid, row + 1, col, dis + 1);
+    DFS(grid, row, col - 1, dis + 1);
+    DFS(grid, row, col + 1, dis + 1);
+    return;
+  }
+}
+```
+
+### 2. BFS
+
+```java
+class Solution {
+  public int maxDistance(int[][] grid) {
+    int[][] dir = new int[][]{{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+    Queue<int[]> queue = new LinkedList<>();
+    int n = grid.length;
+    int m = grid[0].length;
+    boolean[][] visit = new boolean[n][m];
+    for(int i = 0; i < n; i++) {
+      for(int j = 0; j < m; j++) {
+        if(grid[i][j] == 1) {
+          queue.add(new int[]{i, j});
+          visit[i][j] = true;
+        }
+      }
+    }
+    if (queue.size() == m * n) {
+      return -1;
+    }
+    int dis = 1;
+    while (!queue.isEmpty()) {
+      int s = queue.size();
+      for (int i = 0; i < s; i++){ 
+        int[] cur = queue.poll();
+        int rol = cur[0];
+        int col = cur[1];
+        for (int j = 0; j < dir.length; j++){
+          int newR = rol + dir[j][0];
+          int newC = col + dir[j][1];
+          if (newR >= 0 && newC >= 0 && newR < n && newC <m && !visit[newR][newC]) {
+            queue.add(new int[]{newR, newC});
+            visit[newR][newC] = true;
+          }
+        }
+      }
+      dis++;
+    }
+    return (dis == 1) ? -1 : dis - 2;
+  }
+}
+```
+
+
+
+Here, we find our land cells and put surrounding water cells in the queue. We mark water cells as visited and continue the expansion from land cells until there are no more water cells left. In the end, the number of steps in DFS is how far can we go from the land.
+
+
+
+Using the same example as above, the picture below shows the state of the grid after each step of BFS
+![image](https://assets.leetcode.com/users/votrubac/image_1566199213.png)
