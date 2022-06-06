@@ -435,3 +435,73 @@ Here, we find our land cells and put surrounding water cells in the queue. We ma
 
 Using the same example as above, the picture below shows the state of the grid after each step of BFS
 ![image](https://assets.leetcode.com/users/votrubac/image_1566199213.png)
+
+
+
+## 417. Pacific Atlantic Water Flow
+
+### 1. BFS
+
+```java
+class Solution {
+  private int[][] dir = new int[][]{{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+  public List<List<Integer>> pacificAtlantic(int[][] heights) {
+    int n = heights.length;
+    int m = heights[0].length;
+    List<List<Integer>> res = new ArrayList<>();
+    if (n == 0 || m == 0) {
+      return res;
+    }
+    Queue<int[]> q1 = new LinkedList<>();
+    Queue<int[]> q2 = new LinkedList<>();
+    for (int i = 0; i < n; i++){
+      q1.add(new int[]{i, 0});
+      q2.add(new int[]{i, m - 1});
+    }
+    for (int j = 0; j < m; j++) {
+      q1.add(new int[]{0, j});
+      q2.add(new int[]{n - 1, j});
+    }
+    boolean[][] r1 = BFS(heights, q1);
+    boolean[][] r2 = BFS(heights, q2);
+    for (int i = 0; i < n; i++){
+      for (int j = 0; j < m; j++){
+        if (r1[i][j] && r2[i][j]) {
+          res.add(List.of(i,j));
+        }
+      }
+    }
+    return res;
+  }
+  public boolean[][] BFS(int[][] heights, Queue<int[]> queue) {
+    int n = heights.length;
+    int m = heights[0].length;
+    boolean[][] reach = new boolean[n][m];
+    while (!queue.isEmpty()) {
+      int[] cur = queue.poll();
+      int row = cur[0];
+      int col = cur[1];
+      reach[row][col] = true;
+      for (int i = 0; i < 4; i++) {
+        int newR = row + dir[i][0];
+        int newC = col + dir[i][1];
+        if (newR < 0 || newR == n || newC < 0|| newC == m){
+          continue;
+        }
+        if (reach[newR][newC]){
+          continue;
+        }
+        if (heights[newR][newC] < heights[row][col]) {
+          continue;
+        }
+        queue.add(new int[]{newR, newC});
+      }
+    }
+    return reach;
+  }
+}
+```
+
+This problem want to solve which land water can both flow to the Pacific Ocean and Atlantic Ocean.
+
+Method : Using two boolean matrix to traversal, find their common “true”
