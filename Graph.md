@@ -505,3 +505,42 @@ class Solution {
 This problem want to solve which land water can both flow to the Pacific Ocean and Atlantic Ocean.
 
 Method : Using two boolean matrix to traversal, find their common “true”
+
+
+
+## 841. Keys and Rooms
+
+### 1. BFS
+
+```java
+class Solution{
+  public boolean canVisitAllRooms(List<List<Integer>> rooms){
+    if(rooms.isEmpty()) {
+      return false;
+    }
+    boolean[] visited = new boolean[rooms.size()];
+    Queue<Integer> queue = new LinkedList<>();
+    List<Integer> zero = rooms.get(0);
+    for (int i = 0; i < zero.size(); i++) {
+      queue.add(zero.get(i));
+    }
+    visited[0] = true;
+    while (!queue.isEmpty()) {
+      int key = queue.poll();
+      visited[key] = true;
+      List<Integer> cur = rooms.get(key);
+      for (int i = 0; i < cur.size(); i++) {
+        int index = cur.get(i);
+        if (!visited[index])
+          queue.add(cur.get(i));
+      }
+    }
+    boolean res = true;
+    for (int i = 0; i < visited.length; i++) {
+      res &= visited[i];
+    }
+    return res;
+  }
+}
+```
+
