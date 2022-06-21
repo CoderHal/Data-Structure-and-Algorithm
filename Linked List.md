@@ -687,3 +687,34 @@ class Solution {
 }
 ```
 
+
+
+## 19. Remove Nth Node From End of List
+
+### 1. LinkedList
+
+```java
+class Solution {
+  public ListNode removeNthFromEnd(ListNode head, int n) {
+    int length = 0;
+    ListNode temp = head;
+    ListNode res = head;
+    while(temp != null) {
+      length++;
+      temp = temp.next;
+    }
+    if (n == length) {
+      res = res.next;
+      return res;
+    }
+    int count = 1;
+    while (count < length - n) {
+      res = res.next;
+      count++;
+    }
+    res.next = res.next.next;
+    return head;
+  }
+}
+```
+
