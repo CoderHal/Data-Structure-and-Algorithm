@@ -263,3 +263,28 @@ class Solution {
 
 ```
 
+
+
+## 66. Plus One
+
+### 1. Math
+
+```java
+class Solution {
+  public int[] plusOne(int[] digits) {
+    if (digits.length == 0) {return digits;}
+    for (int i = digits.length - 1; i >= 0; i--) {
+      if (digits[i] < 9) {
+        digits[i]++;
+        return digits;
+      }
+      digits[i] = 0;
+    }
+    digits = new int[digits.length + 1];
+    digits[0] = 1;
+    return digits;
+  }
+}
+```
+
+if the array are all 9's, the array have to increase 1 space, and the first index is 1, others are 0.
