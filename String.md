@@ -29,3 +29,31 @@ class Solution {
 ```
 
 ![image-20220621160627333](/Users/youhao/Library/Application Support/typora-user-images/image-20220621160627333.png)
+
+## 14. Longest Common Prefix
+
+```java
+class Solution {
+  public String longestCommonPrefix(String[] strs) {
+    if (strs.length() <= 1) {
+      return strs;
+    }
+    String preStr = strs[0];//Store the first String
+    //From the first to the end, compare the pre and cur, update the pre
+    for (int i = 1; i < strs.length(); i++) {
+      int index = 0;
+      String cur = strs[i];
+      // Compare with the preString
+      while (index < preStr.length() && index < cur.length() && preStr.charAt(index) == cur.charAt(index)){
+        index++;
+      }
+      if(index == 0) {
+        preStr = "";
+        return preStr;
+      }
+      preStr = cur.substring(0, index);
+    }
+    return preStr;
+  }
+}
+```
