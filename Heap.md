@@ -205,3 +205,37 @@ class Solution {
 ```
 
 ![69901654202105_.pic](/Users/youhao/Library/Containers/com.tencent.xinWeChat/Data/Library/Application Support/com.tencent.xinWeChat/2.0b4.0.9/5c30e188b46dd764edba02dc2a7d8db0/Message/MessageTemp/debebe7def205d28f6eae426b86e9ea2/Image/69901654202105_.pic.jpg)
+
+
+
+## 253. Meeting Rooms II
+
+### 1. Heap
+
+```java
+class Solution {
+  public int minMeetingRooms(int[][] intervals) {
+    if (intervals.length == 0) {
+      return 0;
+    }
+    Arrays.sort(intervals, (a, b) -> a[0] - b[0]);
+    PriorityQueue<int[]> heap = new PriorityQueue<>(intervals.length, (a, b) -> a[1] - b[1]);
+    heap.add(intervals[0]);
+    int res = 1;
+    for (int i = 1; i < intervals.length; i++) {
+      int[] cur = intervals[i];
+      int[] preMeetTime = heap.poll();
+      if (cur[0] >= preMeetTime[1]) {
+        preMeetTime[1] = cur[1];
+      } else {
+        res++;
+        heap.add(cur);
+      }
+      heap.add(preMeetTime);
+    }
+    return res;
+  }
+}
+```
+
+![image-20220621153700883](/Users/youhao/Library/Application Support/typora-user-images/image-20220621153700883.png)
