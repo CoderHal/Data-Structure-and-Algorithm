@@ -57,3 +57,39 @@ class Solution {
   }
 }
 ```
+
+
+
+## 28. Implement strStr()
+
+### 1. String
+
+```java
+class Solution {
+  public int strStr(String haystack, String needle) {
+    if (needle.length() == 0) {
+      return 0;
+    }
+    int n = haystack.length();
+    int m = needle.length();
+    for (int i = 0; i < n - m + 1; i++) {
+      boolean correct = false;
+      if (haystack.charAt(i) == needle.charAt(0)) {
+        for (int j = 0; j < m; j++) {
+          if (haystack.charAt(i + j) != needle.charAt(j)) {
+            correct = false;
+            break;
+          } else {
+            correct = true;
+          }
+        }
+      }
+      if (correct) {
+        return i;
+      }
+    }
+    return -1;
+  }
+}
+```
+
