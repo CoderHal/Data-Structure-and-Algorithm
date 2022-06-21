@@ -224,3 +224,42 @@ class Solution {
 }
 ```
 
+
+
+## 7. Reverse Integer
+
+## 1. Math
+
+```java
+class Solution {
+  public int reverse(int x) {
+    if (x == 0) {
+      return x;
+    }
+    int res = 0;
+    while(x != 0){ 
+      int pop = x % 10;
+      x /= 10;
+      if (res > 0) {// Consider the res exceed the boundary of int 
+        // res should < (max value of int) / 10 
+        // or in the case of res = (max value of int) / 10, pop should < (max value of int) % 10
+        // in order to make res * 10 + pop < max value
+        if (res > Integer.MAX_VALUE / 10 || (res == Integer.MAX_VALUE / 10 && pop > Integer.MAX_VALUE % 10)){
+          return 0;
+        }
+      } else {// Consider the res exceed the boundary of int 
+        // res should > (min value of int) / 10 
+        // or in the case of res = (min value of int) / 10, pop should > (min value of int) % 10
+        // in order to make res * 10 + pop > min value
+        if (res < Integer.MIN_VALUE / 10 || (res == Integer.MIN_VALUE / 10 && pop < Integer.MIN_VALUE % 10)) {
+          return 0;
+        }
+      }
+      res = res * 10 + pop;
+    }
+    return res;
+  }
+}
+
+```
+
