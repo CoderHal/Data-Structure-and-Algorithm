@@ -93,3 +93,59 @@ class Solution {
 }
 ```
 
+## 412. Fizz Buzz
+
+### 1. Use %
+
+```java
+class Solution {
+  public List<String> fizzBuzz(int n) {
+    List<String> res = new ArrayList<>();
+    for (int i = 1; i <= n; i++) {
+      if (i % 3 == 0 && i % 5 == 0){
+        res.add("FizzBuzz");
+      } else if (i % 3 == 0){
+        res.add("Fizz");
+      } else if (i % 5 == 0){
+        res.add("Buzz");
+      } else {
+        res.add(i);
+      }
+    }
+    return res;
+  }
+}
+```
+
+### 2. Don't use %
+
+一般来说，对于CPU取余数的运算相对来说效率很低，上面解法避免了使用大量的求余数操作，提升了程序的性能。
+
+```java
+class Solution {
+  public List<String> fizzBuzz(int n) {
+    List<String> res = new ArrayList<>();
+    for (int i = 1, fizz = 0, buzz = 0; i <= n; i++) {
+      fizz++;
+      buzz++;
+      if (fizz == 3 && buzz == 5) {
+        res.add("FizzBuzz");
+        fizz = 0;
+        buzz = 0;
+      } 
+      else if (fizz == 3) {
+        res.add("Fizz");
+        fizz = 0;
+      }
+      else if (buzz == 5) {
+        res.add("Buzz");
+        buzz = 0;
+      } else {
+        res.add(Integer.toString(i));
+      }
+    }
+    return res;
+  }
+}
+```
+
