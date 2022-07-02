@@ -740,4 +740,50 @@ class Solution{
 
 ![image-20220306202010127](/Users/youhao/Library/Application Support/typora-user-images/image-20220306202010127.png)
 
-# 
+## 227. Basic Calculator II
+
+### 1. Stack
+
+```java
+class Solution {
+  public int calculate(String s) {
+    int n = s.length();
+    int curTotal = 0;
+    int res = 0;
+    char operation = '+';
+    Stack<Integer> stack = new Stack<>();
+    for (int i = 0; i < n; i++) {
+      char cur = s.charAt(i);
+      if(Character.isDigit(cur)){
+        curTotal = curTotal * 10 + (cur - '0');
+      } 
+      if((!Character.isDigit(cur) && cur != ' ' )|| i == n - 1) {
+        if (operation == '+') {
+          stack.push(curTotal);
+          curTotal = 0;
+        }
+        else if (operation == '-') {
+          stack.push(-curTotal);
+          curTotal = 0;
+        }
+        else if (operation == '*') {
+          int pre = stack.pop();
+          stack.push(pre * curTotal);
+          curTotal = 0;
+        } else {
+          int pre = stack.pop();
+          stack.push(pre / curTotal);
+          curTotal = 0;
+        }
+        operation = cur;
+      }
+    }
+    while (!stack.isEmpty()) {
+      res += stack.pop();
+    }
+    return res;
+  }
+}
+```
+
+![image-20220701204809410](/Users/youhao/Library/Application Support/typora-user-images/image-20220701204809410.png)
