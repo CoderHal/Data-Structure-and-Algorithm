@@ -256,7 +256,34 @@ class Solution{
 }
 ```
 
+## 454. 4Sum II
 
+### 1. HashTable
+
+```java
+class Solution {
+  public int fourSumCount(int[] nums1, int[] nums2, int[] nums3, int[] nums4) {
+    HashMap<Integer, Integer> map = new HashMap<>();
+    int res = 0;
+    for (int a : nums1) {
+      for (int b : nums2) {
+        map.put(a + b, map.getOrDefault(a + b, 0) + 1);
+      }
+    }
+    for (int c : nums3) {
+      for (int d : nums4) {
+        int sum = 0 - (c + d);
+        if (map.containsKey(sum)) {
+          res += map.get(sum);
+        }
+      }
+    }
+    return res;
+  }
+}
+```
+
+![image-20220701171629217](/Users/youhao/Library/Application Support/typora-user-images/image-20220701171629217.png)
 
 ## 56. Merge Intervals
 
