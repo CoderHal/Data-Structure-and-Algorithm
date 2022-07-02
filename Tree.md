@@ -661,6 +661,7 @@ class Solution {
 
 ```java
 class Solution {
+  
     int[] nums;
 
     public TreeNode helper(int left, int right) {
@@ -1368,4 +1369,59 @@ class Solution{
 
 ![image-20220222162521473](/Users/youhao/Library/Application Support/typora-user-images/image-20220222162521473.png)
 
-# 
+# Binary Search Tree
+
+**二叉查找树**（英语：Binary Search Tree），也称为**二叉搜索树**、**有序二叉树**（ordered binary tree）或**排序二叉树**（sorted binary tree），是指一棵空树或者具有下列性质的[二叉树](https://zh.wikipedia.org/wiki/二叉树)：
+
+1. 若任意节点的左子树不空，则左子树上所有节点的值均小于它的根节点的值；
+2. 若任意节点的右子树不空，则右子树上所有节点的值均大于它的根节点的值；
+3. 任意节点的左、右子树也分别为二叉查找树；
+
+## 230. Kth Smallest Element in a BST
+
+### 1. Recursion
+
+```java
+class Solution {
+  public int kthSmallest(TreeNode root, int k) {
+    List<Integer> res = new LinkedList<>();
+    inOrder(root, res);
+    return res.get(k - 1);
+  }
+  public void inOrder(TreeNode root, List<Integer> res) {
+    if (root == null) return;
+    inOrder(root.left, res);
+    res.add(root.val);
+    inOrder(root.right, res);
+    //O(n)
+    //O(n)
+  }
+}
+```
+
+### 2. Iterative 
+
+```java
+class Solution {
+  public int kthSmallest(TreeNode root, int k) {
+    if (root == null) {
+      return 0;
+    }
+    Stack<TreeNode> stack = new Stack<>();
+    while(true) {
+      while(root != null) {
+        stack.push(root);
+        root = root.left;
+      }
+      TreeNode cur = stack.pop();
+      if (--k == 0) {
+        return cur.val;
+      }
+      root = root.right;
+    }
+    //Time O(H + k)
+    //Space O(H)
+  }
+}
+```
+
