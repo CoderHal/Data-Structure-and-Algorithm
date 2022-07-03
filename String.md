@@ -226,3 +226,44 @@ class Solution {
 }
 ```
 
+## 171. Excel Sheet Column Number
+
+### 1. Right to Left
+
+```java
+class Solution {
+    public int titleToNumber(String columnTitle) {
+        int n = columnTitle.length();
+        int res = 0;
+        int digit = 0;
+        for (int i = n - 1; i >= 0; i--) {
+            int cur = columnTitle.charAt(i) - 'A' + 1;
+            int exp = 1;
+            for(int j = 0; j < digit; j++){
+                exp *= 26;
+            }
+            res = res + exp * cur;
+            digit++;
+        }
+        return res;
+    }
+}
+```
+
+### 2. Left to Right
+
+```java
+class Solution {
+  public int titleToNumber(String columnTitle) {
+    int res = 0;
+    int n = columnTitle.length();
+    for (int i = 0; i < n; i++) {
+      res *= 26;
+      int cur = columnTitle.charAt(i) - 'A' + 1;
+      res += cur;
+    }
+    return res;
+  }
+}
+```
+
