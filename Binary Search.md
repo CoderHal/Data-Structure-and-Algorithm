@@ -414,4 +414,44 @@ class Solution{
 
 ![image-20220328132248105](/Users/youhao/Library/Application Support/typora-user-images/image-20220328132248105.png)
 
-# 
+## 378. Kth Smallest Element in a Sorted Matrix
+
+### 1. Binary Search
+
+```java
+class Solution {
+  public int kthSmallest(int[][] matrix, int k) {
+    int n = matrix.length;
+    int matrixMin = matrix[0][0];
+    int matrixMax = matrix[n - 1][n - 1];
+    while (matrixMin < matrixMax) {
+      int mid = matrixMin + (matrixMax - matrixMin) / 2;
+      int count = checkCount(matrix, mid);
+      if (count < k) {
+        matrixMin = mid + 1;
+      } else {
+        matrixMax = mid;
+      }
+    }
+    return matrixMax;
+  }
+  public int checkCount(int[][] matrix, int mid) {
+    int n = matrix.length;
+    int row = 0;
+    int col = n - 1;
+    int count = 0;
+    while (row < n && col >= 0) {
+      if (matrix[row][col] <= mid) {
+        count += col + 1;
+        row++;
+        
+      } else {
+        col--;
+      }
+    }
+    return count;
+  }
+}
+```
+
+![image-20220702203305433](/Users/youhao/Library/Application Support/typora-user-images/image-20220702203305433.png)
