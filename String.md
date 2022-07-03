@@ -149,3 +149,60 @@ class Solution {
 }
 ```
 
+
+
+## 242. Valid Anagram
+
+### 1. HashMap
+
+```java
+class Solution {
+  public boolean isAnagram(String s, String t) {
+    int n1 = s.length();
+    int n2 = t.length();
+    if (n1 != n2) return false;
+    HashMap<Character, Integer> map = new HashMap<>();
+    for (int i = 0; i < n1; i++) {
+      char curS = s.charAt(i);
+      char curT = t.charAt(i);
+      map.put(curS, map.getOrDefault(curS, 0) + 1);
+      map.put(curT, map.getOrDefault(curT, 0) - 1);
+    }
+    for (char cur : map.keySet()) {
+      if (map.get(cur) != 0) {
+        return false;
+      }
+    }
+    return true;
+  }
+}
+```
+
+### 2. Using Character Array
+
+```java
+class Solution {
+    public boolean isAnagram(String s, String t) {
+        int n1 = s.length();
+        int n2 = t.length();
+        if (n1 != n2) return false;
+        int[] newS = new int[26];
+        int[] newT = new int[26];
+        for(int i = 0; i < n1; i++) {
+            int curS = s.charAt(i) - 'a';
+            int curT = t.charAt(i) - 'a';
+            newS[curS]++;
+            newT[curT]++;
+        }
+        int count = 0;
+        while (count < 26) {
+            if(newS[count] != newT[count]) {
+                return false;
+            }
+            count++;
+        }
+        return true;
+    }
+}
+```
+
