@@ -288,3 +288,32 @@ class Solution {
 ```
 
 if the array are all 9's, the array have to increase 1 space, and the first index is 1, others are 0.
+
+
+
+## 202. Happer Number
+
+### 1. HashTable
+
+```java
+class Solution {
+    public boolean isHappy(int n) {
+        Set<Integer> set = new HashSet<>();
+        set.add(n);
+        while (true) {
+            int sum = 0;
+            while (n != 0) {
+                int digit = n % 10;
+                sum = sum + digit * digit;
+                n /= 10;
+            }
+            if (sum == 1) {return true;}
+            if (set.contains(sum)) {return false;}
+            set.add(sum);
+            n = sum;
+        }
+    }
+}
+
+```
+
