@@ -786,3 +786,27 @@ class Solution {
 ```
 
 ![69421654046617_.pic](/Users/youhao/Library/Containers/com.tencent.xinWeChat/Data/Library/Application Support/com.tencent.xinWeChat/2.0b4.0.9/5c30e188b46dd764edba02dc2a7d8db0/Message/MessageTemp/debebe7def205d28f6eae426b86e9ea2/Image/69421654046617_.pic.jpg)
+
+## 283. Move Zeroes
+
+### 1. Two Pointers
+
+```java
+class Solution {
+    public void moveZeroes(int[] nums) {
+        int n = nums.length;
+        if (n <= 0) {return;}
+        int lastNewArray = 0;
+        for (int i = 0; i < n; i++) {
+            if (nums[i] != 0) {
+                nums[lastNewArray++] = nums[i]; 
+            }
+        }
+        for (int j = lastNewArray; j < n; j++) {
+            nums[j] = 0;
+        }
+        return;
+    }
+}
+```
+
