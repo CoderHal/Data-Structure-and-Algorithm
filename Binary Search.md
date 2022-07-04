@@ -353,6 +353,36 @@ class Solution{
 }
 ```
 
+## 240. Search a 2D Matrix II (Not Binary Search)
+
+### 1. Search Space Reduction
+
+```java
+class Solution {
+  public boolean searchMatrix(int[][] matrix, int target) {
+        int n = matrix.length;
+        int m = matrix[0].length;
+        int row = 0;
+        int col = m - 1;
+        while (row < n && col >= 0) {
+            int cur = matrix[row][col];
+            if (target > cur) {
+                row++;
+            } else if (target < acur) {
+                col--;
+            } else {
+                return true;
+            }
+        }
+        return false;
+    }
+}
+```
+
+![image-20220704152225376](/Users/youhao/Library/Application Support/typora-user-images/image-20220704152225376.png)
+
+
+
 ## 153. Find Minimum in Rotated Sorted Array
 
 ### 1. Binary Search
