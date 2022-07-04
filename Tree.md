@@ -1425,3 +1425,53 @@ class Solution {
 }
 ```
 
+
+
+# Lowest Common Ancestor Series
+
+## 235. Lowest Common Ancestor of a Binary Search Tree
+
+### 1. Recursive Solution
+
+```java
+class Solution {
+  public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+    if (root.val > p.val && root.val > q.val) {
+      return lowestCommonAncestor(root.left, p, q);
+    }
+    else if (root.val < p.val && root.val < q.val) {
+      return lowestCommonAncestor(root.right, p, q);
+    } else {
+      return root;
+    }
+  }
+}
+```
+
+
+
+### 2. Iterative Solution 
+
+```java
+class Solution {
+  public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+    int pV = p.val;
+    int qV = q.val;
+    while(root != null) {
+      int curV = root.val;
+      if (curV > pV && curV > qV) {
+        root = root.left;
+      }
+      else if (curV < pV && curV < qV) {
+        root = root.right;
+      } else {
+        return root;
+      }
+    }
+    return root;
+  }
+}
+```
+
+![image-20220703205117873](/Users/youhao/Library/Application Support/typora-user-images/image-20220703205117873.png)
+
