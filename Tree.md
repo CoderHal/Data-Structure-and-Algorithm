@@ -1475,3 +1475,31 @@ class Solution {
 
 ![image-20220703205117873](/Users/youhao/Library/Application Support/typora-user-images/image-20220703205117873.png)
 
+## 236. Lowest Common Ancestor of a Binary Tree
+
+### 1. Recursive Solution
+
+```java
+class Solution {
+  public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+    if (root == null || root == q || root == p) {
+      return root; 
+    }
+    // search its left subTreeNode
+    TreeNode left = lowestCommonAncestor(root.left, p, q);
+    // search its right subTreeNode
+    TreeNode right = lowestCommonAncestor(root.right, p, q);
+    // Based on the boundry condition to discuss
+    if (left != null && right != null) {
+      return root;// its left and right can find p and q
+    }
+    if (left != null) {
+      return left;
+    }
+    return right;
+    
+  }
+}
+```
+
+![image-20220703224243670](/Users/youhao/Library/Application Support/typora-user-images/image-20220703224243670.png)
