@@ -1503,3 +1503,54 @@ class Solution {
 ```
 
 ![image-20220703224243670](/Users/youhao/Library/Application Support/typora-user-images/image-20220703224243670.png)
+
+## 1644.  Lowest Common Ancestor of a Binary Tree II
+
+### 1. Recursive Solution 
+
+```java
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+  private boolean pFound,qFound;
+  public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) { 
+    TreeNode res = helper(root, p, q);
+    if (qFound && pFound) {return res;} 
+    else {return null;}
+  }
+  public TreeNode helper(TreeNode root, TreeNode p, TreeNode q) {
+    if (root == null) {
+      return root;
+    }
+    TreeNode left = helper(root.left, p, q);
+    TreeNode right = helper(root.right, p, q);
+    if (root == p || root == q) {
+        if (root == p) {
+          pFound = true;
+      }
+        if (root == q) {
+          qFound = true;
+      }
+        return root;
+    }
+    if (left != null && right != null){
+      return root;
+    }
+    if (left != null) {
+      return left;
+    }
+    return right;
+  }
+}
+```
+
+
+
+和236题不同的是，root == p|| root == q的判断语句需要放在 递归函数的后面。必须要先去判断其左右子树，再去判断当前节点。因为我们需要完全的找到p和q。  236题可以只找到1个就判断，因为p, q都存在于Tree中
