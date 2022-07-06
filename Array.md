@@ -958,3 +958,55 @@ class Solution {
 ```
 
 ![image-20220705201224917](/Users/youhao/Library/Application Support/typora-user-images/image-20220705201224917.png)
+
+## 238. Product to Array Except Self
+
+### 1. Create Left and Right Array
+
+```java
+class Solution {
+    public int[] productExceptSelf(int[] nums) {
+        int n = nums.length;
+        int[] l = new int[n];
+        int[] r = new int[n];
+        int[] ans = new int[n];
+        l[0] = 1;
+        r[n - 1] = 1;
+        for (int i = 1; i < n; i++) {
+            l[i] = l[i - 1] * nums[i - 1];
+        }
+        for (int j = n - 2; j >= 0; j--) {
+            r[j] = r[j + 1] * nums[j + 1];
+        }
+        for (int a = 0; a < n; a++) {
+            ans[a] = l[a] * r[a];
+        }
+        return ans;
+    }
+}
+```
+
+![image-20220705204420842](/Users/youhao/Library/Application Support/typora-user-images/image-20220705204420842.png)
+
+### 2. Not using extra space
+
+```java
+class Solution {
+    public int[] productExceptSelf(int[] nums) {
+        int n = nums.length;
+        int l = 1;
+        int r = 1;
+        int[] ans = new int[n];
+        for (int i = 0; i < n; i++) {
+            ans[i] = l;
+            l *= nums[i];
+        }
+        for (int j = n - 1; j >= 0; j--) {
+            ans[j] *= r;
+            r *= nums[j];
+        }
+        return ans;
+    }
+}
+```
+
