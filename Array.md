@@ -903,3 +903,58 @@ class Solution{
 }
 ```
 
+
+
+## 289. Game of Life
+
+### 1. Create a new Array
+
+```java
+class Solution {
+    public void gameOfLife(int[][] board) {
+        int n = board.length;
+        int m = board[0].length;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                int count = helper(i, j, board);
+                if (board[i][j] == 1) {// the cell live
+                    if (count == 2 || count == 3) {
+                        board[i][j] += 2;
+                    }
+                } else if (board[i][j] == 0) { // the cell die
+                    if (count == 3) {
+                        board[i][j] += 2;
+                    }
+                }
+            }
+        }
+        for (int i = 0; i < n; i++) { 
+            for (int j = 0; j < m; j++) {
+                board[i][j] >>= 1;
+            }
+        }
+        return;
+    }
+    public int helper(int row, int col, int[][] board) {
+        int n = board.length;
+        int m = board[0].length;
+        int c = 0;
+        for (int i = Math.max(0, row - 1); i <= Math.min(n - 1, row + 1); i++) {
+            for (int j = Math.max(0, col - 1); j <= Math.min(m - 1, col + 1); j++) {
+                if (i == row && j == col) {
+                    continue;
+                } else {
+                    int cur = board[i][j] & 1;//figure out the current state without the future state
+                    if (cur == 1) {
+                        c++;
+                    }
+                }
+            }
+        }
+        return c;
+    }
+}
+
+```
+
+![image-20220705201224917](/Users/youhao/Library/Application Support/typora-user-images/image-20220705201224917.png)
