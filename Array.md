@@ -450,6 +450,42 @@ public class Solution {
 
 <img src="/Users/youhao/Library/Application Support/typora-user-images/image-20220423211434231.png" alt="image-20220423211434231" style="zoom:50%;" />
 
+## 347. Top K Frequent Elements
+
+### 1. Heap
+
+```java
+class Solution {
+    public int[] topKFrequent(int[] nums, int k) {
+        Map<Integer, Integer> map = new HashMap<>();
+        for (int n : nums) {
+            map.put(n, map.getOrDefault(n, 0) + 1);
+        }
+        PriorityQueue<Integer> heap = new PriorityQueue<>((n1, n2) -> map.get(n1) - map.get(n2));
+        for (int c : map.keySet()) {
+            heap.add(c);
+            if (heap.size() > k) {heap.poll();}
+        }
+        int[] res = new int[k];
+        for (int i = 0; i < k; i++) {
+            res[i] = heap.poll();
+        }
+        return res;
+    }
+  //Time  O(nlogk)
+  //Space O(n + k)
+}
+```
+
+### 2. Quickselect
+
+```java
+```
+
+
+
+
+
 ## 811. Subdomain Visit Count
 
 ### 1. HashMap
