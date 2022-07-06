@@ -477,12 +477,37 @@ class Solution {
 }
 ```
 
-### 2. Quickselect
+### 2. Bucket Sort
 
 ```java
+class Solution {
+  public int[] topKFrequent(int[] nums, int k) {
+    Map<Integer, Integer> map = new HashMap<>();
+    for (int n : nums) {
+      map.put(n, map.getOrDefault(n, 0) + 1);
+    }
+    // create a bucket, the bucket's indexes are according to the frequent of the number, max is n
+    List<Integer>[] bucket = new List[nums.length + 1];
+    for (int num : map.keySet()) {
+      int count = map.get(num);
+      if (bucket[count] == null) {
+        bucket[count] = new ArrayList();
+      }
+      bucket[count].add(num);
+    }
+    int[] res = new int[k];
+    for (int i = nums.length; i >= 0; i--) {
+      if (bucket[i] == null) {continue;}
+      while (!bucket[i].isEmpty() && --k >= 0) {//It is guaranteed that the answer is unique.
+        res[k] = bucket[i].remove(0);
+      }
+    }
+    return res;
+  }
+}
 ```
 
-
+![image-20220705225840828](/Users/youhao/Library/Application Support/typora-user-images/image-20220705225840828.png)
 
 
 
