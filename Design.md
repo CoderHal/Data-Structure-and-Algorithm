@@ -128,3 +128,82 @@ class TicTacToe {
  */
 ```
 
+
+
+## 384. Shuffle an Array
+
+### 1. Brute Force (Using List to Randomize the Array)
+
+```java
+class Solution {
+  private int[] org;
+  private int[] randomArray;
+  private Random rand = new Random();
+  
+  public Solution(int[] nums) {
+    org = nums.clone();
+    randomArray = nums.clone();
+  }
+    
+  public int[] reset() {
+    return org;
+  }
+
+  public int[] shuffle() {
+    List<Integer> randomList = new ArrayList<>();
+    for (int i = 0; i < org.length; i++) {
+      randomList.add(org[i]);
+    }
+    for (int j = 0; j < randomArray.length; j++) {
+      int randIndex = rand.nextInt(randomList.size()); // random 0 ~ (size() - 1)
+      randomArray[j] = randomList.get(randIndex);
+      randomList.remove(randIndex);//Time n
+    }
+    return randomArray;
+  }
+}
+
+/**
+ * Your Solution object will be instantiated and called as such:
+ * Solution obj = new Solution(nums);
+ * int[] param_1 = obj.reset();
+ * int[] param_2 = obj.shuffle();
+ */
+```
+
+### 2. Fisher- Yates Algorithm
+
+```java
+class Solution {
+  private int[] org;
+  private int[] randomArray;
+  private Random rand = new Random();
+  
+  public Solution(int[] nums) {
+    org = nums.clone();
+    randomArray = nums.clone();
+  }
+    
+  public int[] reset() {
+    return org;
+  }
+
+  public int[] shuffle() {
+    for (int i = 0; i < randomArray.length; i++) {
+      randChoose(i, randomArray.length);
+    }
+    return randomArray;
+  }
+  public void randChoose(int l, int h) {
+    int chooseNum = rand.nextInt(h - l) + l;
+    swap(l, chooseNum, randomArray);
+  }
+  public void swap(int i, int j, int[] a) {
+    int temp = a[i];
+    a[i] = a[j];
+    a[j] = temp;
+  }
+}
+```
+
+![image-20220707231420169](/Users/youhao/Library/Application Support/typora-user-images/image-20220707231420169.png)
