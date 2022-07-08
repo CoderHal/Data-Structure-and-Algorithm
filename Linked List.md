@@ -190,7 +190,7 @@ Attention: fast.next & fast, we need to consider about the situation that fast.n
 
 ### Solution
 
-```
+```java
 /**
  * Definition for singly-linked list.
  * class ListNode {
@@ -231,7 +231,7 @@ We just need to figure out the middle Node of this list.
 
 #### 1. Output to Array
 
-```
+```java
 /**
  * Definition for singly-linked list.
  * public class ListNode {
@@ -262,7 +262,7 @@ Using the Array to storage the List Node. And we just need to return A[t/2]. Let
 
 #### 2. Fast and Slow Pointer
 
-```
+```java
 /**
  * Definition for singly-linked list.
  * public class ListNode {
@@ -715,6 +715,35 @@ class Solution {
     res.next = res.next.next;
     return head;
   }
+}
+```
+
+
+
+## 142. Linked List Cycle II
+
+### 1. Floyd‘s Tortoise  and Hare (Cycle Detection) ( P287)
+
+```java
+public class Solution {
+    public ListNode detectCycle(ListNode head) {
+        ListNode fast = head;
+        ListNode slow = head;
+        do {
+            if(fast == null || fast.next == null) {
+                return null;
+            }
+            fast = fast.next.next;
+            slow = slow.next;
+        } while (fast != slow);
+        
+        fast = head;
+        while (fast != slow) {
+            fast = fast.next;
+            slow = slow.next;
+        }
+        return slow;
+    }
 }
 ```
 
