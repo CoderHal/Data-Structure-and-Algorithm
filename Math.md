@@ -344,3 +344,31 @@ class Solution {
 14 :  2 & 7 -> 7 : % 2 != 0 return false;
 
 12:  2 & 6 - > 6:  2 & 3 - > 3: 3 & 1 -> jump out of loop return true;
+
+
+
+## 264. Ugly Number
+
+### 1. DP
+
+```java
+class Solution {
+    public int nthUglyNumber(int n) {
+        if (n <= 3) return n;
+        int[] nums = new int[n];
+        int twos = 0;
+        int threes = 0;
+        int fives = 0;
+        nums[0] = 1;
+        for (int i = 1; i < n; i++) {
+            nums[i] = Math.min(Math.min(nums[twos] * 2, nums[threes] * 3), nums[fives] * 5);
+            if (nums[i] == nums[twos] * 2) twos++;
+            if (nums[i] == nums[threes] * 3) threes++;// The reason why we don't use else if, is because 2 * 3 = 3 * 2, in this case we need to make twos and threes all jump to next index.
+            if (nums[i] == nums[fives] * 5) fives++;
+        }
+        return nums[n - 1];
+    }
+}
+```
+
+![image-20220709164428002](/Users/youhao/Library/Application Support/typora-user-images/image-20220709164428002.png)
