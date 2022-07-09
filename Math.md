@@ -291,7 +291,7 @@ if the array are all 9's, the array have to increase 1 space, and the first inde
 
 
 
-## 202. Happer Number
+## 202. Happy Number
 
 ### 1. HashTable
 
@@ -317,3 +317,30 @@ class Solution {
 
 ```
 
+
+
+## 263. Ugly Number
+
+### 1. Math
+
+```java
+class Solution {
+    public boolean isUgly(int n) {
+        if (n == 0) {return false;}
+        if (n == 1) {return true;}
+        while (n != 1) {
+            if (n % 2 == 0) {n /= 2;} // n can divide by 2, so we can discuss another multipulier
+            else if (n % 3 == 0) {n /= 3;} // n can divide by 3, so we can discuss another multipulier
+            else if (n % 5 == 0) {n /= 5;} // n can divide by 5, so we can discuss another multipulier
+            else {
+                return false;
+            }
+        }
+        return true;
+    }
+}
+```
+
+14 :  2 & 7 -> 7 : % 2 != 0 return false;
+
+12:  2 & 6 - > 6:  2 & 3 - > 3: 3 & 1 -> jump out of loop return true;
