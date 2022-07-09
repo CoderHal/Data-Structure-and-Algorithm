@@ -747,3 +747,53 @@ public class Solution {
 }
 ```
 
+## 148. Sort List (Divided and Conquor)
+
+
+
+![image-20220708202824696](/Users/youhao/Library/Application Support/typora-user-images/image-20220708202824696.png)
+
+### 1. Merge Sort (top down) 
+
+```java
+class Solution {
+  public ListNode sortList(ListNode head) {
+    if (head == null || head.next == null) {return head;}
+    // Using fast and slow to find the mid 
+    ListNode fast = head.next;
+    ListNode slow = head;
+    while (fast != null && fast.next != null) {
+      fast = fast.next.next;
+      slow = slow.next;
+    }
+    // split to two Lists
+    ListNode mid = slow.next;
+    slow.next = null;
+    return mergeSort(sortList(head), sortList(mid));
+  }
+  public ListNode mergeSort(ListNode l1, ListNode l2) {
+    ListNode pre = new ListNode(0);
+    ListNode tail = pre;
+    while (l1 != null && l2 != null) {
+      if (l1.val < l2.val) {
+        tail.next = l1;
+        l1 = l1.next;
+        tail = tail.next;
+      } else {
+        tail.next = l2;
+        l2 = l2.next;
+        tail = tail.next;
+      }
+    }
+    tail.next = (l1 != null) ? l1 : l2;
+    return pre.next;
+    //Time O(nlogn)
+    //Space O(logn)
+  }
+}
+```
+
+![image-20220708211344441](/Users/youhao/Library/Application Support/typora-user-images/image-20220708211344441.png)
+
+
+
