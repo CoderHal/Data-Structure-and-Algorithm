@@ -1268,3 +1268,71 @@ class Solution{
 }
 ```
 
+
+
+## 300. Longest Increasing Subsequence
+
+### 1. DP
+
+```java
+class Solution {
+    public int lengthOfLIS(int[] nums) {
+        int n = nums.length;
+        if (n == 1) {return 1;}
+        int dp[] = new int[n];
+        Arrays.fill(dp, 1);
+        int res = 0;
+        for (int i = 1; i < n; i++) {
+            for (int j = 0; j < i; j++) {
+                if (nums[i] > nums[j]){
+                    dp[i] = Math.max(dp[i], dp[j] + 1);
+                }
+            }
+            res = Math.max(res, dp[i]);
+        }
+        return res;
+    }
+  // Time O(n^2);
+  // Space O(n)
+}
+```
+
+![image-20220709152511931](/Users/youhao/Library/Application Support/typora-user-images/image-20220709152511931.png)
+
+### 2. DP + Greedy + Binary Search
+
+```java
+class Solution {
+  public int lengthOfLIS(int[] nums) {
+    int n = nums.length;
+    if(n == 1) {return 1;}
+    List<Integer> dp = new ArrayList<>();
+    dp.add(nums[0]);
+    for (int i = 1; i < n; i++) {
+      int cur = nums[i];
+      if (cur > dp.get(dp.size() - 1)) {
+        dp.add(cur);
+      } else {
+        binarySearch(dp, cur);
+      }
+    }
+      return dp.size();
+  }
+  public void binarySearch(List<Integer> dp, int cur) {
+    int l = 0;
+    int r = dp.size() - 1;
+    while (l <= r) {
+      int mid = l + (r - l) / 2;
+      if (dp.get(mid) < cur) {
+        l = mid + 1;
+      } else {
+        r = mid - 1;
+      }
+    }
+    dp.set(l, cur);
+  }
+  // O(nlogn)
+}
+```
+
+![image-20220709152602350](/Users/youhao/Library/Application Support/typora-user-images/image-20220709152602350.png)
