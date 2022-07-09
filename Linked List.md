@@ -747,7 +747,7 @@ public class Solution {
 }
 ```
 
-## 148. Sort List (Divided and Conquor)
+## 148. Sort List
 
 
 
