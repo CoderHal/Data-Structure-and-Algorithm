@@ -491,4 +491,45 @@ Space: 19
 
 ![image-20220421135656446](/Users/youhao/Library/Application Support/typora-user-images/image-20220421135656446.png)
 
-# 
+
+
+## 131. Palindrome Partitioning
+
+### 1. BackTracking
+
+```java
+class Solution {
+  public List<List<String>> partition(String s) {
+    List<List<String>> res = new ArrayList<>();
+    helper(s, res, new ArrayList<>(), 0);
+    return res;
+  }
+  public void helper(String s, List<List<String>> res, List<String> temp, int index) {
+    if (index == s.length()) {
+      res.add(new ArrayList<>(temp));
+      return;
+    }
+    for (int i = index + 1; i < s.length(); i++) {
+      if (checkValid(s.substring(index, i))){
+        temp.add(s.substring(index, i));
+        helper(s, res, temp, index + 1);
+        temp.remove(temp.size() - 1);
+      }
+    }
+  }
+  public boolean checkValid(String s) {
+    int l = 0;
+    int r = s.length();
+    while (l <= r) {
+      if (s.charAt(l) != s.charAt(r)) {
+        return false;
+      }
+      l++;
+      r--;
+    }
+    return true;
+  }
+}
+```
+
+![image-20220708232628097](/Users/youhao/Library/Application Support/typora-user-images/image-20220708232628097.png)
