@@ -207,3 +207,120 @@ class Solution {
 ```
 
 ![image-20220707231420169](/Users/youhao/Library/Application Support/typora-user-images/image-20220707231420169.png)
+
+## 208. Implement Trie (Prefix Tree)
+
+### 1. Using HashMap (Too Slow)
+
+```java
+class Trie {
+    private Map<String, Integer> map;
+    public Trie() {
+        map = new HashMap<>();
+    }
+    
+    public void insert(String word) {
+        map.put(word, map.getOrDefault(word, 0) + 1);
+    }
+    
+    public boolean search(String word) {
+        if (map.containsKey(word)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    public boolean startsWith(String prefix) {
+        int lp = prefix.length();
+        boolean check = false;
+        for (String cur : map.keySet()) {
+            int lc = cur.length();
+            if (lc >= lp) {
+                String curSub = cur.substring(0, lp);
+                if (prefix.equals(curSub)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+}
+
+/**
+ * Your Trie object will be instantiated and called as such:
+ * Trie obj = new Trie();
+ * obj.insert(word);
+ * boolean param_2 = obj.search(word);
+ * boolean param_3 = obj.startsWith(prefix);
+ */
+```
+
+
+
+### 2. Prefix Tree
+
+```java
+class Trie {
+  class TrieNode {
+    TrieNode[] children; // 26 object
+    boolean isWord;
+    
+    public TrieNode() {
+      children = new TrieNode[26];
+      isWord = false;
+    }
+  }
+  
+  private TrieNode root;
+  
+  public Trie() {
+    root = new TrieNode();
+  }
+  
+  public void insert(String word) {
+    TrieNode curNode = root;
+    for (int i = 0; i < word.length(); i++) {
+      int index = word.charAt(i) - 'a';
+      if (curNode.children[index] == null) {
+        curNode.children[index] = new TrieNode();
+      }
+      curNode = curNode.children[index];
+    }
+    curNode.isWord = true;
+    // Time O(m) word's length
+    // Space O(m)
+  }
+  
+  public boolean search(String word) {
+    TrieNode curNode = root;
+    for (int i = 0; i < word.length(); i++){
+      int index = word.charAt(i) - 'a';
+      if (curNode.children[index] == null) {
+        return false;
+      }
+      curNode = curNode.children[index];
+    }
+    if (curNode.isWord) {return true;}
+    else {return false;}
+    // Time O(m) word's length
+    // Space O(1)
+  }
+  
+  public boolean startsWith(String prefix) {
+    TrieNode curNode = root;
+    for(int i = 0; i < prefix.length(); i++) {
+      int index = prefix.charAt(i) - 'a';
+      if (curNode.children[index] == null) {
+        return false;
+      }
+      curNode = curNode.children[index];
+    }
+    return true;
+    // Time O(m) word's length
+    // Space O(1)
+  }
+}
+```
+
+![831657680620_.pic](/Users/youhao/Library/Containers/com.tencent.xinWeChat/Data/Library/Application Support/com.tencent.xinWeChat/2.0b4.0.9/5c30e188b46dd764edba02dc2a7d8db0/Message/MessageTemp/9e20f478899dc29eb19741386f9343c8/Image/831657680620_.pic.jpg)
