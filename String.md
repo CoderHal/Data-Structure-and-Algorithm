@@ -32,18 +32,39 @@ class Solution {
 
 ## 14. Longest Common Prefix
 
+### 1. Array.sort
+
+```java
+class Solution {
+    public String longestCommonPrefix(String[] strs) {
+        Arrays.sort(strs);
+        String firstS = strs[0];
+        String lastS = strs[strs.length - 1];
+        int index = 0;
+        while ((index < Math.min(firstS.length(), lastS.length())) && firstS.charAt(index) == lastS.charAt(index)) {
+            index++;
+        }
+        return firstS.substring(0, index);
+    }
+  //Time O(m * nlogn) m be the average # of characters for the strings in the str array
+  //n be the number of elements in the str array.
+}
+```
+
+
+
+### 2. Horizonal Scanning
+
 ```java
 class Solution {
   public String longestCommonPrefix(String[] strs) {
-    if (strs.length() <= 1) {
-      return strs;
+    if (strs.length <= 1) {
+      return strs[0];
     }
-    String preStr = strs[0];//Store the first String
-    //From the first to the end, compare the pre and cur, update the pre
-    for (int i = 1; i < strs.length(); i++) {
+    String preStr = strs[0];
+    for (int i = 1; i < strs.length; i++) {
       int index = 0;
       String cur = strs[i];
-      // Compare with the preString
       while (index < preStr.length() && index < cur.length() && preStr.charAt(index) == cur.charAt(index)){
         index++;
       }
@@ -55,6 +76,7 @@ class Solution {
     }
     return preStr;
   }
+  // Time O(m * n) m 平均长度 n length of strs
 }
 ```
 
