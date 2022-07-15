@@ -1071,3 +1071,113 @@ class Solution {
 }
 ```
 
+
+
+## 287. Find the Duplicated Number
+
+### 1. Negative Marking ( not satisfy the problem constrains) (P41)
+
+```java
+class Solution {
+    public int findDuplicate(int[] nums) {
+        int n = nums.length;
+        int duplicate = -1;
+        for (int i = 0; i < n; i++) {
+            int cur = Math.abs(nums[i]);
+            if (nums[cur] < 0) {
+                duplicate = cur;
+                break;
+            }
+            nums[cur] *= -1;
+        }
+        
+        for (int i = 0; i < nums.length; i++) {
+            nums[i] = Math.abs(nums[i]);
+        }
+        return duplicate;
+    }
+}
+```
+
+![image-20220707175819457](/Users/youhao/Library/Application Support/typora-user-images/image-20220707175819457.png)
+
+### 2. Binary Search
+
+```java
+class Solution {
+  public int findDuplicate(int[] nums) {
+    int n = nums.length - 1;
+    int r = n; 
+    int l = 1;
+    int duplicate = -1;
+    while (l <= r) {
+      int mid = l + (r - l) / 2;
+      int count = 0;
+      for (int num : nums) {
+        if (num <= mid) {
+          count++;
+        }
+      }
+      if (count > mid) {
+        duplicate = mid;
+        r = mid - 1;
+      } else {
+        l = mid + 1;
+      }
+    }
+    return duplicate;
+  }
+}
+```
+
+![image-20220707214240157](/Users/youhao/Library/Application Support/typora-user-images/image-20220707214240157.png)
+
+### 3. Floyd‘s Tortoise  and Hare (Cycle Detection) ( P142)
+
+```java
+class Solution {
+  public int findDuplicate(int[] nums) {
+    int slow = 0;
+    int fast = 0;
+    do { // find the meet point 
+        slow = nums[slow];
+        fast = nums[nums[fast]];
+    } while (slow != fast);
+    
+    fast = 0; // find the cycle point
+    while (fast != slow) {
+      fast = nums[fast];
+      slow = nums[slow];
+    }
+    return slow;
+  }
+}
+```
+
+
+
+![image-20220707211557022](/Users/youhao/Library/Application Support/typora-user-images/image-20220707211557022.png)
+
+## 1207. Unique Number of Occurrences
+
+### 1. HashTable
+
+```java
+class Solution {
+    public boolean uniqueOccurrences(int[] arr) {
+        HashMap<Integer, Integer> map = new HashMap<>();
+        HashSet<Integer> set = new HashSet<>();
+        for (int num : arr) {
+            map.put(num, map.getOrDefault(num, 0) + 1);
+        }
+        for (int c : map.keySet()) {
+            if (set.contains(map.get(c))) {
+                return false;
+            }
+            set.add(map.get(c));
+        }
+        return true;
+    }
+}
+```
+
