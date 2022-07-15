@@ -1366,3 +1366,32 @@ class Solution {
 ```
 
 ![image-20220709164428002](/Users/youhao/Library/Application Support/typora-user-images/image-20220709164428002.png)
+
+## 322. Coin Change
+
+### 1. DP
+
+```java
+class Solution {
+    public int coinChange(int[] coins, int amount) {
+        int row = coins.length;
+        int[] dp = new int[amount + 1];
+        
+        for(int i = 1; i < dp.length; i++) {
+            dp[i] = amount + 1;
+            for (int j = 0; j < coins.length; j++) {
+                if (i - coins[j] < 0 || dp[i - coins[j]] == -1) {// if the coins cannot combine to the amount
+                    continue;
+                }
+                dp[i] = Math.min(dp[i], dp[i - coins[j]] + 1);
+            }
+            if (dp[i] == amount + 1) {
+                dp[i] = -1;
+            }
+        }
+        return dp[amount];
+    }
+}
+```
+
+![891657849486_.pic](/Users/youhao/Library/Containers/com.tencent.xinWeChat/Data/Library/Application Support/com.tencent.xinWeChat/2.0b4.0.9/5c30e188b46dd764edba02dc2a7d8db0/Message/MessageTemp/9e20f478899dc29eb19741386f9343c8/Image/891657849486_.pic.jpg)
