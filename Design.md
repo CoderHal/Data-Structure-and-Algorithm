@@ -324,3 +324,67 @@ class Trie {
 ```
 
 ![831657680620_.pic](/Users/youhao/Library/Containers/com.tencent.xinWeChat/Data/Library/Application Support/com.tencent.xinWeChat/2.0b4.0.9/5c30e188b46dd764edba02dc2a7d8db0/Message/MessageTemp/9e20f478899dc29eb19741386f9343c8/Image/831657680620_.pic.jpg)
+
+
+
+
+
+## 380. Insert Delete GetRandom
+
+### 1. Use HashTable and List
+
+```java
+class RandomizedSet {
+    private HashMap<Integer, Integer> map;
+    private List<Integer> res;
+    private int index;
+    public RandomizedSet() {
+        map = new HashMap<>();
+        res = new ArrayList<>();
+        index = 0;
+    }
+    
+    public boolean insert(int val) {
+        if (map.containsKey(val)) {
+            return false;
+        } else {
+            res.add(val);
+            map.put(val, res.size() - 1);
+            return true;
+        }
+    }
+    
+    public boolean remove(int val) {
+        if (map.containsKey(val)) {
+            int i = map.get(val);
+            int lastElement = res.get(res.size() - 1);
+            
+            // set the specific index's value equals to lastElement
+            res.set(i, lastElement);
+            // update the lastElement's index
+            map.put(lastElement, i);
+            // we don't need the lastElement, so we can delete in the map and arrayList
+            res.remove(res.size() - 1);
+            map.remove(val);
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    public int getRandom() {
+        Random ran = new Random();
+        int index = ran.nextInt(res.size());
+        return res.get(index);
+    }
+}
+
+/**
+ * Your RandomizedSet object will be instantiated and called as such:
+ * RandomizedSet obj = new RandomizedSet();
+ * boolean param_1 = obj.insert(val);
+ * boolean param_2 = obj.remove(val);
+ * int param_3 = obj.getRandom();
+ */
+```
+
