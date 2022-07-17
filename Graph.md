@@ -635,3 +635,97 @@ class Solution {
 为每个节点创造一个ArrayList
 
 对于该节点的先修课程进行遍历，如果遇到了原来走过的点，就说明有环存在。 在遍历过程中visited[cur] = 2说明后面没有环就可以直接结束讨论
+
+
+
+
+
+## 210. Course Schedule II
+
+### 1. Use Queue
+
+```java
+class Solution {
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        int[] need = new int[numCourses];
+        for (int[] cur : prerequisites) {
+           need[cur[0]]++; 
+        }
+        Queue<Integer> queue = new LinkedList<>();
+        int[] res = new int[numCourses];
+        int index = 0;
+        for (int i = 0; i < need.length; i++) {
+            if (need[i] == 0) {
+                queue.add(i);
+                res[index++] = i;
+            }
+        }
+        
+        while(!queue.isEmpty()) {
+            int curCourse = queue.poll();
+            for (int[] cur : prerequisites) {
+                if (need[cur[0]] == 0) {
+                    continue;
+                }
+                
+                if (cur[1] == curCourse) {
+                    need[cur[0]]--;
+                }
+                
+                if (need[cur[0]] == 0) {
+                    queue.add(cur[0]);
+                    res[index++] = cur[0];
+                }
+            }
+        }
+        for (int i = 0; i < need.length; i++) {
+            if (need[i] != 0) {
+                return new int[0];
+            }
+        }
+       return res;
+    }
+}
+```
+
+Same as 207
+
+
+
+### 2. Topological Sorting + DFS
+
+```java
+class Solution {
+    private int index;
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+      index = 0;
+      List<List<Integer>> graph = new ArrayList<>();
+      int[] ans = new int[numCourses];
+      for (int i = 0; i < numCourses; i++) {
+        graph.add(new ArrayList<>());
+      }
+      
+      for (int[] cur : prerequisites) {
+        graph.get(cur[0]).add(cur[1]);
+      }
+      int visited[] = new int[numCourses];
+      for (int i = 0; i < numCourses; i++) {
+        if (DFS(i, graph, visited, ans)) return new int[0];
+      }
+      return ans;
+    }
+    public Boolean DFS(int cur, List<List<Integer>> graph, int[] visited, int[] ans) {
+      if (visited[cur] == 2) {return false;}
+      if (visited[cur] == 1) {return true;}
+      
+      visited[cur] = 1;
+      for (int next : graph.get(cur)) {
+        if (DFS(next, graph, visited, ans)) return true;
+      }
+      ans[index++] = cur;
+      visited[cur] = 2;
+      return false;
+    }
+}
+```
+
