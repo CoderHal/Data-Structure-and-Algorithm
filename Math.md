@@ -319,7 +319,7 @@ class Solution {
 
 
 
-## 263. Ugly Number
+## 263. Ugly Number (relative with P.264)
 
 ### 1. Math
 
@@ -347,28 +347,76 @@ class Solution {
 
 
 
-## 264. Ugly Number
+## 50. Pow(x, n)
 
-### 1. DP
+### 1. Iterative
 
 ```java
 class Solution {
-    public int nthUglyNumber(int n) {
-        if (n <= 3) return n;
-        int[] nums = new int[n];
-        int twos = 0;
-        int threes = 0;
-        int fives = 0;
-        nums[0] = 1;
-        for (int i = 1; i < n; i++) {
-            nums[i] = Math.min(Math.min(nums[twos] * 2, nums[threes] * 3), nums[fives] * 5);
-            if (nums[i] == nums[twos] * 2) twos++;
-            if (nums[i] == nums[threes] * 3) threes++;// The reason why we don't use else if, is because 2 * 3 = 3 * 2, in this case we need to make twos and threes all jump to next index.
-            if (nums[i] == nums[fives] * 5) fives++;
-        }
-        return nums[n - 1];
+  public double myPow(double x, int n) {
+    if(x == 1 || n == 0) {return 1;}
+    if(n == 0) {return x;}
+    double res = 1;
+    if(n < 0) {
+      if (n == Integer.MIN_VALUE) {
+          x = 1 / x;
+          n = - (n + 1);
+          res *= x;
+      } else {
+          x = 1 / x;
+          n = - n;
+      }
     }
+
+     while (n > 1) {
+       if (n % 2 == 1) {
+         n--;
+         res *= x;
+       }
+       n /= 2;
+       x *= x;
+     }
+     res *= x;
+    return res;
+  }
 }
 ```
 
-![image-20220709164428002](/Users/youhao/Library/Application Support/typora-user-images/image-20220709164428002.png)
+
+
+### 2. Recursive 
+
+```java
+class Solution {
+  private double res;
+  public double myPow(double x, int n) {
+    if (n == 0 || x == 1) return 1;
+    if (n == 1) {return x;}
+    res = 1;
+    if(n < 0) {
+      if (n == Integer.MIN_VALUE) {
+        res *= (1 / x);
+        x = 1 / (x * x);
+        n = - (n + 1);
+      } else {
+        x = 1 / x;
+        n = - n;
+      }
+    }
+      return helper(x, n, res);
+  }
+      
+  public double helper(double x, int n, double ans) {
+    if (n == 1) {return x;}
+   
+    if (n % 2 == 0) {
+      ans *= helper(x * x, n / 2, ans);
+    } else {
+      ans = ans * x * helper(x * x, n / 2, ans);
+    }
+    return ans;
+  }
+}
+```
+
+![image-20220718232215732](/Users/youhao/Library/Application Support/typora-user-images/image-20220718232215732.png)
