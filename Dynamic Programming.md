@@ -1395,3 +1395,69 @@ class Solution {
 ```
 
 ![891657849486_.pic](/Users/youhao/Library/Containers/com.tencent.xinWeChat/Data/Library/Application Support/com.tencent.xinWeChat/2.0b4.0.9/5c30e188b46dd764edba02dc2a7d8db0/Message/MessageTemp/9e20f478899dc29eb19741386f9343c8/Image/891657849486_.pic.jpg)
+
+
+
+
+
+## 279. Perfect Square
+
+### 1. DP (Same with coin change)
+
+```java
+class Solution {
+    public int numSquares(int n) {
+        int count = 0;
+        int dp[] = new int[n + 1];
+        for (int i = 0; i < dp.length; i++) {
+            dp[i] = Integer.MAX_VALUE;
+        }
+        dp[0] = 0;
+        dp[1] = 1;
+        for (int i = 1; i <= n; i++) {
+            int cur = 1;
+            while (i - (cur * cur) >= 0) {
+                dp[i] = Math.min(dp[i], dp[i - (cur * cur)] + 1);
+                cur++;
+            }
+        }
+        return dp[n];
+    }
+}
+```
+
+### 2. BFS
+
+```java
+class Solution {
+    public int numSquares(int n) {
+        Queue<Integer> queue = new LinkedList<>();
+        if (n == n * n) {return 1;}
+        int level = 1;
+        queue.add(n);
+        HashSet<Integer> set = new HashSet<>();
+        set.add(n);
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            for (int i = 0; i < size; i++) {
+                int cur = queue.poll();
+                for (int j = 1; j * j <= cur; j++) {
+                    int rest = cur - j * j;
+                    if (rest == 0) {
+                        return level;
+                    } else if (rest > 0 && !set.contains(rest)) {
+                        queue.add(rest);
+                        set.add(rest);
+                    } else if (rest < 0) {
+                        break;
+                    }
+                }
+            } 
+            level++;
+        }
+        return level;
+    }
+}
+```
+
+![image-20220720223711649](/Users/youhao/Library/Application Support/typora-user-images/image-20220720223711649.png)
