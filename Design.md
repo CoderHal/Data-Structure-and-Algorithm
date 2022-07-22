@@ -388,3 +388,50 @@ class RandomizedSet {
  */
 ```
 
+![911657941530_.pic](/Users/youhao/Library/Containers/com.tencent.xinWeChat/Data/Library/Application Support/com.tencent.xinWeChat/2.0b4.0.9/5c30e188b46dd764edba02dc2a7d8db0/Message/MessageTemp/9e20f478899dc29eb19741386f9343c8/Image/911657941530_.pic.jpg)
+
+
+
+## 284. Peeking Iterator
+
+### 1. Saving the next value
+
+```java
+// Java Iterator interface reference:
+// https://docs.oracle.com/javase/8/docs/api/java/util/Iterator.html
+
+class PeekingIterator implements Iterator<Integer> {
+    Iterator<Integer> iter;
+    Integer cur;
+	public PeekingIterator(Iterator<Integer> iterator) {
+	    // initialize any member here.
+	    iter = iterator;
+        cur = iter.next();
+	}
+	
+    // Returns the next element in the iteration without advancing the iterator.
+	public Integer peek() {
+        return cur;
+	}
+	
+	// hasNext() and next() should behave the same as in the Iterator interface.
+	// Override them if needed.
+	@Override
+	public Integer next() {
+	    Integer temp = cur; 
+        if (iter.hasNext()) {
+            cur = iter.next();
+        } else {
+            cur = null;
+        }
+        return temp;
+	}
+	
+	@Override
+	public boolean hasNext() {
+	    return (cur != null);
+	}
+}
+```
+
+![image-20220721224644146](/Users/youhao/Library/Application Support/typora-user-images/image-20220721224644146.png)
