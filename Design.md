@@ -435,3 +435,147 @@ class PeekingIterator implements Iterator<Integer> {
 ```
 
 ![image-20220721224644146](/Users/youhao/Library/Application Support/typora-user-images/image-20220721224644146.png)
+
+
+
+## 341. Flatten Nested List Iterator
+
+### 1. Recursive Solution
+
+```java
+/**
+ * // This is the interface that allows for creating nested lists.
+ * // You should not implement it, or speculate about its implementation
+ * public interface NestedInteger {
+ *
+ *     // @return true if this NestedInteger holds a single integer, rather than a nested list.
+ *     public boolean isInteger();
+ *
+ *     // @return the single integer that this NestedInteger holds, if it holds a single integer
+ *     // Return null if this NestedInteger holds a nested list
+ *     public Integer getInteger();
+ *
+ *     // @return the nested list that this NestedInteger holds, if it holds a nested list
+ *     // Return empty list if this NestedInteger holds a single integer
+ *     public List<NestedInteger> getList();
+ * }
+ */
+public class NestedIterator implements Iterator<Integer> {
+    private List<Integer> res;
+    private int length;
+    private int index;
+    public NestedIterator(List<NestedInteger> nestedList) {
+        res = new ArrayList<>();
+        flatting(nestedList);
+        length = res.size();
+        index = 0;
+    }
+    
+    public void flatting(List<NestedInteger> nestedList) {
+        for (NestedInteger nestedInteger : nestedList){
+            if (nestedInteger.isInteger()) {
+            res.add(nestedInteger.getInteger());
+            } else {
+            flatting(nestedInteger.getList());
+            }
+        }
+    }
+
+    @Override
+    public Integer next() {
+        int temp = res.get(index);
+        index++;
+        return temp;
+    }
+
+
+    @Override
+    public boolean hasNext() {
+        if (index == length) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+}
+
+
+
+/**
+ * Your NestedIterator object will be instantiated and called as such:
+ * NestedIterator i = new NestedIterator(nestedList);
+ * while (i.hasNext()) v[f()] = i.next();
+ */
+```
+
+Time O(N + L): 
+
+For each list within the nested list, there will be one call to flattenList(...). The loop within flattenList(...) will then iterate nn times, where nn is the number of integers within that list. Across all calls to flattenList(...), there will be a total of NN loop iterations. Therefore, the time complexity is the number of lists plus the number of integers, giving us O(N + L)O(N+L).
+
+Space :
+
+The less obvious auxiliary space is the space used by the `flattenList(...)` function. Recall that recursive functions need to keep track of where they're up to by putting stack frames on the runtime stack. Therefore, we need to determine what the maximum number of stack frames there could be at a time is. Each time we encounter a nested list, we call `flattenList(...)` and a stack frame is added. Each time we finish processing a nested list, `flattenList(...)` returns and a stack frame is removed. Therefore, the maximum number of stack frames on the runtime stack is the maximum nesting depth, D*D*.
+
+Because these two operations happen one-after-the-other, and either could be the largest, we add their time complexities together giving a final result of O(N + D)*O*(*N*+*D*).
+
+### 2. Stack
+
+```java
+/**
+ * // This is the interface that allows for creating nested lists.
+ * // You should not implement it, or speculate about its implementation
+ * public interface NestedInteger {
+ *
+ *     // @return true if this NestedInteger holds a single integer, rather than a nested list.
+ *     public boolean isInteger();
+ *
+ *     // @return the single integer that this NestedInteger holds, if it holds a single integer
+ *     // Return null if this NestedInteger holds a nested list
+ *     public Integer getInteger();
+ *
+ *     // @return the nested list that this NestedInteger holds, if it holds a nested list
+ *     // Return empty list if this NestedInteger holds a single integer
+ *     public List<NestedInteger> getList();
+ * }
+ */
+public class NestedIterator implements Iterator<Integer> {
+    private Stack<NestedInteger> stack;
+    public NestedIterator(List<NestedInteger> nestedList) {
+        stack = new Stack<>();
+        flatting(nestedList);
+    }
+    
+    public void flatting(List<NestedInteger> nestedList) {
+        for (int i = nestedList.size() - 1; i >= 0; i--) {
+            stack.push(nestedList.get(i));
+        }
+    }
+
+    @Override
+    public Integer next() {
+        if (!hasNext()) {
+            return null;
+        }
+        return stack.pop().getInteger();
+    }
+
+
+    @Override
+    public boolean hasNext() {
+        while (!stack.isEmpty()) {
+            if (stack.peek().isInteger()) {
+                return true;
+            }
+            flatting(stack.pop().getList());
+        }
+        return false;
+    }
+}
+
+/**
+ * Your NestedIterator object will be instantiated and called as such:
+ * NestedIterator i = new NestedIterator(nestedList);
+ * while (i.hasNext()) v[f()] = i.next();
+ */
+```
+
