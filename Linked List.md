@@ -747,7 +747,9 @@ public class Solution {
 }
 ```
 
-## 148. Sort List
+#  Sort List Problem 
+
+## 148. Sort List (Divided and Conquor)
 
 
 
@@ -797,3 +799,67 @@ class Solution {
 
 
 
+
+
+## 147. Insertion Sort List
+
+### 1. Insertion Sort
+
+```java
+class Solution {
+  public ListNode insertionSortList(ListNode head) {
+    if (head == null || head.next == null) {
+      return head;
+    }
+    ListNode dummy = new ListNode(); // Create a dependent node 
+    ListNode cur = head; // Use cur as the traversal node
+    while (cur != null) {
+      ListNode pre = dummy; // make pre always equal the result List's pre node
+      // in order to start at the first node
+      ListNode temp = cur.next;
+      while (pre.next != null && pre.next.val < cur.val) {
+        // 1. for the started loop, pre.next == null, so we can just add the cur
+        // 2. pre.next.val > cur
+        // 3. all the pre < cur
+        pre = pre.next;
+      }
+      cur.next = pre.next;
+      pre.next = cur;
+      cur = temp;
+    }
+    return dummy.next;
+    //O(n * n)
+    //O(1)
+  }
+}
+```
+
+
+
+
+
+## 138. Copy List with Random Pointer
+
+### 1. HashMap
+
+```java
+class Solution {
+    public Node copyRandomList(Node head) {
+        Node cur = head;
+        Map<Node, Node> map = new HashMap<>();
+        while (cur != null) {
+            map.put(cur, new Node(cur.val));
+            cur = cur.next;
+        }
+        cur = head;
+        while (cur != null) {
+            map.get(cur).next = map.get(cur.next);
+            map.get(cur).random = map.get(cur.random);
+            cur = cur.next;
+        }
+        return map.get(head);
+    }
+}
+```
+
+![image-20220722222737600](/Users/youhao/Library/Application Support/typora-user-images/image-20220722222737600.png)
