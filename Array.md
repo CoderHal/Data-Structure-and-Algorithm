@@ -1181,3 +1181,34 @@ class Solution {
 }
 ```
 
+
+
+## 128. Longest Consecutive Sequence
+
+### 1. HashSet
+
+```java
+class Solution {
+    public int longestConsecutive(int[] nums) {
+        Set<Integer> set = new HashSet<>();
+        for (int num : nums) {
+            set.add(num);
+        }
+        int longest = 0;
+        for (int num : set) {
+            if (!set.contains(num - 1)) {
+                int length = 1;
+                int cur = num;
+                while (set.contains(cur + 1)) {
+                    length++;
+                    cur++;
+                }
+                longest = Math.max(longest, length);
+            }
+        }
+        return longest;
+    }
+}
+```
+
+第二次用set遍历防止数组中的重复数字，为什么时间复杂度是O(n)的原因： 我们会去讨论该子序列中最小的数字，如果不是最小的那就不讨论，从最小的开始讨论避免了重复讨论，所以一个子序列只可能遍历一次。
