@@ -863,3 +863,55 @@ class Solution {
 ```
 
 ![image-20220722222737600](/Users/youhao/Library/Application Support/typora-user-images/image-20220722222737600.png)
+
+
+## 2130. Maximum Twin Sum of a Linked List
+
+### 1. Two Pointers + Reverse LinkList
+
+```java
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public int pairSum(ListNode head) {
+       ListNode fast = head;
+       ListNode slow = head;
+       if (fast.next.next == null) {
+           return head.val + head.next.val;
+       }
+       while (fast.next.next != null) {
+           fast = fast.next.next;
+           slow = slow.next;
+       }
+       fast = slow.next;
+       slow.next = null;
+       ListNode pre = null;
+       ListNode cur = head;
+       while (cur != null) {
+           ListNode temp = cur;
+           temp = temp.next;
+           cur.next = pre;
+           pre = cur;
+           cur = temp;
+       }
+       int res = 0;
+       while (slow != null) {
+           res = Math.max(res, slow.val + fast.val);
+           slow = slow.next;
+           fast = fast.next;
+       }
+        return res;
+    }
+}
+
+
+```
+
