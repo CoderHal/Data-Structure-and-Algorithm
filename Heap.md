@@ -239,3 +239,103 @@ class Solution {
 ```
 
 ![image-20220621153700883](/Users/youhao/Library/Application Support/typora-user-images/image-20220621153700883.png)
+
+## 973. K Closest Points to Origin
+
+### 1. Heap
+
+```java
+class Solution {
+    public int[][] kClosest(int[][] points, int k) {
+        if (points.length < k) {return points;}
+        PriorityQueue<int[]> heap = new PriorityQueue<>((a, b) -> (b[0] - a[0]));
+        for (int i = 0; i < points.length; i++) {
+            int square = points[i][0] * points[i][0] + points[i][1] * points[i][1];
+            if (heap.size() < k) {
+                heap.add(new int[]{square, i});
+            } else {
+                if (heap.peek()[0] > square) {
+                    heap.poll();
+                    heap.add(new int[]{square, i});
+                }
+            }
+        }
+        int[][] res = new int[k][2];
+        for (int i = 0; i < k; i++) {
+            int index = heap.poll()[1];
+            res[i] = points[index];
+        }
+        return res;
+      // O(NlogK)
+      // Adding to/removing from the heap (or priority queue) only takes O(\log k)O(logk) time when the size of the heap is capped at kk elements.
+      // O(k)
+    }
+}
+```
+
+### 2. Quick Sort
+
+由于我们可以return any order，所以 我们只需要把前k个结果返回就行，不需要将所有的都排序
+
+```java
+class Solution {
+  public int[][] kClosest(int[][] points, int k) {
+    return quickSort(points, k);
+  }
+  public int[][] quickSort(int[][] points, int k) {
+    int left = 0;
+    int right = points.length - 1;
+    int pivotIndex = points.length;
+    while (pivotIndex != k) {
+      // Repeatedly partition the array
+      // while narrowing in on the kth element
+      pivotIndex = partition(points, right, left);
+      if (pivotIndex < k) {
+        //因为当前的值选择的是[0, pivotIndex - 1]  [pivotIndex, length]这么划分的所以 pivotIndex的值可能在前k中，所以依然要讨论
+        left = pivotIndex;
+      } else {
+        right = pivotIndex - 1;
+      }
+    }
+    // Return the first k elements of the partially sorted array
+    return Arrays.copyOf(points, k);
+  }
+  public int partition(int[][] points, int right, int left) {
+    int[] pivot = choosePivot(points, left, right);
+    int pivotDist = square(pivot);
+    while (left < right) {
+      // Iterate through the range and swap elements to make sure
+      // that all points closer than the pivot are to the left
+      if (square(points[left]) >= pivotDist) {
+        int[] temp = points[left];
+        points[left] = points[right];
+        points[right] = temp;
+        right--;
+      } else {
+        left++;
+      }
+
+    }
+      // Ensure the left pointer is just past the end of
+      // the left range then return it as the new pivotIndex
+      // 如果最后出发了right--，说明left位置的值是小于pivotDist的，如果要return left 我们必须要将left放到>= pivotDist这边
+      if (square(points[left]) < pivotDist) {
+      left++;
+      }
+      return left;
+  }
+  public int[] choosePivot(int[][] points, int left, int right) {
+    return points[left + (right - left) / 2];
+  }
+  public int square(int[] pivot){
+    return pivot[0] * pivot[0] + pivot[1] * pivot[1];
+  }
+}
+```
+
+
+
+# Quick Sort
+
+![image-20220723220110594](/Users/youhao/Library/Application Support/typora-user-images/image-20220723220110594.png)
+
