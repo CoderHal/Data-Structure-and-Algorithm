@@ -1212,3 +1212,40 @@ class Solution {
 ```
 
 第二次用set遍历防止数组中的重复数字，为什么时间复杂度是O(n)的原因： 我们会去讨论该子序列中最小的数字，如果不是最小的那就不讨论，从最小的开始讨论避免了重复讨论，所以一个子序列只可能遍历一次。
+
+
+
+## 163. Missing Number
+
+### 1. Linear Scan
+
+```java
+class Solution {
+    public List<String> findMissingRanges(int[] nums, int lower, int upper) {
+        List<String> res = new ArrayList<>();
+        int left = lower - 1;
+        int right = lower - 1;
+        for (int i = 0; i < nums.length; i++) {
+            right = nums[i];
+            String str = "";
+            if (right - left == 2) {
+                    str += (left + 1);
+                    res.add(str);
+                }
+            else if (right - left > 2) {
+                    str = (left + 1) + "->" + (right - 1);
+                res.add(str);
+            }
+            left = right;
+        }
+        if (upper - right == 1) {
+            res.add("" + upper);
+        }
+        if (upper - right > 1) {
+            res.add((right + 1) + "->" + upper);
+        }
+        return res;
+    }
+}
+```
+
