@@ -289,3 +289,149 @@ class Solution {
 }
 ```
 
+
+
+
+
+## 293. Flip Game
+
+### 1. Loop
+
+```java
+class Solution {
+    public List<String> generatePossibleNextMoves(String currentState) {
+        List<String> res = new ArrayList<>();
+        if (currentState.length() < 2) {return res;}
+        for (int i = 1; i < currentState.length(); i++) {
+            if (currentState.charAt(i) == '+' && currentState.charAt(i - 1) == '+')
+            res.add(currentState.substring(0, i - 1) + "--" + currentState.substring(i + 1));
+        }
+        return res;
+    }
+}
+```
+
+
+
+## 1268. Search Suggestions System
+
+### 1. Binary Search
+
+```java
+class Solution {
+    public List<List<String>> suggestedProducts(String[] products, String searchWord) {
+        int n = products.length;
+        List<List<String>> res = new ArrayList<>();
+        Arrays.sort(products);
+        String prefix = "";
+        int start = 0;
+        for (char c : searchWord.toCharArray()) {
+            prefix += c;
+            int bsStart = lowerBound(products, prefix, start);
+            int preLength = prefix.length();
+            List<String> cur = new ArrayList<>();
+            for (int i = bsStart; i < Math.min(n, bsStart + 3); i++) {
+                if (preLength > products[i].length() || ! products[i].substring(0, preLength).equals(prefix)) {
+                   break;
+                }
+                 cur.add(products[i]);
+            }
+            res.add(cur);
+            start = bsStart; // 方便下次循环从bsStart开始查，减少运行复杂度
+        }
+        return res;
+    }
+    
+    public int lowerBound(String[] products, String prefix, int start) {
+        int mid = 0;
+        int end = products.length;
+        while (start < end) {
+            mid = (start + end) / 2;
+            if (products[mid].compareTo(prefix) >= 0) {
+                end = mid;
+            } else { //prefix的字母要在当前products的后面， 所以start 需要在mid后面一位
+                start = mid + 1;
+            }
+        }
+        return start;
+    }
+}
+```
+
+- Time complexity : O(nlog(n)) + O(mlog(n))*O*(*n**l**o**g*(*n*))+*O*(*m**l**o**g*(*n*)). Where `n` is the length of `products` and `m` is the length of the search word. Here we treat string comparison in sorting as O(1)*O*(1). O(nlog(n)comes from the sorting and O(mlog(n)) comes from running `binary search` on products `m` times.
+  - In Java there is an additional complexity of O(m^2)*O*(*m*2) due to Strings being immutable, here `m` is the length of `searchWord`.
+
+### 2. Trie Tree +DFS (未解决)
+
+```java
+List<List<String>> res=new ArrayList<List<String>>();
+class TrieNode{
+    boolean endOfWord;
+    TrieNode children[]=new TrieNode[26];
+    public TrieNode(){
+        children=new TrieNode[26];
+    }
+}
+
+public void dfs(String pref, TrieNode root, List<String> temp,String curr){
+    if(root!=null){
+        if(temp.size()==3){
+            return;
+        }
+        if(root.endOfWord){
+            temp.add(pref+curr);
+        }
+        
+        for(int i=0;i<26;i++){
+            if(root.children[i]!=null){
+                dfs(pref,root.children[i],temp,curr + (char)(i+'a'));
+            }   
+        }
+    }
+}
+
+public void insert(TrieNode root,String word){
+    for(int i=0;i<word.length();i++){
+        int x=word.charAt(i)-'a';
+        if(root.children[x]==null){
+            root.children[x]=new TrieNode();
+        }
+        root=root.children[x];
+    }
+    root.endOfWord=true;
+}
+
+public void search(TrieNode root,String pref){
+    List<String> temp=new ArrayList<String>();
+    for(int i=0;i<pref.length();i++){
+        Character xchar = pref.charAt(i);
+        int x = xchar-'a';
+        if(root.children[x]!=null){
+            root=root.children[x];        
+        }else{
+            res.add(temp);
+            return;
+        }
+    }
+    dfs(pref,root,temp,"");    //collect all strings.
+    res.add(temp);
+    
+}
+
+public List<List<String>> suggestedProducts(String[] products, String searchWord) {
+    TrieNode root=new TrieNode();
+    for(int i=0;i<products.length;i++){
+        insert(root,products[i]);
+    }
+    
+    int sn=searchWord.length();
+    String pref = "";
+    for(int i=0;i<sn;i++){
+        pref+= searchWord.charAt(i);
+        search(root,pref);
+    }
+    
+    return res;
+}
+```
+
