@@ -1461,3 +1461,68 @@ class Solution {
 ```
 
 ![image-20220720223711649](/Users/youhao/Library/Application Support/typora-user-images/image-20220720223711649.png)
+
+
+
+## 926. Flip String to Monotone Increasing  （单调递增）
+
+### 1. DP 
+
+```java
+class Solution {
+  public int minFlipsMonoIncr(String s) {
+    int n = s.length();
+    int[][] dp = new int[n + 1][2];
+    for (int i = 1; i <= n; i++) {
+      char c = s.charAt(i - 1);
+      if (c == '0') {
+        dp[i][0] = dp[i - 1][0];
+        dp[i][1] = Math.min(dp[i - 1][0], dp[i - 1][1]) + 1;
+      } else {
+        dp[i][0] = dp[i - 1][0] + 1;
+        dp[i][1] = Math.min(dp[i - 1][0], dp[i - 1][1]);
+      }
+    }
+    return Math.min(dp[n][0], dp[n][1]);
+  }
+}
+```
+
+![image-20220726215310802](/Users/youhao/Library/Application Support/typora-user-images/image-20220726215310802.png)
+
+### 2 . Prefix + Suffix
+
+```java
+class Solution {
+    public int minFlipsMonoIncr(String s) {
+        int n = s.length();
+        int[] left = new int[n + 1];
+        int[] right = new int[n + 1];
+        for (int i = 1; i <= s.length(); i++) {
+            char c = s.charAt(i - 1);
+            if (c == '1') {
+                left[i] = left[i - 1] + 1;
+            } else {
+                left[i] = left[i - 1];
+            }
+        }
+        for (int j = n - 1; j >= 0; j--) {
+            char c = s.charAt(j);
+            if (c == '0') {
+                right[j] = right[j + 1] + 1;
+            } else {
+                right[j] = right[j + 1];
+            }
+        }
+        int count = Integer.MAX_VALUE;
+        for (int a = 0; a < n + 1 ; a++) {
+            count = Math.min(left[a] + right[a], count);
+        }
+        return count;
+    }
+}
+
+
+```
+
+![image-20220726212624944](/Users/youhao/Library/Application Support/typora-user-images/image-20220726212624944.png)
