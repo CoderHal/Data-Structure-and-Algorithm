@@ -482,6 +482,102 @@ class Solution{
 //The iterative approach only allocates a few pointers, so it has a constant overall memory footprint.
 ```
 
+
+
+## 23. Merge k Sorted Lists
+
+### 1. Compared One by one
+
+```java
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public ListNode mergeKLists(ListNode[] lists) {
+        if (lists.length == 0) {
+            return null;
+        }
+        if (lists.length == 1) {
+            return lists[0];
+        }
+        ListNode res = new ListNode(0);
+        ListNode cur = res;
+        int n = lists.length;
+        ListNode list1 = lists[0];
+        for (int i = 1; i < n; i++) {
+            ListNode list2 = lists[i];
+            cur = res;
+            while (list1 != null && list2 != null) {
+                if (list1.val <= list2.val) {
+                    cur.next = list1;
+                    list1 = list1.next;
+                    cur = cur.next;
+                } else {
+                    cur.next = list2;
+                    list2 = list2.next;
+                    cur = cur.next;
+                }
+            } 
+            if (list1 == null) {
+                cur.next = list2;
+            } else {
+                cur.next = list1;
+            }
+            list1 = res.next;
+        }
+        return res.next;
+    }
+}
+```
+
+
+
+### 2. Using Priority Queue
+
+```java
+class Solution {
+    public ListNode mergeKLists(ListNode[] lists) {
+        if (lists.length == 0) {
+           return null;
+        }
+        if (lists.length == 1) {
+           return lists[0];
+        }
+        //最小堆
+        PriorityQueue<ListNode> pq = new PriorityQueue<>(lists.length, (a, b) -> (a.val - b.val));
+        for (ListNode list : lists) {
+            if (list != null) {
+                pq.add(list);
+            }
+        }
+        ListNode dummy = new ListNode(0);
+        ListNode cur = dummy;
+        while (pq.size() > 0) {
+            ListNode node = pq.poll();
+            cur.next = node;
+            if (node.next != null){
+                pq.add(node.next);
+            }
+            cur = cur.next;
+        }
+        return dummy.next;
+    }
+//优先队列 pq 中的元素个数最多是 k，所以一次 poll 或者 add 方法的时间复杂度是 O(logk)；所有的链表节点都会被加入和弹出 pq，所以算法整体的时间复杂度是 O(Nlogk)，其中 k 是链表的条数，N 是这些链表的节点总数
+}
+
+```
+
+创建一个二叉堆，二叉堆的规则是： 创建一个lists.length空间的二叉堆， 根据list头节点的值进行排序
+
+利用dummy的新节点去遍历整个二叉堆，将最小的头节点拿出来，再把头节点后面的节点加入堆中重新排序
+
 ## 92. Reverse Linked List II
 
 ### Solution
