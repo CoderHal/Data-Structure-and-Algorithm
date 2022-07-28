@@ -1526,3 +1526,51 @@ class Solution {
 ```
 
 ![image-20220726212624944](/Users/youhao/Library/Application Support/typora-user-images/image-20220726212624944.png)
+
+
+
+## 120. Triangle
+
+### 1. DP
+
+```java
+class Solution {
+    public int minimumTotal(List<List<Integer>> triangle) {
+        int s = triangle.size();
+        int[][] dp = new int[s][s];
+        for (int i = 0; i < s; i++) {
+            for (int j = 0; j < s; j++) {
+                dp[i][j] = Integer.MAX_VALUE;
+            }
+        }
+        int min = Integer.MAX_VALUE;
+        dp[0][0] = triangle.get(0).get(0);
+        for (int i = 1; i < s; i++) {
+            for (int j = 0; j < i + 1; j++) {
+                if (j - 1 >= 0){
+                    dp[i][j] = Math.min(dp[i - 1][j] , dp[i - 1][j - 1]) + triangle.get(i).get(j);
+                } else {
+                    dp[i][j] = dp[i - 1][j] + triangle.get(i).get(j);
+                }
+            }
+        }
+        for (int i = 0; i < s; i++) {
+            min = Math.min(min, dp[s - 1][i]);
+        }
+        return min;
+    }
+}
+```
+
+### 基本思路
+
+第 `i` 行的第 `j` 个元素从哪里来？可以从第 `i - 1` 行第 `j` 或第 `j - 1` 个元素下落过来，这就是所谓的状态转移关系：
+
+落到 `triangle[i][j]` 的最小路径和可以通过落到 `triangle[i-1][j]` 和 `triangle[i-1][j-1]` 的最小路径和推导出来。
+
+所以我们造一个 `dp` 数组，`dp[i][j]` 表示从 `triangle[0][0]` 走到 `triangle[i][j]` 的最小路径和。
+
+进一步，base case 就是 `dp[0][0] = triangle[0][0]`，我们要找的答案就是 `dp[n-1][..]` 中的最大值。
+
+
+
