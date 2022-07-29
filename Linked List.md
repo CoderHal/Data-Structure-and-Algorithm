@@ -1057,3 +1057,72 @@ Before- head ->>>>>>>> 小于x
 After- head ->>>>>>>>大于等于x -> null
 
 Made before-head -> after-head.next
+
+
+## 25. Reverse Node in k-Group
+
+### 1. Recursive Solution
+
+```java
+class Solution {
+  public ListNode reverseKGroup(ListNode head, int k) {
+    if (head == null) {
+      return null;
+    }
+    // [a, b)
+    ListNode a = head;
+    ListNode b = head;
+    for (int i = 0; i < k; i++) {
+      if (b == null) {
+        return a;
+      }
+      b = b.next;
+    }
+    ListNode res = reverse(a, b);
+    a.next = reverseKGroup(b, k);
+    return res;
+  }
+  public ListNode reverse(ListNode a, ListNode b) {
+    ListNode pre = null;
+    ListNode cur = a;
+    while (cur != b) {
+      ListNode temp = cur;
+      temp = temp.next;
+      cur.next = pre;
+      pre = cur;
+      cur = temp;
+    }
+    return pre;
+  }
+}
+```
+
+**1、先反转以 `head` 开头的 `k` 个元素**。
+
+
+
+![img](https://labuladong.github.io/algo/images/kgroup/3.jpg)
+
+
+
+**2、将第 `k + 1` 个元素作为 `head` 递归调用 `reverseKGroup` 函数**。
+
+
+
+![img](https://labuladong.github.io/algo/images/kgroup/4.jpg)
+
+
+
+**3、将上述两个过程的结果连接起来**。
+
+
+
+![img](https://labuladong.github.io/algo/images/kgroup/5.jpg)
+
+
+
+最后函数递归完成之后就是这个结果，完全符合题意：
+
+
+
+![img](https://labuladong.github.io/algo/images/kgroup/7.jpg)
