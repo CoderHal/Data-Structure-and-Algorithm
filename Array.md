@@ -1249,3 +1249,48 @@ class Solution {
 }
 ```
 
+
+
+## 303. Range Sum Query -Immutable
+
+### 1. Prefix Sum (Cache)
+
+```java
+class NumArray {
+    private int[] sum;
+    public NumArray(int[] nums) {
+        int n = nums.length;
+        sum = new int[n + 1];
+        for (int i = 0; i < n; i++) {
+            sum[i + 1] = sum[i] + nums[i];
+        }
+    }
+    
+    public int sumRange(int left, int right) {
+        return sum[right + 1] - sum[left];
+    }
+}
+
+```
+
+### 2. Prefix Sum (Using Map)
+
+```java
+class NumArray{
+  private Map<Integer, Integer> map;
+  public NumArray(int[] nums) {
+    map = new HashMap<>();
+    int sum = 0;
+    map.put(-1, sum);
+    for (int i = 0; i < nums.length; i++){
+      sum += nums[i];
+      map.put(i, sum);
+    }
+  }
+  public int sumRange(int left, int right) {
+    return map.get(right) - map.get(left - 1);
+  }
+}
+```
+
+![image-20220730211208340](/Users/youhao/Library/Application Support/typora-user-images/image-20220730211208340.png)
