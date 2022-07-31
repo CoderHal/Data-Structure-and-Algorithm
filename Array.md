@@ -1414,3 +1414,50 @@ class Solution {
 相信你已经能够联想到差分数组技巧了：**`trips[i]` 代表着一组区间操作，旅客的上车和下车就相当于数组的区间加减；只要结果数组中的元素都小于 `capacity`，就说明可以不超载运输所有旅客**。
 
 这题还有一个细节，一批乘客从站点 `trip[1]` 上车，到站点 `trip[2]` 下车，呆在车上的站点应该是 `[trip[1], trip[2] - 1]`，这是需要被操作的索引区间。
+
+
+
+## 1109. Corporate Flight Bookings
+
+```java
+class Solution {
+    public int[] corpFlightBookings(int[][] bookings, int n) {
+        int[] labels = new int[n];
+        Difference df = new Difference(labels);
+        for (int[] booking : bookings) {
+            int value = booking[2];
+            int i = booking[0] - 1;
+            int j = booking[1] - 1;
+            df.increment(i, j, value);
+        }
+        int[] res = df.result();
+        return res;  
+    }
+    class Difference {
+        int[] diff; 
+        public Difference(int[] nums) {
+            diff = new int[nums.length];
+            diff[0] = nums[0];
+            for (int i = 1; i < diff.length; i++) {
+                diff[i] = nums[i] - nums[i - 1];
+            }
+        }
+        
+        public void increment(int i, int j, int x) {
+            diff[i] += x;
+            if (j + 1 < diff.length) {
+                diff[j + 1] -= x;
+            }
+        }
+        public int[] result() {
+            int[] res = new int[diff.length];
+            res[0] = diff[0];
+            for (int i = 1; i < diff.length; i++) {
+                res[i] = res[i - 1] + diff[i];
+            }
+            return res;
+        }
+    }
+}
+```
+
