@@ -1461,3 +1461,53 @@ class Solution {
 }
 ```
 
+
+
+## 370. Range Addition
+
+### 1. Using Difference Class
+
+```java
+class Solution {
+    public int[] getModifiedArray(int length, int[][] updates) {
+        int[] arr = new int[length];
+        Difference df = new Difference(arr);
+        for (int[] update : updates) {
+            int i = update[0];
+            int j = update[1];
+            int val = update[2];
+            df.increment(i, j, val);
+        }
+        int[] res = df.result();
+        return res;
+    }
+    
+    class Difference{
+        private int[] diff;
+        public Difference(int[] nums) {
+            diff = new int[nums.length];
+            diff[0] = nums[0];
+            for (int i = 1; i < diff.length; i++) {
+                diff[i] = nums[i] - nums[i - 1];
+            }
+        }
+        
+        public void increment(int i, int j, int x) {
+            diff[i] += x;
+            if (j + 1 < diff.length) {
+                diff[j + 1] -= x;
+            }
+        }
+        
+        public int[] result() {
+            int[] res = new int[diff.length];
+            res[0] = diff[0];
+            for (int i = 1; i < res.length; i++) {
+                res[i] = res[i - 1] + diff[i];
+            }
+            return res;
+        }
+    }
+}
+```
+
