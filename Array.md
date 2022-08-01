@@ -571,7 +571,59 @@ class Solution {
 
 
 
-# Matrix
+# Traverse the 2D array
+
+## 151. Reverse Words in a String
+
+### 1. Reverse the original Array
+
+```java
+class Solution {
+  public String reverseWords(String s) {
+    StringBuilder sb = new StringBuilder();
+    for (int i = 0; i < s.length(); i++) {
+      char cur = s.charAt(i);
+      if (cur != ' ') {
+        sb.append(cur);
+      } else {
+        if (sb.length() != 0 && sb.charAt(sb.length() - 1) != ' ') {
+          sb.append(cur);
+        }
+      }
+    }
+    if (sb.charAt(sb.length() - 1) == ' ') {
+      sb.deleteCharAt(sb.length() - 1);
+    }
+    char[] res = sb.toString().toCharArray();
+    reverse(res, 0, sb.length() - 1);
+    int start = 0;
+    for (int i = 0; i < res.length; i++) {
+      char c = res[i];
+      if (i == res.length - 1) {
+        reverse(res, start, i);
+      } else if (c == ' ') {
+        reverse(res, start, i - 1);
+        start = i + 1;
+      }
+    }
+    return new String(res);
+  }
+  
+  public void reverse(char[] ch, int start, int end) {
+    while (start < end) {
+      char temp = ch[start];
+      ch[start] = ch[end];
+      ch[end] = temp;
+      start++;
+      end--;
+    }
+  }
+}
+```
+
+![image-20220731200253861](/Users/youhao/Library/Application Support/typora-user-images/image-20220731200253861.png)
+
+
 
 ## 48. Rotate Image
 
@@ -690,6 +742,69 @@ class Solution {
 
 ![image-20220421160609071](/Users/youhao/Library/Application Support/typora-user-images/image-20220421160609071.png)
 
+## 59. Spiral MatrixII
+
+```java
+class Solution {
+  public int[][] generateMatrix(int n) {
+    int[][] res = new int[n][n];
+    int step = 1;
+    int right = 1, left = 0, up = 0, down = 0;
+    int col = 0, row = 0;
+    int change = 0;
+    while(step <= n * n) {
+      res[row][col] = step;
+      if (step == n * n) return res;
+      if (right == 1) {
+        if (col < n && col + 1 < n && res[row][col + 1] == 0) {
+          col++;
+          step++;
+        }
+        else {
+          down = 1;
+          right = 0;
+        }
+      }
+      if (down == 1) {
+        if (row < n && row + 1 < n && res[row + 1][col] == 0) {
+          row++;
+          step++;
+        }
+        else {
+          down = 0;
+          left = 1;
+        }
+      }
+      if (left == 1) {
+        if (col >= 0 && col - 1 >= 0 && res[row][col - 1] == 0) {
+          col--;
+          step++;
+        }
+        else {
+          left = 0;
+          up = 1;
+        }
+      }
+      if (up == 1) {
+        if (row >= 0 && row - 1 >= 0 && res[row - 1][col] == 0) {
+          row--;
+          step++;
+        }
+        else {
+          up = 0;
+          right = 1;
+        }
+      }
+    }
+      return res;
+  }
+}
+```
+
+
+
+# Matrix
+
 ## 36. Valid Sudoku
 
 ### 1. HashSet
@@ -801,65 +916,6 @@ class Solution {
 ```
 
 ![image-20220421192136536](/Users/youhao/Library/Application Support/typora-user-images/image-20220421192136536.png)
-
-## 59. Spiral MatrixII
-
-```java
-class Solution {
-  public int[][] generateMatrix(int n) {
-    int[][] res = new int[n][n];
-    int step = 1;
-    int right = 1, left = 0, up = 0, down = 0;
-    int col = 0, row = 0;
-    int change = 0;
-    while(step <= n * n) {
-      res[row][col] = step;
-      if (step == n * n) return res;
-      if (right == 1) {
-        if (col < n && col + 1 < n && res[row][col + 1] == 0) {
-          col++;
-          step++;
-        }
-        else {
-          down = 1;
-          right = 0;
-        }
-      }
-      if (down == 1) {
-        if (row < n && row + 1 < n && res[row + 1][col] == 0) {
-          row++;
-          step++;
-        }
-        else {
-          down = 0;
-          left = 1;
-        }
-      }
-      if (left == 1) {
-        if (col >= 0 && col - 1 >= 0 && res[row][col - 1] == 0) {
-          col--;
-          step++;
-        }
-        else {
-          left = 0;
-          up = 1;
-        }
-      }
-      if (up == 1) {
-        if (row >= 0 && row - 1 >= 0 && res[row - 1][col] == 0) {
-          row--;
-          step++;
-        }
-        else {
-          up = 0;
-          right = 1;
-        }
-      }
-    }
-      return res;
-  }
-}
-```
 
 
 
