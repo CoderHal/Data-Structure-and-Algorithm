@@ -333,6 +333,61 @@ The solution is same with<< 438. Find All Anagrams in a String>>
 
 
 
+## 76. Minimum Window Substring
+
+### 1. Sliding Window with HashMap
+
+```java
+class Solution {
+  public String minWindow(String s, String t) {
+    Map<Character, Integer> window = new HashMap<>();
+    Map<Character, Integer> need = new HashMap<>();
+    // record the characters we need
+    for(char cur : t.toCharArray()) {
+      need.put(cur, need.getOrDefault(cur, 0) + 1);
+    }
+    // loop the string 
+    int right = 0;
+    int left = 0;
+    // record how many types of characters is satisfactory
+    int valid = 0;
+    // record the minimum window substring
+    int start = 0;
+    int len = Integer.MAX_VALUE;
+    while (right < s.length()) {
+      char c = s.charAt(right);
+      right++;
+      // update the window data
+      if (need.containsKey(c)) {
+        window.put(c, window.getOrDefault(c, 0) + 1);
+        if (window.get(c).equals(need.get(c))) {
+          valid++;
+        }
+      }
+      //judge if the left side needs to be contracted
+      while (valid == need.size()) {
+        //record the minimum length
+        if (len > right - left) {
+          len = right - left;
+          start = left;
+        }
+        char d = s.charAt(left);
+        left++;
+        if (need.containsKey(d)) {
+          if (window.get(d).equals(need.get(d))){
+            valid--;
+          }
+          window.put(d, window.get(d) - 1);
+        }
+      }
+    }
+    return len == Integer.MAX_VALUE ? "" : s.substring(start, len + start);
+  }
+}
+```
+
+
+
 ## 11. Container With Most Water
 
 ### 1. Two Pointer
