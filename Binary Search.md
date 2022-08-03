@@ -485,3 +485,142 @@ class Solution {
 ```
 
 ![image-20220702203305433](/Users/youhao/Library/Application Support/typora-user-images/image-20220702203305433.png)
+
+## 528. Random Pick with Weight
+
+### 1. Binary Search
+
+```java
+class Solution {
+    private int[] prefixSum;
+    private Random rand = new Random();
+    public Solution(int[] w) {
+        prefixSum = new int[w.length + 1];
+        for (int i = 1; i < prefixSum.length; i++) {
+            prefixSum[i] = w[i - 1] + prefixSum[i - 1];
+        }
+    }
+    
+    public int pickIndex() {
+        int target = rand.nextInt(prefixSum[prefixSum.length - 1]) + 1;
+        return leftBound(prefixSum, target) - 1;
+    }
+    public int leftBound(int[] pS, int t) {
+        int left = 0;
+        int right = pS.length - 1;
+        while (left < right) {
+            int mid = left + (right - left) / 2;
+            if (pS[mid] == t) {
+                return mid;
+            } else if (pS[mid] > t) {
+                right = mid;
+            } else {
+                left = mid + 1;
+            }
+        }
+        return left;
+    }
+}
+
+/**
+ * Your Solution object will be instantiated and called as such:
+ * Solution obj = new Solution(w);
+ * int param_1 = obj.pickIndex();
+ */
+```
+
+
+
+
+
+## 4. Median of Two Sorted Arrays
+
+### 1. Merge Sort
+
+```java
+class Solution {
+    public double findMedianSortedArrays(int[] nums1, int[] nums2) {
+        int[] merge = new int[nums1.length + nums2.length];
+        int l1 = 0; 
+        int l2 = 0;
+        int index = 0;
+        while (l1 < nums1.length && l2 < nums2.length) {
+            if (nums1[l1] > nums2[l2]) {
+                merge[index] = nums2[l2];
+                l2++;
+                index++;
+            } else {
+                merge[index] = nums1[l1];
+                l1++;
+                index++;
+            }
+        }
+        if (l1 != nums1.length) {
+            for (int i = l1; i < nums1.length; i++) {
+                merge[index] = nums1[i];
+                index++;
+            }
+        } else {
+            for (int i = l2; i < nums2.length; i++) {
+                merge[index] = nums2[i];
+                index++;
+            }
+        }
+        
+        int n = merge.length;
+        if (n % 2 == 1) {
+            return (double)merge[(n - 1) / 2];
+        } else {
+            int r1 = merge[n / 2];
+            int r2 = merge[n / 2 - 1];
+            return (double)(r1 + r2) / 2;
+        }
+    }
+}
+```
+
+
+
+### 2. Binary Search
+
+```java
+class Solution {
+    public double findMedianSortedArrays(int[] nums1, int[] nums2) {
+        if(nums1.length > nums2.length) {
+            int[] temp = nums1;
+            nums1 = nums2;
+            nums2 = temp;
+        }
+        int n1 = nums1.length;
+        int n2 = nums2.length;
+        int low = 0;
+        int high = nums1.length;
+        int partition1 = 0;
+        int partition2 = 0;
+        while (low <= high) {
+            partition1 = (low + high) / 2;
+            partition2 = (n1 + n2 + 1) / 2 - partition1;
+            int maxLeftX = (partition1 == 0) ? Integer.MIN_VALUE:nums1[partition1 - 1];
+            int maxLeftY = (partition2 == 0) ? Integer.MIN_VALUE:nums2[partition2 - 1];
+            int minRightX = (partition1 == n1) ? Integer.MAX_VALUE: nums1[partition1];
+            int minRightY = (partition2 == n2) ? Integer.MAX_VALUE: nums2[partition2];
+            if (maxLeftX <= minRightY && maxLeftY <= minRightX) {
+                if ((n1 + n2) % 2 == 0) {
+                    int r1 = Math.max(maxLeftX, maxLeftY);
+                    int r2 = Math.min(minRightX, minRightY);
+                    return ((double)(r1 + r2) / 2);
+                } else {
+                    return (double) (Math.max(maxLeftX, maxLeftY));
+                }
+            } else if (maxLeftX > minRightY) {
+                high = partition1 - 1;
+            } else {
+                low = partition1 + 1;
+            }
+        } 
+        return -1;
+    }
+}
+```
+
+![image-20220802213543112](/Users/youhao/Library/Application Support/typora-user-images/image-20220802213543112.png)
