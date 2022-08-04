@@ -1554,3 +1554,84 @@ class Solution {
 
 
 和236题不同的是，root == p|| root == q的判断语句需要放在 递归函数的后面。必须要先去判断其左右子树，再去判断当前节点。因为我们需要完全的找到p和q。  236题可以只找到1个就判断，因为p, q都存在于Tree中
+
+
+
+
+
+# TreeMap
+
+## 729. My Calendar I
+
+### 1. Brute force
+
+```java
+class MyCalendar {
+    private List<Pair> res; 
+    public MyCalendar() {
+        res = new ArrayList<>();
+    }
+    
+    public boolean book(int start, int end) {
+        if (res.isEmpty()) {
+            res.add(new Pair(start,end));
+            return true;
+        } else {
+            int s = res.size();
+            for (int i = 0; i < s; i++) {
+                Pair cur = res.get(i);
+                if (Math.max(cur.start, start) < Math.min(cur.end, end)){
+                    return false;
+                }
+            }
+        }
+        res.add(new Pair(start, end));
+        return true;
+    }
+    class Pair {
+        private int end;
+        private int start;
+        public Pair(int start, int end) {
+            this.start = start;
+            this.end = end;
+        }
+    }
+}
+
+/**
+ * Your MyCalendar object will be instantiated and called as such:
+ * MyCalendar obj = new MyCalendar();
+ * boolean param_1 = obj.book(start,end);
+ */
+```
+
+
+
+### 2. Balanced Tree (TreeMap)
+
+```java
+class MyCalendar {
+    TreeMap<Integer, Integer> tree;
+    public MyCalendar() {
+        tree = new TreeMap<>();
+    }
+    
+    public boolean book(int start, int end) {
+        Integer prev = tree.floorKey(start);
+        Integer next = tree.ceilingKey(start);
+        if ((prev == null || tree.get(prev) <= start) && (next == null || next >= end)) {
+            tree.put(start, end);
+            return true;
+        }
+        return false;
+    }
+}
+
+/**
+ * Your MyCalendar object will be instantiated and called as such:
+ * MyCalendar obj = new MyCalendar();
+ * boolean param_1 = obj.book(start,end);
+ */
+```
+
+ TreeMap的接口是SortedMap， CeilKey 就是比当前start大的集合里最小的key， floorKey是比当前start小的集合中最大的key， 如果没有返回null， 原理是红黑树
