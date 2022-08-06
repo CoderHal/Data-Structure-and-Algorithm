@@ -435,3 +435,30 @@ public List<List<String>> suggestedProducts(String[] products, String searchWord
 }
 ```
 
+
+
+## 58. Length of Last Word
+
+### 1. String
+
+```java
+class Solution {
+    public int lengthOfLastWord(String s) {
+        int p = 0;
+        if (s.length() == 0) {
+            return 0;
+        }
+        for (int i = 0; i < s.length(); i++) {
+            if (s.charAt(i) != ' ') {
+                p = 0;
+            }
+            while (i < s.length() && s.charAt(i) != ' ' ) {
+                i++;
+                p++;
+            }
+        }
+        return p;
+    }
+}
+```
+
