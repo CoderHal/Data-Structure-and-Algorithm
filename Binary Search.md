@@ -1,5 +1,272 @@
 # BinarySearch
 
+# 算法思想
+
+# 二分查找框架
+
+```java
+int binarySearch(int[] nums, int target) {
+    int left = 0, right = ...;
+
+    while(...) {
+        int mid = left + (right - left) / 2;
+        if (nums[mid] == target) {
+            ...
+        } else if (nums[mid] < target) {
+            left = ...
+        } else if (nums[mid] > target) {
+            right = ...
+        }
+    }
+    return ...;
+}
+```
+
+尽量不要使用else，把每个条件都写得清清楚楚 left + (right - left) / 2能够有效防止溢出，(right + left) / 2有可能发生溢出
+
+## 1. 寻找一个数
+
+```java
+int binarySearch(int[] nums, int target) {
+    int left = 0, right = nums.length - 1;//注意
+
+    while(left <= right) {
+        int mid = left + (right - left) / 2;
+        if (nums[mid] == target) {
+            return mid;
+        } else if (nums[mid] < target) {
+            left = mid + 1; // 注意
+        } else if (nums[mid] > target) {
+            right = mid - 1; //注意
+        }
+    }
+    return -1;
+}
+```
+
+### (1) 为什么不是(left < right) ?
+
+因为right 为 nums.length - 1, 所以搜索区间为 [left, right], 两端都是闭区间
+
+### (2) 终止条件
+
+while(left <= right) 意味着终止条件为 left = right + 1, 区间为[right + 1, right], 不可能出现这种区间，所以结果可以直接返回 -1，表示没找到
+
+while(left < right) 意味着终止条件为 left = right, 区间为[right, right], 此时不是非空区间。我们需要讨论nums[right] 是否等于target，再决定是否返回-1
+
+### (3) 为什么是left = mid + 1, right = mid - 1? 
+
+首先要明确搜索区间，如果nums[mid]不是target目标，说明我们不需要从mid为边界了，就是[left, mid - 1] 或者 [mid + 1, right]
+
+
+
+## 2. 寻找左侧边界的二分搜索
+
+```java
+int left_bound(int[] nums, int target) {
+  int left = 0;
+  int right = nums.length;//注意
+  
+  while (left < right) {
+    int mid = left + (right - left) / 2;
+    if (nums[mid] == target) {
+      right = mid;
+    } else if (nums[mid] < target) {
+      left = mid + 1;
+    } else if (nums[mid] > target) {
+      right = mid; //注意
+    }
+  }
+  return left;
+}
+```
+
+### (1) 为什么while不是 <= 而是 <
+
+还是看搜索区间，此时right = nums.length，所以应该是[left, right)， 而循环终止条件是 left = right也就是 [left,  left)是空的，所以可以终止。
+
+### (2) 没有返回-1操作？如果不存在target怎么办
+
+返回的时候判断nums[left] 是否等于 target就行了。 在判断之前，需要讨论left 是否越界
+
+```java
+while (left < right) {
+    //...
+}
+// 此时 target 比所有数都大，返回 -1
+if (left == nums.length) return -1;
+// 判断一下 nums[left] 是不是 target
+return nums[left] == target ? left : -1;
+
+```
+
+### (3) 为什么是left = mid + 1， right = mid? 
+
+因为是左闭右开区间 [left, right), 所以如果nums[mid] 被检索了之后， [left, mid)， 和 [mid + 1, right)是符合的，避免了重复检测mid
+
+### (4) 为什么该算法能够搜索左侧边界
+
+因为我们要求nums[mid] = target时, right = mid, 也就是从[left, mid)中继续搜索，不断的向左收缩，就能达到左侧边界
+
+### (5) 返回left， right 都一样
+
+因为终止条件是left = right
+
+### (6) 按照 while (left <= right) 来修改模版
+
+```java
+public int left_bound(int[] nums, int target) {
+  int left = 0;
+  int right = nums.length - 1;
+  while (left <= right) {
+    int mid = left + (right - left) / 2;
+    if (nums[mid] == target) {
+      right = mid - 1;
+    } else if (nums[mid] > target) {
+      right = mid - 1;
+    } else if (nums[mid] < target) {
+      left = mid + 1;
+    }
+  }
+  if (left == nums.length) return -1;
+  // 判断一下 nums[left] 是不是 target
+  return nums[left] == target ? left : -1;
+}
+```
+
+
+
+## 3. 寻找右侧边界的二分搜索
+
+```java
+public int right_bound(int[] nums, int target) {
+  int left = 0; 
+  int right = nums.length; 
+  while (left < right) {
+    int mid = left + (right - left) / 2;
+    if (nums[mid] == target) {
+      left = mid + 1;//注意
+    }
+    else if (nums[mid] < target) {
+      left = mid + 1;
+    }
+    else if (nums[mid] > target) {
+      right = mid;
+    }
+  }
+  return left - 1;//注意
+}
+```
+
+### (1) 为什么到达右侧边界
+
+当nums[mid] == target 时， 我们需要将left 往右收缩 --> left = mid + 1 去寻找我们的右边界
+
+### (2) 为什么返回left - 1 而不是 left
+
+首先终止条件是 left = right, 和左侧边界不同，左侧中一直是right = mid所以能等于target，只需要返回left。 因为我们更新的是left = mid + 1, 也就是说nums[left] 肯定不等于target了 (参考if条件语句)，所以我们要返回left - 1，去寻找我们的右边界
+
+### (3) 如果不存在target
+
+和左侧一样，我们讨论nums[left - 1]是否等于target
+
+```java
+while (left < right) {
+    // ...
+}
+// 判断 target 是否存在于 nums 中
+// 此时 left - 1 索引越界
+if (left - 1 < 0) return -1;
+// 判断一下 nums[left] 是不是 target
+return nums[left - 1] == target ? (left - 1) : -1;
+```
+
+### (4) 按照While (left <= right)来修改
+
+```java
+public int right_bound(int[] nums, int target) {
+  int left = 0;
+  int right = nums.length - 1;
+  while (left <= right) {
+    int mid = left + (right - left) / 2;
+    if (nums[mid] == target) {
+      // 这里改成收缩左侧边界即可
+      left = mid + 1;
+    } else if (nums[mid] < target) {
+      left = mid + 1;
+    } else if (nums[mid] > target) {
+      right = mid - 1;
+    }
+  }
+  // 最后改成返回 left - 1
+    if (left - 1 < 0) return -1;
+    return nums[left - 1] == target ? (left - 1) : -1;
+}
+```
+
+## 4. 三种情况的统一模版
+
+```java
+int binary_search(int[] nums, int target) {
+    int left = 0, right = nums.length - 1; 
+    while(left <= right) {
+        int mid = left + (right - left) / 2;
+        if (nums[mid] < target) {
+            left = mid + 1;
+        } else if (nums[mid] > target) {
+            right = mid - 1; 
+        } else if(nums[mid] == target) {
+            // 直接返回
+            return mid;
+        }
+    }
+    // 直接返回
+    return -1;
+}
+
+int left_bound(int[] nums, int target) {
+    int left = 0, right = nums.length - 1;
+    while (left <= right) {
+        int mid = left + (right - left) / 2;
+        if (nums[mid] < target) {
+            left = mid + 1;
+        } else if (nums[mid] > target) {
+            right = mid - 1;
+        } else if (nums[mid] == target) {
+            // 别返回，锁定左侧边界
+            right = mid - 1;
+        }
+    }
+    // 判断 target 是否存在于 nums 中
+    // 此时 target 比所有数都大，返回 -1
+    if (left == nums.length) return -1;
+    // 判断一下 nums[left] 是不是 target
+    return nums[left] == target ? left : -1;
+}
+
+int right_bound(int[] nums, int target) {
+    int left = 0, right = nums.length - 1;
+    while (left <= right) {
+        int mid = left + (right - left) / 2;
+        if (nums[mid] < target) {
+            left = mid + 1;
+        } else if (nums[mid] > target) {
+            right = mid - 1;
+        } else if (nums[mid] == target) {
+            // 别返回，锁定右侧边界
+            left = mid + 1;
+        }
+    }
+    // 此时 left - 1 索引越界
+    if (left - 1 < 0) return -1;
+    // 判断一下 nums[left] 是不是 target
+    return nums[left - 1] == target ? (left - 1) : -1;
+}
+
+```
+
+
+
 ## 69. Sqrt(x)
 
 ### 1. Binary Search

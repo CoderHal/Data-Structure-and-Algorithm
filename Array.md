@@ -1,5 +1,143 @@
 # Array
 
+# 常见算法
+
+## 1. 前缀和， 数组
+
+### (1) 数组
+
+计算索引区间的和，可以使用前缀和来求，减少累加次数
+
+![image-20220806201537357](/Users/youhao/Library/Application Support/typora-user-images/image-20220806201537357.png)
+
+如果计算[1, 4]内的元素之和， 只需要 preSum[5] - preSum[1]就可以求出来
+
+### (2). 矩阵
+
+![image-20220806202515590](/Users/youhao/Library/Application Support/typora-user-images/image-20220806202515590.png)
+
+创造一个比当前矩阵多一行一列的新矩阵， 从新矩阵的[1, 1]来存储，开始计算 从(0, 0) - > (i, j)的前缀和。根据上述图来计算矩阵某一区域的和
+
+## 2. 差分数组
+
+**差分数组的主要适用场景是频繁对原始数组的某个区间的元素进行增减**
+
+差分就是nums[i] - nums[i - 1];
+
+![image-20220806203234438](/Users/youhao/Library/Application Support/typora-user-images/image-20220806203234438.png)
+
+如果对区间[i...j]中元素全部+3， 那么只需要让 `diff[i] += 3`，然后再让 `diff[j+1] -= 3` 即可
+
+### 差分数组工具类模版
+
+```java
+// 差分数组工具类
+class Difference {
+    // 差分数组
+    private int[] diff;
+    
+    /* 输入一个初始数组，区间操作将在这个数组上进行 */
+    public Difference(int[] nums) {
+        assert nums.length > 0;
+        diff = new int[nums.length];
+        // 根据初始数组构造差分数组
+        diff[0] = nums[0];
+        for (int i = 1; i < nums.length; i++) {
+            diff[i] = nums[i] - nums[i - 1];
+        }
+    }
+
+    /* 给闭区间 [i, j] 增加 val（可以是负数）*/
+    public void increment(int i, int j, int val) {
+        diff[i] += val;
+        if (j + 1 < diff.length) {
+            diff[j + 1] -= val;
+        }
+    }
+
+    /* 返回结果数组 */
+    public int[] result() {
+        int[] res = new int[diff.length];
+        // 根据差分数组构造结果数组
+        res[0] = diff[0];
+        for (int i = 1; i < diff.length; i++) {
+            res[i] = res[i - 1] + diff[i];
+        }
+        return res;
+    }
+}
+```
+
+比如 预定问题， 拼车
+
+## 3. 原地反转
+
+#### (1) 反转字符串
+
+先反转整个字符串， 再对每个单词进行反转
+
+s = "labuladong world hello"
+
+s = "gnodalubal dlrow olleh"
+
+s = "labuladong world hello"
+
+#### (2) 反转matrix
+
+##### ---顺时针旋转90度
+
+先镜像对称
+
+![image-20220806210738331](/Users/youhao/Library/Application Support/typora-user-images/image-20220806210738331.png)
+
+再进行反转
+
+![image-20220806210814782](/Users/youhao/Library/Application Support/typora-user-images/image-20220806210814782.png)
+
+这就是顺时针翻转90度
+
+![image-20220806210854474](/Users/youhao/Library/Application Support/typora-user-images/image-20220806210854474.png)
+
+
+
+##### ---逆时针旋转90度
+
+![image-20220806211156220](/Users/youhao/Library/Application Support/typora-user-images/image-20220806211156220.png)
+
+
+
+## 4. Sliding Window模版
+
+```java
+public void slidingWindow(String s) {
+  HashMap<Character, Integer> map = new HashMap<>();
+  int left = 0;
+  int right = 0;
+  while (right < s.length()) {
+    //c是将要移入窗口的的字符
+    c = s.charAt(right);
+    //增大窗口
+    right++;
+    //进行窗口的一系列更新
+    ...
+    
+    //判断左侧窗口是否要收缩
+    while (window need to shrink) {
+      //d 是将要移出的字符
+      d = s.charAt(left);
+      //缩小窗口
+      left++;
+      // 将窗口进行一系列更新
+      。。。
+    }
+  }
+}
+```
+
+
+
+
+
 ## 1.Two Sum
 
 ### Problem Description
