@@ -939,3 +939,52 @@ class Solution {
 ```
 
 找到最大装载量和最小装载量， 在这个范围内利用二分查找去找和target days 相等的天数，并且要靠左边界搜索，因为我们要求最小装载量
+
+
+
+## 410. Split Array Largest Sum
+
+### 1. Binary Search
+
+```java
+class Solution {
+    public int splitArray(int[] nums, int m) {
+        int left = 0;
+        int right = 0;
+        for (int num : nums) {
+            left = Math.max(left, num);
+            right += num;
+        }
+        
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            int needGroup = split(nums, mid);
+            if (needGroup == m) {
+                right = mid - 1;
+            }
+            else if (needGroup > m) {
+                left = mid + 1;
+            }
+            else if (needGroup < m) {
+                right = mid - 1;
+            }
+        }
+        return left;
+    }
+    
+    public int split(int[] nums, int cap) {
+        int cur = cap;
+        int res = 1;
+        for (int num : nums) {
+            if (num > cur) {
+                cur = cap;
+                res++;
+            }
+            cur -= num;
+        }
+        return res;
+    }
+}
+```
+
+Same as the 1011. 计算一个数组的最大容量和最小容量， 以[最小容量，最大容量]为范围，去搜索左侧边界寻找在能分成m组的情况下，最小的容量。
