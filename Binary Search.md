@@ -988,3 +988,54 @@ class Solution {
 ```
 
 Same as the 1011. 计算一个数组的最大容量和最小容量， 以[最小容量，最大容量]为范围，去搜索左侧边界寻找在能分成m组的情况下，最小的容量。
+
+
+
+## 875. Koko Eating Bananas
+
+### 1. Binary Search
+
+```java
+class Solution {
+    public int minEatingSpeed(int[] piles, int h) {
+        int left = 1;
+        int right = 0;
+        for (int pile : piles) {
+            right = Math.max(right, pile);
+        }
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            int needHours = helper(piles, mid);
+            if (needHours <= 0) {//进行溢出处理
+                left = mid + 1;
+            }
+            else if (needHours == h) {
+                right = mid - 1;
+            }
+            else if (needHours > h) {
+                left = mid + 1;
+            }
+            else if (needHours < h) {
+                right = mid - 1;
+            }
+        } 
+        return left;
+    }
+    
+    public int helper(int[] piles, int k) {
+
+        int res = 0;
+        for (int pile : piles) {
+            int thisPile = pile / k;
+            res += thisPile; //这个地方超出了上界 溢出之后变成了负数
+            if (pile % k > 0) {
+                res++;
+            }
+        }
+        return res;
+    }
+}
+```
+
+这道题一定要考虑int类型溢出问题
+
