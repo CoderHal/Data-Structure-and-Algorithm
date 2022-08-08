@@ -891,3 +891,51 @@ class Solution {
 ```
 
 ![image-20220802213543112](/Users/youhao/Library/Application Support/typora-user-images/image-20220802213543112.png)
+
+
+
+## 1011. Capacity To ship Package Within D days
+
+### 1. Binary Search
+
+```java
+class Solution {
+  public int shipWithinDays(int[] weights, int days) {
+    int left = 0; 
+    int right = 0;
+    for (int weight : weights) {
+      left = Math.max(left, weight); //求最大天数，每天只能运一个
+      right += weight; //最小天数，一天全运完
+    }
+    while (left <= right) {
+      int mid = left + (right - left) / 2;
+      int needDays = helper(weights, mid);
+      if (needDays == days) {
+        right = mid - 1;
+      }
+      else if (needDays > days) {
+        left = mid + 1;
+      }
+      else if (needDays < days) {
+        right = mid - 1;
+      }
+    }
+    return left;
+  }
+  
+  public int helper(int[] weights, int capacity) {
+    int cur = capacity;
+    int res = 1;
+    for (int weight : weights) {
+      if (weight > cur) {
+        day++;
+        cur = capacity;
+      }
+      cur -= weight;
+    }
+    return res;
+  }
+}
+```
+
+找到最大装载量和最小装载量， 在这个范围内利用二分查找去找和target days 相等的天数，并且要靠左边界搜索，因为我们要求最小装载量
