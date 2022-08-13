@@ -1,5 +1,128 @@
 # Tree Traversal
 
+# 算法思想
+
+## 1. 前序遍历和后序遍历
+
+快速排序是二叉树的前序遍历
+
+归并排序是二叉树的后序遍历
+
+### 1. 快速排序模版
+
+```java
+void sort(int[] nums, int lo, int hi) {
+    /****** 前序遍历位置 ******/
+    // 通过交换元素构建分界点 p
+    int p = partition(nums, lo, hi);
+    /************************/
+
+    sort(nums, lo, p - 1);
+    sort(nums, p + 1, hi);
+}
+```
+
+### 2. 归并排序框架
+
+```java
+// 定义：排序 nums[lo..hi]
+void sort(int[] nums, int lo, int hi) {
+    int mid = (lo + hi) / 2;
+    // 排序 nums[lo..mid]
+    sort(nums, lo, mid);
+    // 排序 nums[mid+1..hi]
+    sort(nums, mid + 1, hi);
+
+    /****** 后序位置 ******/
+    // 合并 nums[lo..mid] 和 nums[mid+1..hi]
+    merge(nums, lo, mid, hi);
+    /*********************/
+}
+```
+
+## 2. 二叉树遍历框架
+
+```java
+void traverse(TreeNode root) {
+    if (root == null) {
+        return;
+    }
+    // 前序位置
+    traverse(root.left);
+    // 中序位置
+    traverse(root.right);
+    // 后序位置
+}
+```
+
+前序位置的代码在刚刚进入一个二叉树节点的时候执行；
+
+后序位置的代码在将要离开一个二叉树节点的时候执行；
+
+中序位置的代码在一个二叉树节点左子树都遍历完，即将开始遍历右子树的时候执行。
+
+
+
+## 3. 后序位置的特殊之处
+
+1. 中序遍历一般都出现在BST中
+2. 前序遍历都是自顶向下的
+3. 后序遍历中都是自底向上
+4. 后序遍历一般都是和子树有关
+
+比如如何打印出每个节点的左右子树各有多少节点？
+
+```java
+// 定义：输入一棵二叉树，返回这棵二叉树的节点总数
+int count(TreeNode root) {
+    if (root == null) {
+        return 0;
+    }
+    int leftCount = count(root.left);
+    int rightCount = count(root.right);
+    // 后序位置
+    printf("节点 %s 的左子树有 %d 个节点，右子树有 %d 个节点",
+            root, leftCount, rightCount);
+
+    return leftCount + rightCount + 1;
+}
+
+```
+
+## 4. 层序遍历
+
+### 1.通过迭代
+
+```java
+// 输入一棵二叉树的根节点，层序遍历这棵二叉树
+void levelTraverse(TreeNode root) {
+    if (root == null) return;
+    Queue<TreeNode> q = new LinkedList<>();
+    q.offer(root);
+
+    // 从上到下遍历二叉树的每一层
+    while (!q.isEmpty()) {
+        int sz = q.size();
+        // 从左到右遍历每一层的每个节点
+        for (int i = 0; i < sz; i++) {
+            TreeNode cur = q.poll();
+            // 将下一层节点放入队列
+            if (cur.left != null) {
+                q.offer(cur.left);
+            }
+            if (cur.right != null) {
+                q.offer(cur.right);
+            }
+        }
+    }
+}
+
+```
+
+
+
+
+
 ## 145. Binary Tree Postorder Traversal
 
 ### 1.1 Iteration Solution
@@ -247,6 +370,34 @@ Step 2: while current != null
 ​			a. In current's subleft tree, make current  the right child of the rightmost node
 
 ​			b.  Go to this left child
+
+## 116. Populating Next Right Pointers in Each Node
+
+### 1. Recursion
+
+```java
+class Solution {
+  public Node connect(Node root) {
+    if (root == null) {return root;}
+    //连接根结点的左右子节点
+    traverse(root.left, root.right);
+    return root;
+  }
+  public void traverse(Node n1, Node n2) {
+    if (n1 == null || n2 == null) {
+      return;
+    }
+    //连接当前两个节点
+    n1.next = n2;
+    //先连接左子树的
+    traverse(n1.left, n1.right);
+    traverse(n2.left, n2.right);
+    traverse(n1.right, n2.left);
+  }
+}
+```
+
+
 
 ## Summary Binary Tree Traveral
 
