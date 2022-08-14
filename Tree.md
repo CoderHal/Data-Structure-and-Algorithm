@@ -995,7 +995,67 @@ class Solution {
 
 
 
+## 889. Construct Binary Tree from PreOrder and Postorder Traversal
 
+### 1. Recursion
+
+```java
+class Solution {
+    // 存储 postorder 中值到索引的映射
+    HashMap<Integer, Integer> valToIndex = new HashMap<>();
+
+    public TreeNode constructFromPrePost(int[] preorder, int[] postorder) {
+        for (int i = 0; i < postorder.length; i++) {
+            valToIndex.put(postorder[i], i);
+        }
+        return build(preorder, 0, preorder.length - 1,
+                    postorder, 0, postorder.length - 1);
+    }
+
+    // 定义：根据 preorder[preStart..preEnd] 和 postorder[postStart..postEnd]
+    // 构建二叉树，并返回根节点。
+    TreeNode build(int[] preorder, int preStart, int preEnd,
+                   int[] postorder, int postStart, int postEnd) {
+        if (preStart > preEnd) {
+            return null;
+        }
+        if (preStart == preEnd) {
+            return new TreeNode(preorder[preStart]);
+        }
+
+        // root 节点对应的值就是前序遍历数组的第一个元素
+        int rootVal = preorder[preStart];
+        // root.left 的值是前序遍历第二个元素
+        // 通过前序和后序遍历构造二叉树的关键在于通过左子树的根节点
+        // 确定 preorder 和 postorder 中左右子树的元素区间
+        int leftRootVal = preorder[preStart + 1];
+        // leftRootVal 在后序遍历数组中的索引
+        int index = valToIndex.get(leftRootVal);
+        // 左子树的元素个数
+        int leftSize = index - postStart + 1;
+
+        // 先构造出当前根节点
+        TreeNode root = new TreeNode(rootVal);
+        // 递归构造左右子树
+        // 根据左子树的根节点索引和元素个数推导左右子树的索引边界
+        root.left = build(preorder, preStart + 1, preStart + leftSize,
+                postorder, postStart, index);
+        root.right = build(preorder, preStart + leftSize + 1, preEnd,
+                postorder, index + 1, postEnd - 1);
+
+        return root;
+    }
+}
+
+```
+
+**1、首先把前序遍历结果的第一个元素或者后序遍历结果的最后一个元素确定为根节点的值**。
+
+**2、然后把前序遍历结果的第二个元素作为左子树的根节点的值**。
+
+**3、在后序遍历结果中寻找左子树根节点的值，从而确定了左子树的索引边界，进而确定右子树的索引边界，递归构造左右子树即可**。
+
+![image-20220813232800179](/Users/youhao/Library/Application Support/typora-user-images/image-20220813232800179.png)
 
 
 
