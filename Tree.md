@@ -845,6 +845,68 @@ class Solution {
 
 # Tree Construct
 
+## 297. Serialize and Deserialize Binary Tree
+
+### 1. Recursion (Preorder)
+
+```java
+public class Codec {
+    // Encodes a tree to a single string.
+  private StringBuilder preOrder;
+  public String serialize(TreeNode root) {
+    if (root == null) {
+      return "#";
+    }
+    preOrder = new StringBuilder();
+    serializeTree(root);
+    return preOrder.toString();
+  }
+  
+  public void serializeTree(TreeNode root) {
+    if (root == null) {
+      preOrder.append("#" + ",");
+      return;
+    }
+    preOrder.append(root.val + ",");
+    serializeTree(root.left);
+    serializeTree(root.right);
+    return;
+  }
+  
+    // Decodes your encoded data to tree.
+  public TreeNode deserialize(String data) {
+    String[] newDatas = data.split(",");
+    List<String> list = new LinkedList<>();
+    for (String newData : newDatas) {
+      list.add(newData);
+    }
+    return deserializeTree(list);
+  }
+  
+  public TreeNode deserializeTree(List<String> list) {
+    if (list.isEmpty()) {
+      return null;
+    }
+    
+    String cur = list.remove(0);
+    if (cur.equals("#")) {
+      return null;
+    }
+    
+    TreeNode root = new TreeNode(Integer.parseInt(cur));
+    root.left = deserializeTree(list);
+    root.right = deserializeTree(list);
+    return root;
+  }
+}
+```
+
+将Tree的node利用前序遍历记录在String中， null用“#”来表示， 每一个节点使用","来分隔
+
+再将整个String根据“，”分割成数组
+
+再根据前序遍历的数组中第一个都是根节点特点进行遍历构造
+
 ## 654. Maximum Binary Tree
 
 ### 1. Recursion
