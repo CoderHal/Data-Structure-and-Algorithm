@@ -843,6 +843,51 @@ class Solution {
 }
 ```
 
+
+
+## 652. Find Duplicate SubTrees
+
+### 1. SubTrees Using PostTree
+
+```java
+class Solution {
+    // 记录所有子树以及出现的次数
+    HashMap<String, Integer> memo = new HashMap<>();
+    // 记录重复的子树根节点
+    LinkedList<TreeNode> res = new LinkedList<>();
+
+    /* 主函数 */
+    public List<TreeNode> findDuplicateSubtrees(TreeNode root) {
+        traverse(root);
+        return res;
+    }
+
+    String traverse(TreeNode root) {
+        if (root == null) {
+            return "#";
+        }
+
+        String left = traverse(root.left);
+        String right = traverse(root.right);
+
+        String subTree = left + "," + right + "," + root.val;
+
+        int freq = memo.getOrDefault(subTree, 0);
+        // 多次重复也只会被加入结果集一次
+        if (freq == 1) {
+            res.add(root);
+        }
+        // 给子树对应的出现次数加一
+        memo.put(subTree, freq + 1);
+        return subTree;
+    }
+}
+
+
+```
+
+自底向上进行查询， 零用String来存储到map中方便查找一样的元素
+
 # Tree Construct
 
 ## 297. Serialize and Deserialize Binary Tree
