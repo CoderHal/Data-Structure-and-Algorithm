@@ -1982,7 +1982,25 @@ class Solution {
 
 这种方式属于BST的特性，可以避免将所有的节点都进行遍历
 
+## 701. Insert into a Binary Search Tree
 
+### 1. Recursion
+
+```java
+class Solution {
+  public TreeNode insertIntoBST(TreeNode root, int val) {
+      // 找到空位置插入新节点
+    if (root == null) return new TreeNode(val);
+    // if (root.val == val)
+    //     BST 中一般不会插入已存在元素
+    if (root.val < val) 
+        root.right = insertIntoBST(root.right, val);
+    if (root.val > val) 
+        root.left = insertIntoBST(root.left, val);
+    return root;
+  }
+}
+```
 
 
 
