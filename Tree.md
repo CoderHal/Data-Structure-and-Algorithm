@@ -1888,6 +1888,40 @@ class Solution{
 2. 若任意节点的右子树不空，则右子树上所有节点的值均大于它的根节点的值；
 3. 任意节点的左、右子树也分别为二叉查找树；
 
+## 1. 中序遍历的BST是有序的(升序)
+
+## 2. 利用中序遍历的BST实现累加树
+
+## 538. Convert BST to Greater Tree
+
+### 1. Inorder Tree Traversal
+
+```java
+class Solution {
+    public TreeNode convertBST(TreeNode root) {
+        traverse(root);
+        return root;
+    }
+
+    // 记录累加和
+    int sum = 0;
+    void traverse(TreeNode root) {
+        if (root == null) {
+            return;
+        }
+        traverse(root.right);
+        // 维护累加和
+        sum += root.val;
+        // 将 BST 转化成累加树
+        root.val = sum;
+        traverse(root.left);
+    }
+}
+
+```
+
+由于中序遍历可以得到升序的序列，如果先遍历root.right，能够得到降序的序列，就可以从最右边开始遍历， 我们需要定义一个累加计数器，将每次遍历的节点值与累加器相加。
+
 ## 230. Kth Smallest Element in a BST
 
 ### 1. Recursion
