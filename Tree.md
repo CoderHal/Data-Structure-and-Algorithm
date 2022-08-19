@@ -1922,6 +1922,39 @@ class Solution {
 
 由于中序遍历可以得到升序的序列，如果先遍历root.right，能够得到降序的序列，就可以从最右边开始遍历， 我们需要定义一个累加计数器，将每次遍历的节点值与累加器相加。
 
+## 3. BST的基础操作： 判断BST的合法性， 增，删，改，查。 【删除】 和 【判断合法性比较复杂】
+
+## 98. Validate Binary Search Tree (判断合法性)
+
+### 1. Recursion
+
+```java
+class Solution {
+    public boolean isValidBST(TreeNode root) {
+        return isValidBST(root, null, null);
+    }
+
+    /* 限定以 root 为根的子树节点必须满足 max.val > root.val > min.val */
+    boolean isValidBST(TreeNode root, TreeNode min, TreeNode max) {
+        // base case
+        if (root == null) return true;
+        // 若 root.val 不符合 max 和 min 的限制，说明不是合法 BST
+        if (min != null && root.val <= min.val) return false;
+        if (max != null && root.val >= max.val) return false;
+        // 限定左子树的最大值是 root.val，右子树的最小值是 root.val
+        return isValidBST(root.left, min, root)
+                && isValidBST(root.right, root, max);
+    }
+}
+
+```
+
+根据BST 左子树的值小于当前根节点值， 右子树的值大于根节点值来讨论。 但是如果我们只讨论root.left.val 是否小于root.val，或者root.right.val是否大于root.val，我们只能判断两层之间是否是合理的BST，而不能讨论整个左子树，右子树的值和当前根节点的值的大小关系。 
+
+所以在递归的时候，我们需要向根节点的左子树传递当前节点值作为左子树中的最大值， 以当前节点值作为右子树的最小值，让子树的值和这些比较从而能够整体验证是否属于BST
+
+
+
 ## 230. Kth Smallest Element in a BST
 
 ### 1. Recursion
