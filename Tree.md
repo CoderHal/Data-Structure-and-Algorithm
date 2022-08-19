@@ -1924,6 +1924,22 @@ class Solution {
 
 ## 3. BST的基础操作： 判断BST的合法性， 增，删，改，查。 【删除】 和 【判断合法性比较复杂】
 
+### 1. BST 基础操作框架 
+
+```java
+void BST(TreeNode root, int target) {
+    if (root.val == target)
+        // 找到目标，做点什么
+    if (root.val < target) 
+        BST(root.right, target);
+    if (root.val > target)
+        BST(root.left, target);
+}
+
+```
+
+
+
 ## 98. Validate Binary Search Tree (判断合法性)
 
 ### 1. Recursion
@@ -1982,7 +1998,7 @@ class Solution {
 
 这种方式属于BST的特性，可以避免将所有的节点都进行遍历
 
-## 701. Insert into a Binary Search Tree
+## 701. Insert into a Binary Search Tree(插入)
 
 ### 1. Recursion
 
@@ -2001,6 +2017,56 @@ class Solution {
   }
 }
 ```
+
+
+
+## 450. Delete Node in a BST
+
+### 1. Recursion
+
+```java
+class Solution {
+  public TreeNode deleteNode(TreeNode root, int key) {
+    if (root == null) {
+      return root;
+    }
+    // find the key node
+    if (root.val == key) {
+      //case 1 & case 2
+      if (root.left == null) {return root.right;}
+      if (root.right == null) {return root.left;}
+      //case 3
+      // find the min of the right subTreeNode
+      TreeNode minRightNode = minRight(root.right);
+      // delete the min of the right subTreeNode
+      root.right = deleteNode(root.right, minRightNode.val);
+      // let the current root's value equals to minRightNode's value
+      root.val = minRightNode.val;
+    }
+    // current val < key, to find the right subTreeNode
+    else if (root.val < key) {
+      root.right = deleteNode(root.right, key);
+    }
+    //current val > key, to find the left subTreeNode
+    else {
+      root.left = deleteNode(root.left, key);
+    }
+    return root;
+  }
+  
+  public TreeNode minRight(TreeNode root) {
+    if (root == null) {return root;}
+    //if root.left != null, the min of subTreeNode is in the left subTree
+    if (root.left != null) {return minRight(root.left);}
+    // if root.left == null, the current root is the min
+    return root;
+  }
+}
+```
+
+case 1 & 2: target的子节点最多有一个，我们只需要删除当前节点，返回它的子节点就可
+
+case 3:  target的子节点有两个， 我们需要找到右子树中最小的节点值， 让最小节点值来替代当前节点，使其满足BST结构。
 
 
 
