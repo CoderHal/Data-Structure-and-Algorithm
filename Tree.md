@@ -1955,6 +1955,37 @@ class Solution {
 
 
 
+## 700. Search in a Binary Search Tree  (搜索)
+
+### 1. Recursion
+
+```java
+ class Solution {
+    public TreeNode searchBST(TreeNode root, int val) {
+        if (root == null) {
+            return root;
+        }
+        
+        if (root.val == val) {
+            return root;
+        }
+        else if (root.val < val) {
+            return searchBST(root.right, val);
+        }
+        else {
+            return searchBST(root.left, val);
+        }
+        
+    }
+}
+```
+
+这种方式属于BST的特性，可以避免将所有的节点都进行遍历
+
+
+
+
+
 ## 230. Kth Smallest Element in a BST
 
 ### 1. Recursion
