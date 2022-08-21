@@ -2132,6 +2132,42 @@ class Solution {
 }
 ```
 
+## 95. Unique Binary Search Trees II （Follow up )
+
+### 1. Recursion
+
+```java
+class Solution {
+  public List<TreeNode> generateTrees(int n) {
+    if (n == 0) {return new ArrayList<>();}
+    return build(1, n);
+  }
+  
+  public List<TreeNode> build(int l, int h) {
+    List<TreeNode> res = new ArrayList<>();
+    if (l > h) {
+      res.add(null);
+      return res;
+    }
+    //将每个 l->h范围内的值当作root
+    for (int i = l; i <= h; i++) {
+      //记录[l, i - 1] 和 [i + 1, h] 的BST的所有可能性， 然后再和root进行组合
+      List<TreeNode> leftTree = build(l, i - 1);
+      List<TreeNode> rightTree = build(i + 1, h);
+      for (TreeNode left : leftTree) {
+        for (TreeNode right : rightTree) {
+          TreeNode root = new TreeNode(i);
+          root.left = left;
+          root.right = right;
+          res.add(root);
+        }
+      }
+    }
+    return res;
+  }
+}
+```
+
 
 
 
