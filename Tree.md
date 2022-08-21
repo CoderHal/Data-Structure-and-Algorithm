@@ -2070,6 +2070,72 @@ case 3:  target的子节点有两个， 我们需要找到右子树中最小的�
 
 
 
+## 4. 构造搜索树
+
+## 96.  Unique Binary Search Trees
+
+### 1. DP ： Bottom Up
+
+```java
+class Solution {
+  public int numTrees(int n) {
+    int[] dp = new int[n + 1];
+    //n = 0时，节点为null也算是BST，所以个数为1
+    dp[0] = 1;
+    dp[1] = 1;
+    // dp存储的是 当前index的一共的BST可能性
+    for (int i = 2; i <= n; i++) {
+      // root的可能性是从 1 -> i， 列举所有可能相加起来
+      // 如果root 为 j， 我们需要计算 1 -> j - 1的组合也就是dp[j - 1]；和 j + 1 -> i的组合，该组合和（1 -> i - j)的情况一样，也就是dp[i - j]; 组合和组合的情况相乘
+      for (int j = 1; j <= i; j++) {
+        dp[i] += dp[j - 1] * dp[i - j];
+      }
+    }
+    return dp[n];
+  }
+}
+```
+
+
+
+### 2. Recursion: Top Down
+
+```java
+class Solution {
+  private int[][] memo;
+  public int numTrees(int n) {
+    memo = new int[n + 1][n + 1];
+    if (n == 0) {return 1;}
+    return build(1, n);
+  }
+  
+  public int build(int l, int h) {
+    //因为不存在的话说明为空节点，也算是BST的一种情况
+    if (l > h) {return 1;}
+    //如果以前讨论过该范围的数，我们直接返回 就不需要计算了，减少时间损耗
+    if (memo[l][h] != 0) {
+      return memo[l][h];
+    }
+    int res = 0;
+    //将l->h范围内的每一个数字作为一次根节点进行讨论
+    for (int i = l; i <= h; i++) {
+      //左边是 l -> i - 1
+      int left = build(l, i - 1);
+      //右边是 i + 1 -> h
+      int right = build(i + 1, h);
+      res += left * right;
+    }
+    //记录memo
+    memo[l][h] = res;
+    return res;
+  }
+}
+```
+
+
+
+
+
 ## 230. Kth Smallest Element in a BST
 
 ### 1. Recursion
