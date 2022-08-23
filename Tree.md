@@ -193,6 +193,8 @@ class Solution {
 它的叶子数是： 2^h　　第k层的结点数是： 2^(k-1)　　总结点数是： 2^k-1 (2的k次方减一)　　总节点数一定是奇数。
 ```
 
+
+
 ## 145. Binary Tree Postorder Traversal
 
 ### 1.1 Iteration Solution
@@ -2294,6 +2296,76 @@ class Solution {
 
 # Lowest Common Ancestor Series
 
+## 五道题求公共祖先
+
+### (1). 给你输入一棵**没有重复元素**的二叉树根节点`root`和一个目标值`val`，请你写一个函数寻找树中值为`val`的节点。
+
+```java
+// 定义：在以 root 为根的二叉树中寻找值为 val 的节点
+TreeNode find(TreeNode root, int val) {
+    // base case
+    if (root == null) {
+        return null;
+    }
+    // 看看 root.val 是不是要找的
+    if (root.val == val) {
+        return root;
+    }
+    // root 不是目标节点，那就去左子树找
+    TreeNode left = find(root.left, val);
+    if (left != null) {
+        return left;
+    }
+    // 左子树找不着，那就去右子树找
+    TreeNode right = find(root.right, val);
+    if (right != null) {
+        return right;
+    }
+    // 实在找不到了
+    return null;
+}
+```
+
+修改一下：
+
+```java
+TreeNode find(TreeNode root, int val) {
+    if (root == null) {
+        return null;
+    }
+    // 前序位置
+    if (root.val == val) {
+        return root;
+    }
+    // root 不是目标节点，去左右子树寻找
+    TreeNode left = find(root.left, val);
+    TreeNode right = find(root.right, val);
+    // 看看哪边找到了
+    return left != null ? left : right;
+}
+```
+
+但是实际运行的效率会低一些，原因也很简单，如果你能够在左子树找到目标节点，还有没有必要去右子树找了？没有必要。但这段代码还是会去右子树找一圈，所以效率相对差一些
+
+### (2). 寻找值为`val1`**或**`val2`的节点
+
+```java
+TreeNode find(TreeNode root, int val1, int val2) {
+  if (root == null) {return null;}
+  
+  if (root.val == val1 || root.val == val2) {
+    return root;
+  }
+  
+  TreeNode left = find(root.left, val1, val2);
+  TreeNode right = find(root.right, val1, val2);
+  
+  return left != null ? left : right;
+}
+```
+
+
+
 ## 235. Lowest Common Ancestor of a Binary Search Tree
 
 ### 1. Recursive Solution
@@ -2421,6 +2493,30 @@ class Solution {
 和236题不同的是，root == p|| root == q的判断语句需要放在 递归函数的后面。必须要先去判断其左右子树，再去判断当前节点。因为我们需要完全的找到p和q。  236题可以只找到1个就判断，因为p, q都存在于Tree中
 
 
+
+## 1650.  Lowest Common Ancestor of a Binary Tree III
+
+```java
+class Solution {
+    public Node lowestCommonAncestor(Node p, Node q) {
+        // 施展链表双指针技巧
+        Node a = p, b = q;
+        while (a != b) {
+            // a 走一步，如果走到根节点，转到 q 节点
+            if (a == null) a = q;
+            else a = a.parent;
+            // b 走一步，如果走到根节点，转到 p 节点
+            if (b == null) b = p;
+            else b = b.parent;
+        }
+        return a;
+    }
+}
+
+
+```
+
+和160的链表相交一样的思路
 
 
 
