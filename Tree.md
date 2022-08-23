@@ -2520,6 +2520,45 @@ class Solution {
 
 
 
+## 1676. Lowest Common Ancestor of a Binary Tree IV
+
+```java
+class Solution {
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode[] nodes) {
+        HashSet<Integer> set = new HashSet<>();
+        // 转化到集合中
+        for (TreeNode node : nodes) {
+            set.add(node.val);
+        }
+        return LCA(root, set);
+    }
+
+    private TreeNode LCA(TreeNode root, HashSet<Integer> set) {
+        // base case
+        if (root == null) return null;
+        if (set.contains(root.val)) return root;
+
+        TreeNode left = LCA(root.left, set);
+        TreeNode right = LCA(root.right, set);
+        // 情况 1
+        if (left != null && right != null) {
+            return root;
+        }
+        // 情况 2
+        if (left == null && right == null) {
+            return null;
+        }
+        // 情况 3
+        return left == null ? right : left;
+    }
+}
+
+```
+
+和寻找两个节点的公共祖先的方法一样，利用HashSet来查找。
+
+
+
 # TreeMap
 
 ## 729. My Calendar I
