@@ -121,7 +121,77 @@ void levelTraverse(TreeNode root) {
 
 
 
+## 5. 完全二叉树 (Complete Binary Tree)
 
+```text
+完全二叉树：完全二叉树的节点数是任意的，从形式上讲它是个缺失的的三角形，但所缺失的部分一定是右下角某个连续的部
+分，最后那一行可能不是完整的，对于k层的完全二叉树，节点数的范围2^ (k - 1) -1 < N< 2^k - 1;
+```
+
+### (1). 计算普通二叉树的递归遍历
+
+```java
+public int countNodes(TreeNode root) {
+  if (root == null) {return 0;}
+  return 1 + count(root.right) + count(root.left);
+}
+```
+
+### (2). 计算满二叉树的递归遍历
+
+```java
+public int countNodes(TreeNode root) {
+  if (root == null) {return 0;}
+  int h = 0;
+    // 计算树的高度
+  while (root != null) {
+    h++;
+    root = root.left;
+  }
+   // 节点总数就是 2^h - 1
+  return (int)Math.pow(2, h) - 1;
+}
+```
+
+## 222. Count Complete Tree Nodes
+
+### 1. 普通二叉树 + 满二叉树
+
+```java
+class Solution {
+    public int countNodes(TreeNode root) {
+        TreeNode l = root, r = root;
+        // 记录左、右子树的高度
+        int hl = 0, hr = 0;
+        while (l != null) {
+            l = l.left;
+            hl++;
+        }
+        while (r != null) {
+            r = r.right;
+            hr++;
+        }
+        // 如果左右子树的高度相同，则是一棵满二叉树
+        if (hl == hr) {
+            return (int) Math.pow(2, hl) - 1;
+        }
+        // 如果左右高度不同，则按照普通二叉树的逻辑计算
+        return 1 + countNodes(root.left) + countNodes(root.right);
+    }
+}
+
+```
+
+递归的次数 x 每次递归的时间复杂度，递归次数就是树的高度 O(logN)，每次递归所花费的时间就是 while 循环，需要 O(logN)，所以总体的时间复杂度是 O(logN*logN)。
+
+## 6. 满二叉树(Perfect Binary Tree):
+
+```text
+一个二叉树，如果每一个层的结点数都达到最大值，则这个二叉树就是满二叉树。也就是说，如果一个二叉树的层数为K，且结
+点总数是(2^k) -1 ，则它就是满二叉树。
+一颗树深度为h，最大层数为k，深度与最大层数相同，k=h;
+它的叶子数是： 2^h　　第k层的结点数是： 2^(k-1)　　总结点数是： 2^k-1 (2的k次方减一)　　总节点数一定是奇数。
+```
 
 ## 145. Binary Tree Postorder Traversal
 
