@@ -1,5 +1,204 @@
 # Graph
 
+# 基本算法
+
+## 1. 存储方式
+
+邻接表
+
+邻接矩阵
+
+```java
+// 邻接表
+// graph[x] 存储 x 的所有邻居节点
+List<Integer>[] graph;
+
+// 邻接矩阵
+// matrix[x][y] 记录 x 是否有一条指向 y 的边
+boolean[][] matrix;
+
+```
+
+有向加权图
+
+```java
+// 邻接表
+// graph[x] 存储 x 的所有邻居节点以及对应的权重
+List<int[]>[] graph;
+
+// 邻接矩阵
+// matrix[x][y] 记录 x 指向 y 的边的权重，0 表示不相邻
+int[][] matrix;
+```
+
+
+
+## 2. 遍历
+
+### (1) 多叉树的遍历
+
+```java
+//多叉树的遍历
+
+void traverse(TreeNode root) {
+  if (root == null) {return;}
+  //前序位置
+  for (TreeNode child : root.children) {
+    traverse(child);
+  }
+  //后序位置
+}
+```
+
+### (2) 图的遍历和多叉树遍历的比较
+
+图很可能有环， 如果从图的某一点开始遍历，有可能走了一圈回到原点。所以需要visited数组来辅助
+
+```java
+// 记录被遍历过的节点
+boolean[] visited;
+// 记录从起点到当前节点的路径
+boolean[] onPath;
+
+/* 图遍历框架 */
+void traverse(Graph graph, int s) {
+    if (visited[s]) return;
+    // 经过节点 s，标记为已遍历
+    visited[s] = true;
+    // 做选择：标记节点 s 在路径上
+    onPath[s] = true;
+    for (int neighbor : graph.neighbors(s)) {
+        traverse(graph, neighbor);
+    }
+    // 撤销选择：节点 s 离开路径
+    onPath[s] = false;
+}
+
+```
+
+### (3) DFS 和 回溯算法比较
+
+```java
+class Solution {
+  // DFS 算法，关注点在节点
+  void traverse(TreeNode root) {
+    if (root == null) {
+      return null;
+    }
+    printf("进入节点 %s", root);
+    for (TreeNode child : root.children) {
+        traverse(child);
+    }
+    printf("离开节点 %s", root);
+  }
+  
+  //回溯算法，关注点在树枝上
+  void backtrack(TreeNode root) {
+    if (root == null) {
+      return null;
+    }
+    for (TreeNode child : root.children) {
+        // 做选择
+        printf("从 %s 到 %s", root, child);
+        backtrack(child);
+        // 撤销选择
+        printf("从 %s 到 %s", child, root);
+    }
+  }
+}
+```
+
+## 797. All Paths From Source to Target
+
+### 1. DFS
+
+```java
+class Solution {
+    // 记录所有路径
+    List<List<Integer>> res = new LinkedList<>();
+
+    public List<List<Integer>> allPathsSourceTarget(int[][] graph) {
+        LinkedList<Integer> path = new LinkedList<>();
+        traverse(graph, 0, path);
+        return res;
+    }
+
+    /* 图的遍历框架 */
+    void traverse(int[][] graph, int s, LinkedList<Integer> path) {
+
+        // 添加节点 s 到路径
+        path.addLast(s);
+
+        int n = graph.length;
+        if (s == n - 1) {
+            // 到达终点
+            res.add(new LinkedList<>(path));
+            path.removeLast();
+            return;
+        }
+
+        // 递归每个相邻节点
+        for (int v : graph[s]) {
+            traverse(graph, v, path);
+        }
+
+        // 从路径移出节点 s
+        path.removeLast();
+    }
+}
+
+```
+
+
+
+## 133. Clone Graph
+
+### 1. DFS
+
+```java
+/*
+// Definition for a Node.
+class Node {
+    public int val;
+    public List<Node> neighbors;
+    public Node() {
+        val = 0;
+        neighbors = new ArrayList<Node>();
+    }
+    public Node(int _val) {
+        val = _val;
+        neighbors = new ArrayList<Node>();
+    }
+    public Node(int _val, ArrayList<Node> _neighbors) {
+        val = _val;
+        neighbors = _neighbors;
+    }
+}
+*/
+class Solution {
+  private HashMap<Node, Node> visited= new HashMap<>();
+  public Node cloneGraph(Node node) {
+    if (node == null) {
+      return node;
+    }
+    if (visited.containsKey(node)) {
+      //如果存在，就说明回到了原点，要避免无限循环
+      //需要return visited.get(node)， 返回克隆的节点
+      return visited.get(node);
+    }
+    Node cloneNode = new Node(node.val, new ArrayList<>());
+    visited.put(node, cloneNode);
+    //添加他的邻居
+    for (Node n : node.neighbors) {
+      cloneNode.neightbors.add(cloneGraph(n));
+    }
+    return cloneNode;
+  }
+}
+```
+
+
+
 ## 733. Flood Fill
 
 ```java
