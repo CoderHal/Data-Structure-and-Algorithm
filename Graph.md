@@ -108,6 +108,10 @@ class Solution {
 }
 ```
 
+## 3. 拓扑排序
+
+Course II
+
 ## 797. All Paths From Source to Target
 
 ### 1. DFS
@@ -151,7 +155,55 @@ class Solution {
 
 
 
-## 133. Clone Graph
+## 1490. Clone N-ary Tree
+
+### 1. DFS
+
+```java
+/*
+// Definition for a Node.
+class Node {
+    public int val;
+    public List<Node> children;
+
+    
+    public Node() {
+        children = new ArrayList<Node>();
+    }
+    
+    public Node(int _val) {
+        val = _val;
+        children = new ArrayList<Node>();
+    }
+    
+    public Node(int _val,ArrayList<Node> _children) {
+        val = _val;
+        children = _children;
+    }
+};
+*/
+class Solution {
+    // 定义：输入 N 叉树节点，返回以该节点为根的 N 叉树的深拷贝
+    public Node cloneTree(Node root) {
+        if (root == null) {
+            return null;
+        }
+        // 先拷贝根节点
+        Node cpRoot = new Node(root.val);
+        // 根节点的孩子节点都是深拷贝
+        cpRoot.children = new ArrayList<>();
+        for (Node child : root.children) {
+            cpRoot.children.add(cloneTree(child));
+        }
+        // 返回整棵树的深拷贝
+        return cpRoot;
+    }
+}
+```
+
+
+
+## 133. Clone Graph (Same as 1490)
 
 ### 1. DFS
 
@@ -794,38 +846,73 @@ class Solution {
 
 
 
+//使用邻接表来处理(Adjacency list)
+
 ### 2. Topological Sorting + DFS
 
 ```java
 class Solution {
+    // 记录一次 traverse 递归经过的节点
+    boolean[] onPath;
+    // 记录遍历过的节点，防止走回头路
+    boolean[] visited;
+    // 记录图中是否有环
+    boolean hasCycle = false;
+
     public boolean canFinish(int numCourses, int[][] prerequisites) {
-      List<List<Integer>> graph = new ArrayList<>();
-      for (int i = 0; i < numCourses; i++) {
-        graph.add(new ArrayList<>());
-      }
-      
-      for (int[] cur : prerequisites) {
-        graph.get(cur[0]).add(cur[1]);
-      }
-      int visited[] = new int[numCourses];
-      for (int i = 0; i < numCourses; i++) {
-        if (DFS(i, graph, visited)) return false;
-      }
-      return true;
+        List<Integer>[] graph = buildGraph(numCourses, prerequisites);
+
+        visited = new boolean[numCourses];
+        onPath = new boolean[numCourses];
+
+        for (int i = 0; i < numCourses; i++) {
+            // 遍历图中的所有节点
+            traverse(graph, i);
+        }
+        // 只要没有循环依赖可以完成所有课程
+        return !hasCycle;
     }
-    public Boolean DFS(int cur, List<List<Integer>> graph, int[] visited) {
-      if (visited[cur] == 2) {return false;}
-      if (visited[cur] == 1) {return true;}
-      
-      visited[cur] = 1;
-      for (int next : graph.get(cur)) {
-        if (DFS(next, graph, visited)) return true;
-      }
-      visited[cur] = 2;
-      return false;
+
+    void traverse(List<Integer>[] graph, int s) {
+        if (onPath[s]) {
+            // 出现环
+            hasCycle = true;
+        }
+
+        if (visited[s] || hasCycle) {
+            // 如果已经找到了环，也不用再遍历了
+            return;
+        }
+        // 前序遍历代码位置
+        visited[s] = true;
+        onPath[s] = true;
+        for (int t : graph[s]) {
+            traverse(graph, t);
+        }
+        // 后序遍历代码位置
+        onPath[s] = false;
+    }
+
+    List<Integer>[] buildGraph(int numCourses, int[][] prerequisites) {
+        // 图中共有 numCourses 个节点
+        List<Integer>[] graph = new LinkedList[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            graph[i] = new LinkedList<>();
+        }
+        for (int[] edge : prerequisites) {
+            int from = edge[1];
+            int to = edge[0];
+            // 修完课程 from 才能修课程 to
+            // 在图中添加一条从 from 指向 to 的有向边
+            graph[from].add(to);
+        }
+        return graph;
     }
 }
+
 ```
+
+在递归过程中 Onpath在递归结束后会删除当前的递归路线， visited不删除 是为了减少相同的节点重复的遍历， Onpath是记录一条路线中是否存在同样的数字
 
 找环：
 
@@ -893,11 +980,17 @@ Same as 207
 
 ### 2. Topological Sorting + DFS
 
+
+
 ```java
 class Solution {
     private int index;
+    private boolean[] onPath;
+    private boolean[] visited;
     public int[] findOrder(int numCourses, int[][] prerequisites) {
       index = 0;
+      onPath = new boolean[numCourses];
+      visited = new boolean[numCourses];
       List<List<Integer>> graph = new ArrayList<>();
       int[] ans = new int[numCourses];
       for (int i = 0; i < numCourses; i++) {
@@ -907,22 +1000,22 @@ class Solution {
       for (int[] cur : prerequisites) {
         graph.get(cur[0]).add(cur[1]);
       }
-      int visited[] = new int[numCourses];
       for (int i = 0; i < numCourses; i++) {
-        if (DFS(i, graph, visited, ans)) return new int[0];
+        if (DFS(i, graph, ans)) return new int[0];
       }
       return ans;
     }
-    public Boolean DFS(int cur, List<List<Integer>> graph, int[] visited, int[] ans) {
-      if (visited[cur] == 2) {return false;}
-      if (visited[cur] == 1) {return true;}
+    public Boolean DFS(int cur, List<List<Integer>> graph, int[] ans) {
+      if (onPath[cur]) {return true;}
+      if (visited[cur]) {return false;}
       
-      visited[cur] = 1;
+      visited[cur] = true;
+      onPath[cur] = true;
       for (int next : graph.get(cur)) {
-        if (DFS(next, graph, visited, ans)) return true;
+        if (DFS(next, graph, ans)) return true;
       }
       ans[index++] = cur;
-      visited[cur] = 2;
+      onPath[cur] = false;
       return false;
     }
 }
