@@ -362,6 +362,354 @@ class Solution {
 
 
 
+## 5. Union Find
+
+### 1. 简介
+
+用来解决【动态连通性】
+
+主要实现以下两个API
+
+```java
+class UF{
+  /*将 p 和 q 连接起来*/
+  public void union(int p, int q);
+  /* 判断 p 和 q 是否连通 */
+  public boolean connected(int p, int q);
+    /* 返回图中有多少个连通分量 */
+  public int count();
+}
+```
+
+这里所说的「连通」是一种等价关系，也就是说具有如下三个性质：
+
+#### 1. 自反性：节点 `p` 和 `p` 是连通的。
+
+#### 2. 对称性：如果节点 `p` 和 `q` 连通，那么 `q` 和 `p` 也连通。
+
+#### 3. 传递性：如果节点 `p` 和 `q` 连通，`q` 和 `r` 连通，那么 `p` 和 `r` 也连通。
+
+比如 0～9互不连通， 调用connected都会判断为false， 连通分量为10
+
+调用union(0, 1)， 0 和 1 会被连通， 连通分量为9
+
+### 2. 构造Union Find
+
+#### (2) 设计构造函数
+
+![image-20220826164646075](/Users/youhao/Library/Application Support/typora-user-images/image-20220826164646075.png)
+
+```java
+class UF{
+  //记录连通分量
+  private int count;
+  //节点x的父节点是parent[x]
+  private int[] parent;
+  
+  /*构造函数*， n为图的总结点数*/
+  public UF(int n) {
+    //连通分量一开始为n
+    this.count = n;
+    parent = new int[n];
+    for (int i = 0; i < n; i++) {
+      //一开始父节点都是自己
+      parent[i] = i;
+    }
+  }
+  
+}
+
+```
+
+如果该节点与另一个节点连通， 那么连接他们的根节点
+
+```java
+class UF{
+  //记录连通分量
+  private int count;
+  //节点x的父节点是parent[x]
+  private int[] parent;
+  
+  /*构造函数*， n为图的总结点数*/
+  public UF(int n) {
+    //连通分量一开始为n
+    this.count = n;
+    parent = new int[n];
+    for (int i = 0; i < n; i++) {
+      //一开始父节点都是自己
+      parent[i] = i;
+    }
+  }
+  
+  public void union(int p, int q) {
+    int rootP = find(p);
+    int rootQ = find(q);
+    if (rootP == rootQ) {
+      return;
+    }
+    //将两棵树合成一个
+    parent[rootP] = rootQ;
+    // parent[rootQ] = rootP 也一样
+    count--; // 两个分量合二为一
+  }
+  
+  public int find(int x) {
+    //根节点的parent[x] = x
+    while (parent[x] != x) {
+      x = parent[x];
+    }
+    return parent[x];
+  }
+  /* 返回连通量*/
+  public int count() {
+    return count;
+  }
+  
+}
+
+
+```
+
+#### (2) 平衡优化
+
+![image-20220826170809718](/Users/youhao/Library/Application Support/typora-user-images/image-20220826170809718.png)
+
+比如说 `size[3] = 5` 表示，以节点 `3` 为根的那棵树，总共有 `5` 个节点。这样我们可以修改一下 `union` 方法：
+
+```java
+class UF{
+  //记录连通分量
+  private int count;
+  //节点x的父节点是parent[x]
+  private int[] parent;
+  // 设置重量
+  private int[] size;
+  
+  /*构造函数*， n为图的总结点数*/
+  public UF(int n) {
+    //连通分量一开始为n
+    this.count = n;
+    parent = new int[n];
+    size = new int[n];
+    for (int i = 0; i < n; i++) {
+      //一开始父节点都是自己
+      parent[i] = i;
+      size[i] = 1;
+    }
+  }
+  
+  public void union(int p, int q) {
+    int rootP = find(p);
+    int rootQ = find(q);
+    if (rootP == rootQ) {
+      return;
+    }
+      //小树枝接到大树下面， 平衡树
+      if (size[rootP] > size[rootQ]) {
+        parent[rootQ] = rootP;
+        size[rootP] += size[rootQ];
+      } else {
+        parent[rootP] = rootQ;
+        size[rootQ] += size[rootP];
+   	  }
+   	 	count--; // 两个分量合二为一
+  }
+  
+  public int find(int x) {
+    //根节点的parent[x] = x
+    while (parent[x] != x) {
+      x = parent[x];
+    }
+    return parent[x];
+  }
+  /* 返回连通量*/
+  public int count() {
+    return count;
+  }
+  
+}
+```
+
+这样，通过比较树的重量，就可以保证树的生长相对平衡，树的高度大致在 `logN` 这个数量级，极大提升执行效率。
+
+此时，`find` , `union` , `connected` 的时间复杂度都下降为 O(logN)，即便数据规模上亿，所需时间也非常少。
+
+#### (4) 路经压缩
+
+```java
+class UF{
+  //记录连通分量
+  private int count;
+  //节点x的父节点是parent[x]
+  private int[] parent;
+  // 设置重量
+  private int[] size;
+  
+  /*构造函数*， n为图的总结点数*/
+  public UF(int n) {
+    //连通分量一开始为n
+    this.count = n;
+    parent = new int[n];
+    size = new int[n];
+    for (int i = 0; i < n; i++) {
+      //一开始父节点都是自己
+      parent[i] = i;
+      size[i] = 1;
+    }
+  }
+  
+  public void union(int p, int q) {
+    int rootP = find(p);
+    int rootQ = find(q);
+    if (rootP == rootQ) {
+      return;
+    }
+    //小树枝接到大树下面， 平衡树
+    if (size[rootP] > size[rootQ]) {
+      parent[rootQ] = rootP;
+      size[rootP] += size[rootQ];
+    } else {
+      parent[rootP] = rootQ;
+      size[rootQ] += size[rootP];
+    }
+    count--; // 两个分量合二为一
+  }
+  
+  public int find(int x) {
+    //直接使当前节点的父节点指向根节点
+    //这样看两个节点是否连通时，只需要看他们的父节点是不是一致的
+    if (parent[x] != x) {
+      parent[x] = find(parent[x]);
+    }
+    return parent[x];
+  }
+  /* 返回连通量*/
+  public int count() {
+    return count;
+  }
+  
+}
+```
+
+## 323.  Number of Connected Components in an Undirected Graph
+
+### 1. Union Find
+
+```java
+class Solution {
+    class UF {
+        private int[] parent;
+        private int count;
+        
+        public UF(int n) {
+            parent = new int[n];
+            this.count = n;
+            for (int i = 0; i < n; i++) {
+                parent[i] = i;
+            }
+        }
+        
+        public void union(int p, int q) {
+            int rootP = find(p);
+            int rootQ = find(q);
+            if (rootP == rootQ) {return;}
+            parent[rootP] = rootQ;
+            count--;
+        }
+        
+        public int find(int x) {
+            if (x != parent[x]) {
+                parent[x] = find(parent[x]);
+            }
+            return parent[x];
+        }
+        
+        public int count() {
+            return count;
+        }
+    }
+    public int countComponents(int n, int[][] edges) {
+        UF uf = new UF(n);
+        for (int i = 0; i < edges.length; i++) {
+            uf.union(edges[i][0], edges[i][1]);
+        }
+        return uf.count();
+    }
+}
+```
+
+
+
+## 990. Satisfiability of Equality Equations
+
+### 1. Union Find
+
+```java
+class Solution {
+    class UF {
+        private int[] parent;
+        private int count;
+        
+        public UF(int n) {
+            parent = new int[n];
+            
+            for (int i = 0; i < n; i++) {
+                parent[i] = i;
+            }
+            
+            count = n;
+        }
+        
+        public void union(int p, int q) {
+            int rootP = find(p);
+            int rootQ = find(q);
+            if (rootP == rootQ) {return;}
+            
+            parent[rootP] = rootQ;
+            count--;
+        }
+        
+        public int find(int x) {
+            if (x != parent[x]) {
+                parent[x] = find(parent[x]);
+            }
+            return parent[x];
+        }
+        public int count() {
+            return count;
+        }
+    }
+    public boolean equationsPossible(String[] equations) {
+        UF uf = new UF(26);
+        
+        for (String cur : equations) {
+            int f = cur.charAt(0) - 'a';
+            int s = cur.charAt(3) - 'a';
+            char r = cur.charAt(1);
+            if (r == '=') {
+                uf.union(f, s);
+            }
+        }
+        
+        for (String cur : equations) {
+            int f = cur.charAt(0) - 'a';
+            int s = cur.charAt(3) - 'a';
+            char r = cur.charAt(1);
+            if (r == '!') {
+                if (uf.find(f) == uf.find(s)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+}
+```
+
+
+
+# -------------------------------------------------------
+
 ## 797. All Paths From Source to Target
 
 ### 1. DFS
