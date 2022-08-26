@@ -708,6 +708,64 @@ class Solution {
 
 
 
+## 765. Couples Holding Hands
+
+### 1. Union Find
+
+```java
+class Solution {
+    
+    class UF {
+        private int[] parent;
+        private int count;
+        public UF(int n) {
+            parent = new int[n];
+            for (int i = 0; i < n; i++) {
+                parent[i] = i;
+            }
+            count = n;
+        }
+        
+        public void union (int p, int q) {
+            int rootP = find(p);
+            int rootQ = find(q);
+            if (rootP == rootQ) {
+                return;
+            }
+            
+            parent[rootP] = rootQ;
+            count--;
+            
+        }
+        public int find(int x) {
+            if (x != parent[x]) {
+                parent[x] = find(parent[x]);
+            }
+            return parent[x];
+        }
+        
+        public int count() {
+            return count;
+        }
+    }
+    public int minSwapsCouples(int[] row) {
+        
+        int n = row.length;
+        UF uf = new UF(n);
+        
+        for (int i = 0; i < n; i+= 2) {
+          
+          //将couple_id 联合起来
+            uf.union(row[i] / 2, row[i + 1] / 2);
+        }
+        return n - uf.count();
+    }
+    
+}
+```
+
+
+
 # -------------------------------------------------------
 
 ## 797. All Paths From Source to Target
