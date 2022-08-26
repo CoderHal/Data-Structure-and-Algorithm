@@ -262,6 +262,102 @@ class Solution {
 }
 ```
 
+## 886. Possible Bipartition
+
+### 1. DFS
+
+```java
+class Solution {
+    private boolean[] visited;
+    private boolean[] color;
+    public boolean possibleBipartition(int n, int[][] dislikes) {
+        visited = new boolean[n + 1];
+        color = new boolean[n + 1];
+        List<Integer>[] graph = new ArrayList[n + 1];
+        for (int i = 0; i <= n; i++) {
+            graph[i] = new ArrayList<>();
+        }
+        
+        for (int j = 0; j < dislikes.length; j++) {
+          //构建邻接表的时候要考虑这是undirected Graph,两边都要添加
+            graph[dislikes[j][0]].add(dislikes[j][1]);
+            graph[dislikes[j][1]].add(dislikes[j][0]);
+        }
+        
+        for (int i = 0; i <= n; i++) {
+            if (!DFS(graph, i)) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    public boolean DFS(List<Integer>[] graph, int cur) {
+        visited[cur] = true;
+        
+        for (int n : graph[cur]) {
+            if (!visited[n]) {
+                color[n] = !color[cur];
+                DFS(graph, n);
+            } else {
+                if (color[n] == color[cur]) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+}
+```
+
+### 2. BFS
+
+```java
+class Solution {
+  private boolean[] visited;
+  private boolean[] color;
+  public boolean possibleBipartition(int n, int[][] dislikes) {
+     visited = new boolean[n + 1];
+        color = new boolean[n + 1];
+        List<Integer>[] graph = new ArrayList[n + 1];
+        for (int i = 0; i <= n; i++) {
+            graph[i] = new ArrayList<>();
+        }
+        
+        for (int j = 0; j < dislikes.length; j++) {
+            graph[dislikes[j][0]].add(dislikes[j][1]);
+            graph[dislikes[j][1]].add(dislikes[j][0]);
+        }
+        
+        for (int i = 1; i <= n; i++) {
+            if (!BFS(graph, i)) {
+                return false;
+            }
+        }
+        return true;
+  }
+  public boolean BFS(List<Integer>[] graph, int i) {
+    Queue<Integer> queue = new LinkedList<>();
+    visited[i] = true;
+    queue.add(i);
+    while (!queue.isEmpty()) {
+      int cur = queue.poll();
+      for (int n : graph[cur]) {
+        if (!visited[n]) {
+          color[n] = !color[cur];
+          visited[n] = true;
+          queue.add(n);
+        } 
+        if (color[n] == color[cur]) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+}
+```
+
 
 
 
