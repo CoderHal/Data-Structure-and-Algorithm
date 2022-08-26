@@ -112,6 +112,160 @@ class Solution {
 
 Course II
 
+
+
+## 4. 二分图
+
+比如说我们需要一种数据结构来储存电影和演员之间的关系：某一部电影肯定是由多位演员出演的，且某一位演员可能会出演多部电影。你使用什么数据结构来存储这种关系呢？
+
+既然是存储映射关系，最简单的不就是使用哈希表嘛，我们可以使用一个 `HashMap<String, List<String>>` 来存储电影到演员列表的映射，如果给一部电影的名字，就能快速得到出演该电影的演员。
+
+但是如果给出一个演员的名字，我们想快速得到该演员演出的所有电影，怎么办呢？这就需要「反向索引」，对之前的哈希表进行一些操作，新建另一个哈希表，把演员作为键，把电影列表作为值。
+
+显然，如果用哈希表存储，需要两个哈希表分别存储「每个演员到电影列表」的映射和「每部电影到演员列表」的映射。但如果用「图」结构存储，将电影和参演的演员连接，很自然地就成为了一幅二分图：
+
+每个电影节点的相邻节点就是参演该电影的所有演员，每个演员的相邻节点就是该演员参演过的所有电影，非常方便直观。
+
+### 1. 判定思路
+
+遍历一遍图， 一边遍历一边着色，看看能不能用两种颜色给所有节点染色，且相邻节点的颜色都不相同。DFS， BFS都可以。
+
+### 2. 图遍历框架
+
+```java
+void traverse(Graph graph, int v) {
+  if (visited[v] == true) return;
+  visited[v] = true;
+  for (int neighbor : graph.neighbors[v]) {
+    traverse(graph, neighbor);
+  }
+}
+```
+
+二分图需要修改一下
+
+```java
+void traverse(Graph graph, int v) {
+  visited[v] = true;
+  for (int neighbor : graph.neighbors[v]) {
+    if (!visited[neighbor]) {
+       // 相邻节点 neighbor 没有被访问过
+            // 那么应该给节点 neighbor 涂上和节点 v 不同的颜色
+            traverse(graph, visited, neighbor);
+    } else {
+      // 相邻节点 neighbor 已经被访问过
+            // 那么应该比较节点 neighbor 和节点 v 的颜色
+            // 若相同，则此图不是二分图
+    }
+  }
+}
+```
+
+## 785. Is Graph Bipartite？
+
+### 1. DFS
+
+```java
+class Solution {
+
+    // 记录图是否符合二分图性质
+    private boolean ok = true;
+    // 记录图中节点的颜色，false 和 true 代表两种不同颜色
+    private boolean[] color;
+    // 记录图中节点是否被访问过
+    private boolean[] visited;
+
+    // 主函数，输入邻接表，判断是否是二分图
+    public boolean isBipartite(int[][] graph) {
+        int n = graph.length;
+        color = new boolean[n];
+        visited = new boolean[n];
+        // 因为图不一定是联通的，可能存在多个子图
+        // 所以要把每个节点都作为起点进行一次遍历
+        // 如果发现任何一个子图不是二分图，整幅图都不算二分图
+        for (int v = 0; v < n; v++) {
+            if (!visited[v]) {
+                traverse(graph, v);
+            }
+        }
+        return ok;
+    }
+
+    // DFS 遍历框架
+    private void traverse(int[][] graph, int v) {
+        // 如果已经确定不是二分图了，就不用浪费时间再递归遍历了
+        if (!ok) return;
+
+        visited[v] = true;
+        for (int w : graph[v]) {
+            if (!visited[w]) {
+                // 相邻节点 w 没有被访问过
+                // 那么应该给节点 w 涂上和节点 v 不同的颜色
+                color[w] = !color[v];
+                // 继续遍历 w
+                traverse(graph, w);
+            } else {
+                // 相邻节点 w 已经被访问过
+                // 根据 v 和 w 的颜色判断是否是二分图
+                if (color[w] == color[v]) {
+                    // 若相同，则此图不是二分图
+                    ok = false;
+                }
+            }
+        }
+    }
+
+}
+
+```
+
+
+
+### 2. BFS
+
+```java
+class Solution {
+  private boolean[] visited;
+  private boolean[] color;
+  public boolean isBipartite(int[][] graph) {
+    visited = new boolean[graph.length];
+    color = new boolean[graph.length];
+    
+    for (int i = 0; i < graph.length; i++) {
+      if (!BFS(graph, i)) {
+        return false;
+      }
+    }
+    return true;
+  }
+  
+  public boolean BFS(int[][] graph, int c) {
+    visited[c] = true;
+    Queue<Integer> queue = new LinkedList<>();
+    queue.add(c);
+    while (!queue.isEmpty()) {
+      int cur = queue.poll();
+      for (int n : graph[cur]) {
+        if (!visited[n]) {
+          color[n] = !color[cur];
+          visited[n] = true;
+          queue.add(n);
+        } else {
+          if (color[n] == color[cur]){
+            return false;
+          }
+        }
+      }
+    }
+    return true;
+  }
+}
+```
+
+
+
+
+
 ## 797. All Paths From Source to Target
 
 ### 1. DFS
@@ -979,8 +1133,6 @@ Same as 207
 
 
 ### 2. Topological Sorting + DFS
-
-
 
 ```java
 class Solution {
