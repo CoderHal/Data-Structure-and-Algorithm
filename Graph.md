@@ -849,6 +849,93 @@ class Solution {
 }
 ```
 
+### 2. Prim
+
+```java
+class Solution {
+  class Prim{
+        private PriorityQueue<int[]> pq;
+        private boolean[] inMST;
+        private int weightSum = 0;
+        private List<int[]>[] graph;
+        
+        public Prim(List<int[]>[] graph) {
+            this.graph = graph;
+            this.pq = new PriorityQueue<>((a, b) -> (a[2] - b[2]));
+            int n = graph.length;
+            this.inMST = new boolean[n];
+            
+            //从0点开始切
+            inMST[0] = true;
+            cut(0);
+            while (!pq.isEmpty()) {
+                int[] edge = pq.poll();
+                int to = edge[1];
+                int weight = edge[2];
+                if (inMST[to]) {
+                    continue;
+                }
+                weightSum += weight;
+                inMST[to] = true;
+                cut(to);
+            }
+        }
+        
+        private void cut(int s) {
+            for (int[] edge : graph[s]) {
+                int to = edge[1];
+                if (inMST[to]) {
+                    continue;
+                }
+                pq.add(edge);
+            }
+        }
+        
+        private int weightSum() {
+            return weightSum;
+        }
+        
+        private boolean allConnected() {
+            for (boolean cur : inMST) {
+                if (!cur) {
+                    return false;
+                }
+            }
+            return true;
+        }
+    }
+  
+  public int minimumCost(int n, int[][] connections) {
+        List<int[]>[] graph = buildGraph (n, connections);
+        Prim pr = new Prim(graph);
+        if (!pr.allConnected()) {
+            return -1;
+        }
+        
+        return pr.weightSum;
+    }
+    
+    public List<int[]>[] buildGraph(int n, int[][] connections) {
+        List<int[]>[] graph = new LinkedList[n];
+        for (int i = 0; i < n; i++) {
+        graph[i] = new LinkedList<>();
+    }
+        for (int[] connection : connections) {
+            int f = connection[0] - 1;
+            int t = connection[1] - 1;
+            int weight = connection[2];
+            graph[f].add(new int[]{f, t, weight});
+            graph[t].add(new int[]{t, f, weight});
+        }
+        return graph;
+    }
+}
+```
+
+
+
+
+
 
 
 ## 261. Graph Valid Tree
@@ -928,7 +1015,7 @@ class Solution {
 
 ### 1. Union Find + Kruskal
 
-```
+```java
 class Solution {
      class UF {
         private int[] parent;
@@ -1014,6 +1101,201 @@ class Solution {
     }
 }
 ```
+
+
+
+### 2. Prim 
+
+```java
+class Solution {
+  class Prim{
+        private PriorityQueue<int[]> pq;
+        private boolean[] inMST;
+        private int weightSum = 0;
+        private List<int[]>[] graph;
+        
+        public Prim(List<int[]>[] graph) {
+            this.graph = graph;
+            this.pq = new PriorityQueue<>((a, b) -> (a[2] - b[2]));
+            int n = graph.length;
+            this.inMST = new boolean[n];
+            
+            //从0点开始切
+            inMST[0] = true;
+            cut(0);
+            while (!pq.isEmpty()) {
+                int[] edge = pq.poll();
+                int to = edge[1];
+                int weight = edge[2];
+                if (inMST[to]) {
+                    continue;
+                }
+                weightSum += weight;
+                inMST[to] = true;
+                cut(to);
+            }
+        }
+        
+        private void cut(int s) {
+            for (int[] edge : graph[s]) {
+                int to = edge[1];
+                if (inMST[to]) {
+                    continue;
+                }
+                pq.add(edge);
+            }
+        }
+        
+        private int weightSum() {
+            return weightSum;
+        }
+        
+        private boolean allConnected() {
+            for (boolean cur : inMST) {
+                if (!cur) {
+                    return false;
+                }
+            }
+            return true;
+        }
+    }
+  
+  public int minCostConnectPoints(int[][] points) {
+    List<int[]>[] graph = buildGraph(points);
+    Prim pr = new Prim(graph);
+    return pr.weightSum;
+  }
+  
+  public List<int[]>[] buildGraph(int[][] points) {
+    int n = points.length;
+    List<int[]>[] graph = new LinkedList[n];
+    for (int i = 0; i < n; i++) {
+      graph[i] = new LinkedList<>();
+    }
+    for (int i = 0; i < n; i++) {
+      for (int j = i + 1; j < n; j++) {
+        int xi = points[i][0];
+        int yi = points[i][1];
+        int xj = points[j][0];
+        int yj = points[j][1];
+        graph[i].add(new int[]{i, j, Math.abs(xi - xj) + Math.abs(yi - yj)});
+        graph[j].add(new int[]{j, i, Math.abs(xi - xj) + Math.abs(yi - yj)});
+      }
+    }
+    return graph;
+  }
+}
+```
+
+
+
+## 7⃣️. PRIM 最小生成树算法（MST)
+
+### -- 对比 Kruskal 算法
+
+图论的最小生成树问题，就是让你从图中找若干边形成一个边的集合 `mst`，这些边有以下特性：
+
+1、这些边组成的是一棵树（树和图的区别在于不能包含环）。
+
+2、这些边形成的树要包含所有节点。
+
+3、这些边的权重之和要尽可能小。
+
+#### (1) Kruskal 用到了贪心算法，和Union-Find
+
+#### (2) PRIM 使用了贪心算法， 切分定理。 用到了BFS 算法和visited布数组避免成环。
+
+PRIM 不需要对边进行排序，利用优先级队列动态排序。
+
+### -- 切分定理
+
+当你对一个图进行横切时， 总有一个横切边是最小生成树的边，选权重最小的边。 
+
+![image-20220831211953905](/Users/youhao/Library/Application Support/typora-user-images/image-20220831211953905.png)
+
+
+
+### -- PRIM算法实现
+
+```java
+class Prim {
+    // 核心数据结构，存储「横切边」的优先级队列
+    private PriorityQueue<int[]> pq;
+    // 类似 visited 数组的作用，记录哪些节点已经成为最小生成树的一部分
+    private boolean[] inMST;
+    // 记录最小生成树的权重和
+    private int weightSum = 0;
+    // graph 是用邻接表表示的一幅图，
+    // graph[s] 记录节点 s 所有相邻的边，
+    // 三元组 int[]{from, to, weight} 表示一条边
+    private List<int[]>[] graph;
+
+    public Prim(List<int[]>[] graph) {
+        this.graph = graph;
+        this.pq = new PriorityQueue<>((a, b) -> {
+            // 按照边的权重从小到大排序
+            return a[2] - b[2];
+        });
+        // 图中有 n 个节点
+        int n = graph.length;
+        this.inMST = new boolean[n];
+
+        // 随便从一个点开始切分都可以，我们不妨从节点 0 开始
+        inMST[0] = true;
+        cut(0);
+        // 不断进行切分，向最小生成树中添加边
+        while (!pq.isEmpty()) {
+            int[] edge = pq.poll();
+            int to = edge[1];
+            int weight = edge[2];
+            if (inMST[to]) {
+                // 节点 to 已经在最小生成树中，跳过
+                // 否则这条边会产生环
+                continue;
+            }
+            // 将边 edge 加入最小生成树
+            weightSum += weight;
+            inMST[to] = true;
+            // 节点 to 加入后，进行新一轮切分，会产生更多横切边
+            cut(to);
+        }
+    }
+
+    // 将 s 的横切边加入优先队列
+    private void cut(int s) {
+        // 遍历 s 的邻边
+        for (int[] edge : graph[s]) {
+            int to = edge[1];
+            if (inMST[to]) {
+                // 相邻接点 to 已经在最小生成树中，跳过
+                // 否则这条边会产生环
+                continue;
+            }
+            // 加入横切边队列
+            pq.offer(edge);
+        }
+    }
+
+    // 最小生成树的权重和
+    public int weightSum() {
+        return weightSum;
+    }
+
+    // 判断最小生成树是否包含图中的所有节点
+    public boolean allConnected() {
+        for (int i = 0; i < inMST.length; i++) {
+            if (!inMST[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
+```
+
+
+
+### -- 1135 & 1584
 
 
 
