@@ -364,7 +364,7 @@ class Solution {
 
 ## 5. Union Find
 
-### 1. 简介
+### -- 简介
 
 用来解决【动态连通性】
 
@@ -393,9 +393,9 @@ class UF{
 
 调用union(0, 1)， 0 和 1 会被连通， 连通分量为9
 
-### 2. 构造Union Find
+### -- 构造Union Find
 
-#### (2) 设计构造函数
+#### (1) 设计构造函数
 
 ![image-20220826164646075](/Users/youhao/Library/Application Support/typora-user-images/image-20220826164646075.png)
 
@@ -534,7 +534,7 @@ class UF{
 
 此时，`find` , `union` , `connected` 的时间复杂度都下降为 O(logN)，即便数据规模上亿，所需时间也非常少。
 
-#### (4) 路经压缩
+#### (3) 路经压缩
 
 ```java
 class UF{
@@ -764,9 +764,96 @@ class Solution {
 }
 ```
 
+## 6. Kruskal 最小生成树算法
+
+### -- 算法逻辑
+
+**将所有边按照权重从小到大排序，从权重最小的边开始遍历，如果这条边和 `mst` 中的其它边不会形成环，则这条边是最小生成树的一部分，将它加入 `mst` 集合；否则，这条边不是最小生成树的一部分，不要把它加入 `mst` 集合**。
 
 
-# -------------------------------------------------------
+
+## 1135. Connecting Cities With Minimum Cost
+
+### 1. Kruskal & Union Find
+
+```java
+class Solution {
+    class UF {
+        private int[] parent;
+        private int[] size;
+        private int count;
+        
+        public UF (int n) {
+            parent = new int[n];
+            size = new int[n];
+            
+            for (int i = 0; i < n; i++) {
+                parent[i] = i;
+                size[i] = 1;
+            }
+            count = n;
+        }
+        
+        public void union(int p, int q) {
+            int rootP = find(p);
+            int rootQ = find(q);
+            
+            if (rootP == rootQ) {return;}
+            if (size[rootP] > size[rootQ]) {
+                parent[rootQ] = rootP;
+            } else {
+                parent[rootP] = rootQ;
+            }
+            count--;
+        }
+        
+        public int find(int x) {
+            if (parent[x] != x) {
+                parent[x] = find(parent[x]);
+            }
+            
+            return parent[x];
+        }
+        
+        public boolean connected(int p, int q) {
+            int rootP = find(p);
+            int rootQ = find(q);
+            
+            if (rootP == rootQ) {return true;}
+            else {
+                return false;
+            }
+        }
+        
+        public int count() {
+            return count;
+        }
+    }
+    public int minimumCost(int n, int[][] connections) {
+        Arrays.sort(connections, (a, b) -> (a[2] - b[2]));
+        UF uf = new UF(n + 1);
+        int res = 0;
+        for (int i = 0; i < connections.length; i++) {
+            int p = connections[i][0];
+            int q = connections[i][1];
+            int weight = connections[i][2];
+            if (uf.connected(p, q)) {
+                continue;
+            } else {
+                uf.union(p, q);
+                res += weight;
+            }
+        }
+        return (uf.count == 2) ? res : -1;
+    }
+}
+```
+
+
+
+
+
+#  -------------------------------------------------------
 
 ## 797. All Paths From Source to Target
 
