@@ -2,7 +2,7 @@
 
 # 基本算法
 
-## 1. 存储方式
+## 1⃣️. 存储方式
 
 邻接表
 
@@ -33,7 +33,7 @@ int[][] matrix;
 
 
 
-## 2. 遍历
+## 2⃣️. 遍历
 
 ### (1) 多叉树的遍历
 
@@ -108,13 +108,13 @@ class Solution {
 }
 ```
 
-## 3. 拓扑排序
+## 3⃣️. 拓扑排序
 
 Course II
 
 
 
-## 4. 二分图
+## 4⃣️. 二分图
 
 比如说我们需要一种数据结构来储存电影和演员之间的关系：某一部电影肯定是由多位演员出演的，且某一位演员可能会出演多部电影。你使用什么数据结构来存储这种关系呢？
 
@@ -362,7 +362,7 @@ class Solution {
 
 
 
-## 5. Union Find
+## 5⃣️. Union Find
 
 ### -- 简介
 
@@ -764,7 +764,7 @@ class Solution {
 }
 ```
 
-## 6. Kruskal 最小生成树算法
+## 6⃣️. Kruskal 最小生成树算法 (MST)
 
 ### -- 算法逻辑
 
@@ -919,6 +919,98 @@ class Solution {
             uf.union(p, q);
         }
         return uf.count == 1 ? true : false;
+    }
+}
+```
+
+
+## 1584. Min Cost to Connect All Points
+
+### 1. Union Find + Kruskal
+
+```
+class Solution {
+     class UF {
+        private int[] parent;
+        private int[] size;
+        private int count;
+        
+        public UF(int n) {
+            parent = new int[n];
+            size = new int[n];
+            for (int i = 0; i < n; i++) {
+                parent[i] = i;
+                size[i] = 1;
+            }
+            count = n;
+        }
+        
+        public void union(int p, int q) {
+            int rootP = find(p);
+            int rootQ = find(q);
+            
+            if (rootP == rootQ) return;
+            if (size[rootP] > size[rootQ]) {
+                parent[rootQ] = rootP;
+            } else {
+                parent[rootP] = rootQ;
+            }
+            count--;
+        }
+        
+        public boolean connected(int p, int q) {
+            int rootP = find(p);
+            int rootQ = find(q);
+            
+            if (rootP == rootQ) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        
+        public int find(int x) {
+            if (x != parent[x]) {
+                parent[x] = find(parent[x]);
+            } 
+            return parent[x];
+        }
+        
+        public int count() {
+            return count;
+        }
+    }
+    
+    public int minCostConnectPoints(int[][] points) {
+        
+        List<int[]> edges = new ArrayList<>();
+        //create Adjacency List
+        for (int i = 0; i < points.length; i++) {
+            for (int j = i + 1; j < points.length; j++) {
+                int xi = points[i][0];
+                int yi = points[i][1];
+                int xj = points[j][0];
+                int yj = points[j][1];
+                edges.add(new int[]{i, j, Math.abs(xi - xj) + Math.abs(yi - yj)});
+            }
+        }
+        
+        Collections.sort(edges, (a, b) -> (a[2] - b[2]));
+        
+        UF uf = new UF(points.length);
+        int res = 0;
+        for (int[] edge : edges) {
+            int p = edge[0];
+            int q= edge[1];
+            int weight = edge[2];
+            if (uf.connected(p, q)) {
+                continue;
+            }
+            uf.union(p, q);
+            res += weight;
+        }
+        return res;
+        
     }
 }
 ```
