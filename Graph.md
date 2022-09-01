@@ -851,6 +851,78 @@ class Solution {
 
 
 
+## 261. Graph Valid Tree
+
+### 1. Union Find
+
+```java
+class Solution {
+    class UF {
+        private int[] parent;
+        private int[] size;
+        private int count;
+        
+        public UF(int n) {
+            parent = new int[n];
+            size = new int[n];
+            for (int i = 0; i < n; i++) {
+                parent[i] = i;
+                size[i] = 1;
+            }
+            count = n;
+        }
+        
+        public void union(int p, int q) {
+            int rootP = find(p);
+            int rootQ = find(q);
+            
+            if (rootP == rootQ) return;
+            if (size[rootP] > size[rootQ]) {
+                parent[rootQ] = rootP;
+            } else {
+                parent[rootP] = rootQ;
+            }
+            count--;
+        }
+        
+        public boolean connected(int p, int q) {
+            int rootP = find(p);
+            int rootQ = find(q);
+            
+            if (rootP == rootQ) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        
+        public int find(int x) {
+            if (x != parent[x]) {
+                parent[x] = find(parent[x]);
+            } 
+            return parent[x];
+        }
+        
+        public int count() {
+            return count;
+        }
+    }
+    
+    public boolean validTree(int n, int[][] edges) {
+        UF uf = new UF(n);
+        for (int i = 0; i < edges.length; i++) {
+            int p = edges[i][0];
+            int q = edges[i][1];
+            if (uf.connected(p, q)) {
+                return false;
+            }
+            uf.union(p, q);
+        }
+        return uf.count == 1 ? true : false;
+    }
+}
+```
+
 
 
 #  -------------------------------------------------------
