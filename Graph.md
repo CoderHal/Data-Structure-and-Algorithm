@@ -1299,6 +1299,215 @@ class Prim {
 
 
 
+## 8⃣️. Dijkstra算法
+
+### (1) 二叉树的层级遍历和BFS算法
+
+```java
+// 输入一棵二叉树的根节点，层序遍历这棵二叉树
+void levelTraverse(TreeNode root) {
+    if (root == null) return 0;
+    Queue<TreeNode> q = new LinkedList<>();
+    q.offer(root);
+
+    int depth = 1;
+    // 从上到下遍历二叉树的每一层
+    while (!q.isEmpty()) {
+        int sz = q.size();
+        // 从左到右遍历每一层的每个节点
+        for (int i = 0; i < sz; i++) {
+            TreeNode cur = q.poll();
+            printf("节点 %s 在第 %s 层", cur, depth);
+
+            // 将下一层节点放入队列
+            if (cur.left != null) {
+                q.offer(cur.left);
+            }
+            if (cur.right != null) {
+                q.offer(cur.right);
+            }
+        }
+        depth++;
+    }
+}
+```
+
+BFS的算法框架
+
+```java
+// 输入起点，进行 BFS 搜索
+int BFS(Node start) {
+    Queue<Node> q; // 核心数据结构
+    Set<Node> visited; // 避免走回头路
+    
+    q.offer(start); // 将起点加入队列
+    visited.add(start);
+
+    int step = 0; // 记录搜索的步数
+    while (q not empty) {
+        int sz = q.size();
+        /* 将当前队列中的所有节点向四周扩散一步 */
+        for (int i = 0; i < sz; i++) {
+            Node cur = q.poll();
+            printf("从 %s 到 %s 的最短距离是 %s", start, cur, step);
+
+            /* 将 cur 的相邻节点加入队列 */
+            for (Node x : cur.adj()) {
+                if (x not in visited) {
+                    q.offer(x);
+                    visited.add(x);
+                }
+            }
+        }
+        step++;
+    }
+}
+
+```
+
+### (2) Dijkstra 伪代码
+
+```java
+class State {
+    // 图节点的 id
+    int id;
+    // 从 start 节点到当前节点的距离
+    int distFromStart;
+
+    State(int id, int distFromStart) {
+        this.id = id;
+        this.distFromStart = distFromStart;
+    }
+}
+// 返回节点 from 到节点 to 之间的边的权重
+int weight(int from, int to);
+
+// 输入节点 s 返回 s 的相邻节点
+List<Integer> adj(int s);
+
+// 输入一幅图和一个起点 start，计算 start 到其他节点的最短距离
+int[] dijkstra(int start, List<Integer>[] graph) {
+    // 图中节点的个数
+    int V = graph.length;
+    // 记录最短路径的权重，你可以理解为 dp table
+    // 定义：distTo[i] 的值就是节点 start 到达节点 i 的最短路径权重
+    int[] distTo = new int[V];
+    // 求最小值，所以 dp table 初始化为正无穷
+    Arrays.fill(distTo, Integer.MAX_VALUE);
+    // base case，start 到 start 的最短距离就是 0
+    distTo[start] = 0;
+
+    // 优先级队列，distFromStart 较小的排在前面
+    Queue<State> pq = new PriorityQueue<>((a, b) -> {
+        return a.distFromStart - b.distFromStart;
+    });
+
+    // 从起点 start 开始进行 BFS
+    pq.offer(new State(start, 0));
+
+    while (!pq.isEmpty()) {
+        State curState = pq.poll();
+        int curNodeID = curState.id;
+        int curDistFromStart = curState.distFromStart;
+
+        if (curDistFromStart > distTo[curNodeID]) {
+            // 已经有一条更短的路径到达 curNode 节点了
+            continue;
+        }
+        // 将 curNode 的相邻节点装入队列
+        for (int nextNodeID : adj(curNodeID)) {
+            // 看看从 curNode 达到 nextNode 的距离是否会更短
+            int distToNextNode = distTo[curNodeID] + weight(curNodeID, nextNodeID);
+            if (distTo[nextNodeID] > distToNextNode) {
+                // 更新 dp table
+                distTo[nextNodeID] = distToNextNode;
+                // 将这个节点以及距离放入队列
+                pq.offer(new State(nextNodeID, distToNextNode));
+            }
+        }
+    }
+    return distTo;
+}
+
+```
+
+**什么时候会存在`curDistFromStart < distTo[curNodeID]`？为什么要用`distTo[curNodeID]`来计算`distToNextNode`？**
+
+事实上`curDistFromStart`并不会小于`distTo[curNodeID]`。前面提到过，`distTo`内的值都是在节点入队之前更新的，也就是说是先更新的`distTo`再将节点入队。而`curDistFromStart`是在节点出队时得到的，也就是说`curDistFromStart`只会大于`distTo[curNodeID]`（`curDistFromStart`入队之后`distTo[curNodeID]`被更小的值更新了）或者等于`distTo[curNodeID]`（`curDistFromStart`入队之后`distTo[curNodeID]`没被更新）。
+
+使用`distTo[curNodeID]`来计算`distToNextNode`的原因我认为是在定义上`distTo`中存储的是节点到起点的最短距离。虽然由于枝剪代码的存在，当计算`distToNextNode`时，`curDistFromStart`只可能等于`distTo[curNodeID]`（如之前所述，本来就不存在小于的情况，枝剪代码又去掉了大于的情况），但是根据算法最初的定义，`起点到邻居节点的最短距离=起点到当前节点的最短距离+当前节点到邻居节点的距离`，所以`distTo[curNodeID]`才是计算时应该使用的变量。而`distTo[curNodeID]`不可能大于`curDistFromStart`由于是一个隐藏条件，结合枝剪代码，可能造成了一些误解。
+
+## 743. Network Delay Time
+
+### 1. Dijkstra
+
+```java
+class Solution {
+  public int networkDelayTime(int[][] times, int n, int k) {
+    List<int[]>[] graph = new LinkedList[n + 1];
+    for (int i = 1; i <= n; i++) {
+      graph[i] = new LinkedList<>();
+    }
+    
+    for (int[] time : times) {
+      int from = time[0];
+      int to = time[1];
+      int dis = time[2];
+      graph[from].add(new int[]{to, dis});
+    }
+    
+    int[] dis = Dijkstra(graph, k);
+    int res = 0;
+    for (int i = 1; i < dis.length; i++) {
+      if (dis[i] == Integer.MAX_VALUE) {
+        return -1;
+      }
+      res = Math.max(res, dis[i]);
+    }
+    return res;
+  }
+  
+  class State {
+    int id;
+    int distFromStart;
+    public State(int id, int distFromStart) {
+      this.id = id;
+      this.distFromStart = distFromStart;
+    }
+  }
+  
+  public int[] Dijkstra(List<int[]>[] graph, int start) {
+    int[] distTo = new int[graph.length];
+    Arrays.fill(distTo, Integer.MAX_VALUE);
+    Queue<State> pq = new PriorityQueue<>((a, b) -> (a.distFromStart - b.distFromStart));
+    pq.add(new State(start, 0));
+    distTo[start] = 0;
+    while (!pq.isEmpty()) {
+      State cur = pq.poll();
+      int curID = cur.id;
+      int curDis = cur.distFromStart;
+      if (curDis <= distTo[curID]) {
+        for (int[] neighbor : graph[curID]) {
+          int nextID = neighbor[0];
+          int nextDis = neighbor[1] + distTo[curID];
+          if (nextDis < distTo[nextID]) {
+            distTo[nextID] = nextDis;
+            pq.add(new State(nextID, distTo[nextID]));
+          }
+        }
+      }
+    }
+    return distTo;
+  }
+}
+```
+
+
+
+
+
+
+
 #  -------------------------------------------------------
 
 ## 797. All Paths From Source to Target
