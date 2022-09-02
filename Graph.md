@@ -1603,7 +1603,54 @@ class Solution {
 
 
 
+## 9⃣️. 名流问题
 
+## 277. Find the Celebrity
+
+```java
+/* The knows API is defined in the parent class Relation.
+      boolean knows(int a, int b); */
+
+public class Solution extends Relation {
+  public int findCelebrity(int n) {
+    if (n == 1) return 0;
+    // 将所有候选人装进队列
+    LinkedList<Integer> q = new LinkedList<>();
+    for (int i = 0; i < n; i++) {
+        q.addLast(i);
+    }
+    // 一直排除，直到只剩下一个候选人停止循环
+    while (q.size() >= 2) {
+        // 每次取出两个候选人，排除一个
+        int cand = q.removeFirst();
+        int other = q.removeFirst();
+        if (knows(cand, other) || !knows(other, cand)) {
+            // cand 不可能是名人，排除，让 other 归队
+            q.addFirst(other);
+        } else {
+            // other 不可能是名人，排除，让 cand 归队
+            q.addFirst(cand);
+        }
+    }
+
+    // 现在排除得只剩一个候选人，判断他是否真的是名人
+    int cand = q.removeFirst();
+    for (int other = 0; other < n; other++) {
+        if (other == cand) {
+            continue;
+        }
+        // 保证其他人都认识 cand，且 cand 不认识任何其他人
+        if (!knows(other, cand) || knows(cand, other)) {
+            return -1;
+        }
+    }
+    // cand 是名人
+    return cand;
+  }
+}
+```
+
+![image-20220901230302575](/Users/youhao/Library/Application Support/typora-user-images/image-20220901230302575.png)
 
 #  -------------------------------------------------------
 
