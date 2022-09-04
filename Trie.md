@@ -268,3 +268,80 @@ class Solution {
 }
 ```
 
+
+
+## 4⃣️. Bitwise Trie
+
+Bitwise Trie is a perfect way to see how different the binary forms of numbers are, for example, 3 and 2 share 4 bits.
+
+![image-20220903215052177](/Users/youhao/Library/Application Support/typora-user-images/image-20220903215052177.png)
+
+
+
+## 421. Maximum XOR of Two Numbers in an Array
+
+### 1. Trie 
+
+```java
+class Solution {
+    public int findMaximumXOR(int[] nums) {
+        TrieNode root = new TrieNode();
+        for (int num : nums) {
+            root.insert(root, num);
+        }
+        int res = 0;
+        for (int num : nums) {
+            res = Math.max(res, root.findMaxXOR(root, num));
+        }
+        return res;
+    }
+    
+    class TrieNode {
+        TrieNode[] children;
+        public TrieNode() {
+            children = new TrieNode[2];
+        }
+        
+        public void insert(TrieNode root, int num) {
+            TrieNode node = root;
+            for (int i = 31; i >= 0; i--) {
+                int cur = (num >> i) & 1;
+                if (node.children[cur] == null) {
+                    node.children[cur] = new TrieNode();
+                }
+                node = node.children[cur];
+            }
+        }
+        
+        public int findMaxXOR(TrieNode root, int num) {
+            TrieNode node = root;
+            int sum = 0;
+            for (int i = 31; i >= 0; i--) {
+                int curBit = (num >> i) & 1;
+                int another = curBit == 1 ? 0 : 1;
+                if (node.children[another] == null) {
+                    node = node.children[curBit];
+                } else {
+                    sum += (1 << i);
+                    node = node.children[another];
+                }
+            }
+            return sum;
+        }
+    }
+}
+```
+
+![image-20220903230233453](/Users/youhao/Library/Application Support/typora-user-images/image-20220903230233453.png)
+
+
+
+## 5⃣️. 复杂度分析
+
+![image-20220903230311971](/Users/youhao/Library/Application Support/typora-user-images/image-20220903230311971.png)
+
+
+
+6⃣️. 总结
+
+![image-20220903230417459](/Users/youhao/Library/Application Support/typora-user-images/image-20220903230417459.png)
