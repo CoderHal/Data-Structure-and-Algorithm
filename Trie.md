@@ -161,3 +161,110 @@ class WordDictionary {
 ```
 
 对模版的改动： 只需要关注search中 " . "的情况。
+
+
+
+
+
+## 212. Word Search II (还有word Search I)
+
+### 1. Backtracking + Trie
+
+```java
+class Solution {
+    class Trie {
+        class TrieNode {
+            TrieNode[] children;
+            boolean isWord;
+            public TrieNode() {
+                children = new TrieNode[26];
+            }    
+        }
+        TrieNode root;
+        public Trie() {
+            root = new TrieNode();
+        }
+  
+        public void insert(String word) {
+            TrieNode node = root;
+            for (char c : word.toCharArray()) {
+                int index = c - 'a';
+                if (node.children[index] == null) {
+                node.children[index] = new TrieNode();
+                }
+                node = node.children[index];
+            }
+        node.isWord = true;
+        }
+  
+  public boolean search(String word) {
+    TrieNode node = root;
+    for (char c : word.toCharArray()) {
+      int index = c - 'a';
+      if (node.children[index] == null) {return false;}
+      node = node.children[index];
+    }
+    return node.isWord;
+  }
+  
+  public boolean startsWith(String prefix) {
+    TrieNode node = root;
+    for (char c : prefix.toCharArray()) {
+      int index = c - 'a';
+      if (node.children[index] == null) {return false;}
+      node = node.children[index];
+    }
+    return true;
+  }
+  public void remove(String word) {
+      TrieNode node = root;
+      for (char c : word.toCharArray()) {
+          int index = c - 'a';
+          if (node.children[index] == null) {return;}
+          node = node.children[index];
+      }
+      node.isWord = false;
+  }
+}
+    List<String> res = new ArrayList<>();
+    public List<String> findWords(char[][] board, String[] words) {
+        int n = board.length;
+        int m = board[0].length;
+        
+        Trie t = new Trie();
+        for(String word : words) {
+            t.insert(word);
+        }
+        
+        boolean[][] visited = new boolean[n][m];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                dfs(i, j, board, visited, t, "");
+            }
+        }
+        return res;
+    }
+    
+    public void dfs(int i, int j, char[][] board, boolean[][] visited, Trie t, String str) {
+        int n = board.length;
+        int m = board[0].length;
+        if (i < 0 || i == n || j < 0 || j == m || visited[i][j]) {
+            return;
+        }
+        str += board[i][j];
+        if (!t.startsWith(str)) {return;}
+        if (t.search(str)) {
+            res.add(str);
+            t.remove(str);
+        }
+        visited[i][j] = true;
+        dfs(i + 1, j, board, visited, t, str);
+        dfs(i - 1, j, board, visited, t, str);
+        dfs(i, j + 1, board, visited, t, str);
+        dfs(i, j - 1, board, visited, t, str);
+        visited[i][j] = false;
+        return;
+    }
+}
+```
+
