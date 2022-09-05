@@ -1,4 +1,16 @@
-# Stack
+# Stack and Queue
+
+## 1⃣️. 基本原理
+
+栈：Last in First out
+
+栈是一种特殊的线性表，仅在线性表的一端操作，栈顶允许操作，栈底不允许操作。所以栈常用于递归操作，DFS
+
+队列：First in First out	
+
+队列也是一种线性表， 能在线性表的两端操作，常用来实现BFS
+
+
 
 ## 20. Valid Parentheses(括号)
 
@@ -315,6 +327,77 @@ class MyStack {
 ```
 
 ![image-20220227200029378](/Users/youhao/Library/Application Support/typora-user-images/image-20220227200029378.png)
+
+## 622. Design Circular Queue
+
+### 1. Using Array
+
+```java
+class MyCircularQueue {
+    
+    private int[] arr;
+    private int head, tail, size;
+    
+    public MyCircularQueue(int k) {
+        size = 0;
+        arr = new int[k];
+        head = 0;
+        tail = -1;
+    }
+    
+    public boolean enQueue(int value) {
+        if (!isFull()) {
+            tail = (tail + 1) % arr.length;
+            arr[tail] = value;
+            size++;
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    public boolean deQueue() {
+        if (!isEmpty()) {
+            head = (head + 1) % arr.length;
+            size--;
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    public int Front() {
+        return isEmpty() ? -1 : arr[head];
+    }
+    
+    public int Rear() {
+        return isEmpty() ? -1 : arr[tail];
+    }
+    
+    public boolean isEmpty() {
+        return size == 0 ? true : false;
+    }
+    
+    public boolean isFull() {
+        return size == arr.length ? true : false;
+    }
+}
+
+/**
+ * Your MyCircularQueue object will be instantiated and called as such:
+ * MyCircularQueue obj = new MyCircularQueue(k);
+ * boolean param_1 = obj.enQueue(value);
+ * boolean param_2 = obj.deQueue();
+ * int param_3 = obj.Front();
+ * int param_4 = obj.Rear();
+ * boolean param_5 = obj.isEmpty();
+ * boolean param_6 = obj.isFull();
+ */
+```
+
+
+
+
 
 ## 1021. Remove Outermost Parenthese
 
