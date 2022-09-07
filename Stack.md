@@ -631,6 +631,63 @@ class Solution {
 
 ![image-20220302151529448](/Users/youhao/Library/Application Support/typora-user-images/image-20220302151529448.png)
 
+## 1381. Design a Stack With Increment Operation
+
+### 1. Using Stack
+
+```java
+class CustomStack {
+    Stack<Integer> stack;
+    private int size;
+    private int[] arr;
+    public CustomStack(int maxSize) {
+        stack = new Stack<>();
+        size = maxSize;
+        arr = new int[maxSize];
+    }
+    
+    public void push(int x) {
+        if (stack.size() < size) {
+            stack.push(x);
+        }
+    }
+    
+    public int pop() {
+        if (stack.isEmpty()) {
+            return -1;
+        }
+        int i = stack.size();
+        int res = stack.pop() + arr[i - 1];
+        if (i - 1 == 0){
+            arr[0] = 0;
+            return res;
+        }
+        arr[i - 2] += arr[i - 1];  
+        arr[i - 1] = 0;
+        return res;      
+    }
+    
+    public void increment(int k, int val) {
+        int i = Math.min(stack.size(), k) - 1;
+        if (i >= 0) {
+            arr[i] += val;
+        }
+    }
+}
+
+/**
+ * Your CustomStack object will be instantiated and called as such:
+ * CustomStack obj = new CustomStack(maxSize);
+ * obj.push(x);
+ * int param_2 = obj.pop();
+ * obj.increment(k,val);
+ */
+```
+
+创建相应的arr，当进行increment时，在 Min(k, stack.size()) - 1的位置 加上这个val，等pop时让stack加上这个值
+
+
+
 # Monotonous Stack
 
 ## 496. Next Greater Element I
