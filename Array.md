@@ -1705,3 +1705,39 @@ class Solution {
 }
 ```
 
+
+
+## 1996. The Number of Weak Characters in the Game
+
+### 1. Sorting
+
+```java
+class Solution {
+    public int numberOfWeakCharacters(int[][] properties) {
+        Arrays.sort(properties,(a, b) -> (a[0] == b[0]) ? (b[1] - a[1]) : (a[0] - b[0]));
+        int maxDefense = 0;
+        int count = 0;
+        for (int i = properties.length - 1; i >= 0; i--) {
+            if (properties[i][1] < maxDefense) {
+                count++;
+            }
+            maxDefense = Math.max(maxDefense, properties[i][1]);
+        }
+        return count;
+    }
+}
+```
+
+**Algorithm**
+
+1. Sort the list of pairs `properties` in ascending order of their attack and then in descending order of the defense value. We can achieve it using the custom comparator.
+
+2. Initialize the maximum defense value achieved `maxDefense` to `0`.
+
+3. Iterate over the pairs from right to left and for each pair:
+
+   a. If the `maxDefense` is greater than the defense value of the current character, increment the value `weakCharacters`.
+
+   b. Update the value of `maxDefense` if it's smaller than the current defense value.
+
+4. Return `weakCharacters`.
