@@ -1741,3 +1741,55 @@ class Solution {
    b. Update the value of `maxDefense` if it's smaller than the current defense value.
 
 4. Return `weakCharacters`.
+
+
+
+
+
+# Comparator and Comparable (比较器)
+
+## 252. Meeting Rooms
+
+### 1. Sort (Lambada)
+
+```java
+class Solution {
+    public boolean canAttendMeetings(int[][] intervals) {
+        Arrays.sort(intervals, (a , b) -> Integer.compare(a[0], b[0]));
+        for (int i = 1; i < intervals.length; i++) {
+            if (intervals[i - 1][1] > intervals[i][0]) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
+```
+
+
+
+### 2. Sort (外部Comparator普通写法)
+
+```java
+class Solution {
+    public boolean canAttendMeetings(int[][] intervals) {
+        Arrays.sort(intervals, new MyCompare());
+        for (int i = 1; i < intervals.length; i++) {
+            if (intervals[i - 1][1] > intervals[i][0]) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    class MyCompare implements Comparator<int[]>{
+        @Override
+        public int compare(int[] a, int[] b) {
+            return Integer.compare(a[1], b[1]);
+        }
+    }
+}
+```
+
+
+
