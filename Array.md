@@ -1793,3 +1793,104 @@ class Solution {
 
 
 
+## 253. Meeting Rooms II
+
+### 1. Sort + Heap
+
+```java
+class Solution {
+  public int minMeetingRooms(int[][] intervals) {
+    if (intervals.length == 0) {
+      return 0;
+    }
+    Arrays.sort(intervals, (a, b) -> a[0] - b[0]);
+    PriorityQueue<int[]> heap = new PriorityQueue<>(intervals.length, (a, b) -> a[1] - b[1]);
+    heap.add(intervals[0]);
+    int res = 1;
+    for (int i = 1; i < intervals.length; i++) {
+      int[] cur = intervals[i];
+      int[] preMeetTime = heap.poll();
+      if (cur[0] >= preMeetTime[1]) {
+        preMeetTime[1] = cur[1];
+      } else {
+        res++;
+        heap.add(cur);
+      }
+      heap.add(preMeetTime);
+    }
+    return res;
+  }
+}
+```
+
+
+
+### 2. 扫描线(待讨论)
+
+```java
+class Solution {
+  public int minMeetingRooms(int[][] intervals) {
+    List<int[]> list = new ArrayList<>();
+    for (int[] interval : intervals) {
+      list.add(new int[]{interval[0], 1});
+      list.add(new int[]{interval[1], -1});
+    }
+    Collections.sort(list, (a, b) -> a[0] == b[0] ? a[1] - b[1] : a[0] - b[0]);
+    int res = 0, count = 0;
+    for (int[] point : list) {
+      count += point[1];
+      res = Math.max(res, count);
+    }
+    return res;
+  }
+}
+```
+
+
+
+## 937. Reorder Data in Log Files
+
+### 1. Internel Implement Comparator
+
+```java
+class Solution {
+    public String[] reorderLogFiles(String[] logs) {
+
+        Comparator<String> myComp = new Comparator<String>() {
+            @Override
+            public int compare(String log1, String log2) {
+                // split each log into two parts: <identifier, content>
+                String[] split1 = log1.split(" ", 2);
+                String[] split2 = log2.split(" ", 2);
+
+                boolean isDigit1 = Character.isDigit(split1[1].charAt(0));
+                boolean isDigit2 = Character.isDigit(split2[1].charAt(0));
+
+                // case 1). both logs are letter-logs
+                if (!isDigit1 && !isDigit2) {
+                    // first compare the content
+                    int cmp = split1[1].compareTo(split2[1]);
+                    if (cmp != 0)
+                        return cmp;
+                    // logs of same content, compare the identifiers
+                    return split1[0].compareTo(split2[0]);
+                }
+
+                // case 2). one of logs is digit-log
+                if (!isDigit1 && isDigit2)
+                    // the letter-log comes before digit-logs
+                    return -1;
+                else if (isDigit1 && !isDigit2)
+                    return 1;
+                else
+                    // case 3). both logs are digit-log
+                    return 0;
+            }
+        };
+
+        Arrays.sort(logs, myComp);
+        return logs;
+    }
+}
+```
+
