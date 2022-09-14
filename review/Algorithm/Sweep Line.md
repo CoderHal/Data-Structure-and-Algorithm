@@ -218,3 +218,28 @@ class Solution {
    总结，只要左边或者右边interval有剩余 就加入ArrayList中
 
    
+
+   ## 1288. Remove Covered Intervals
+
+   ### 1. Greedy Algorithm
+
+   ```java
+   class Solution {
+       public int removeCoveredIntervals(int[][] intervals) {
+           Arrays.sort(intervals, (a, b) -> (a[0] == b[0] ? b[1] - a[1] : a[0] - b[0]));
+           int count = 0;
+           int cur = 0;
+           for (int[] i : intervals) {
+               if (cur < i[1]) {
+                   cur = i[1];
+                   count++;
+               }
+           }
+           return count;
+       }
+   }
+   ```
+
+   
+
+   对于数组的每个index的start 进行升序排列， end在start相同情况下进行降序排列。因为start是升序的，所以我们只需要讨论cur和pre的end关系，pre的end是当前index之前中最大的end，如果当前的cur的end小于pre的end，说明会被cover。反之则更新pre的end为当前的end值。
