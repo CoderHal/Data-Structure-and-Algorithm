@@ -112,6 +112,40 @@ class Solution {
 
 
 
+
+
+## 1025. Divisor Game
+
+### 1. Memo + DFS
+
+```java
+class Solution {
+    public boolean divisorGame(int n) {
+        Boolean[] memo = new Boolean[n + 1];
+        return dfs(n, memo);
+    }
+    public boolean dfs(int n, Boolean[] memo){
+        // 当前的n为1，这个player无法继续操作了，因为 0 < x < n，所以只能失败
+        if (n == 1) return false;
+        // memo[n]被操作了，直接返回记事本的东西
+        if (memo[n] != null) {return memo[n];}
+        boolean res = false;
+       // n能被i整除的话，i最大就是n/2，
+      //如果发现能被整除的i，并且当前player减去这个i之后，对手的结果是失败，当前的memo[n]就是成功的状态。直接跳出，减少计算
+        for(int i = 1; i <= n / 2; i++) {
+            if (n % i == 0 && !dfs(n - i, memo)) {
+                res = true;
+                break;
+            }
+        }
+        memo[n] = res;
+        return memo[n];
+    }
+}
+```
+
+
+
 ## 509. Fibonacci Number
 
 ### 1. Recursion 
