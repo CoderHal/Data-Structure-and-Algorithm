@@ -1,5 +1,91 @@
 # Dynamic Programming
 
+# 1. 经典动态规划（一）博弈类
+
+## DFS + Memo模版
+
+Boolean是封装类， boolean是基本数据类型
+
+```java
+private boolean canIWin(int n) {
+  Boolean[] memo = new Boolean[n + 1];
+  return dfs(n, memo);
+}
+
+private boolean dfs(int n, Boolean[] memo) {
+  if (n < 0) return false;
+  if (memo[n] != null) return memo[n];
+  boolean res = false;
+  for (int i = 1; i < 4; i++) {
+    if (n >= i) res |= !dfs(n - i, memo);
+  }
+  return memo[n] = res;
+}
+```
+
+## 292. Nim Game
+
+思路：If dp[i] want to win the game, it must guarantee the rest dp[i -1] dp[i -2] dp[i - 3] have at least one false”
+
+### 1. DFS + Memo
+
+```java
+class Solution {
+  public boolean canWinNim(int n) {
+  	Boolean[] memo = new Boolean[n + 1];
+  	return dfs(n, memo);
+	}
+
+	public boolean dfs(int n, Boolean[] memo) {
+  //探索到底了
+  	if (n < 0) {return false;}
+  //Boolean是封装类，对象在没有赋值的情况下是null，如果当前memo已经有记录了，就直接返回减少计算
+  	if (memo[n] != null) {return memo[n];}
+  //讨论当前index的前三个状态，如果都是false，则当前状态能赢
+  	boolean res = false;
+  	for (int i = 1; i < 4; i++) {
+      //n要比 i大，不能让n - i < 0
+    	if (n >= i) {
+        res |= !dfs(n - i, memo);
+      }
+  	}
+  	memo[n] = res;
+  	return memo[n];
+	}
+}
+```
+
+### 2. Bottom Up
+
+```java
+class Solution {
+    public boolean canWinNim(int n) {
+        boolean[] dp = new boolena[Math.max(n + 1, 4)];
+        dp[1] = true;
+        dp[2] = true;
+        dp[3] = true;
+        for (int i = 4; i <= n; i++) {
+            dp[i] = !dp[i - 1] || !dp[i - 2] || !dp[i - 3];
+        }
+        return dp[n];
+    }
+}
+```
+
+### 3. 巧
+
+```java
+class Solution {
+    public boolean canWinNim(int n) {
+        return n % 4 != 0;
+    }
+}
+```
+
+
+
+
+
 ## 509. Fibonacci Number
 
 ### 1. Recursion 
