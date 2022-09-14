@@ -84,6 +84,32 @@ class Solution {
 
 
 
+## 486. Predit the Winner
+
+### 1. Top - Down + Memo
+
+```java
+class Solution {
+    public boolean PredictTheWinner(int[] nums) {
+      //用二维数组来记录，剩下left - right区间时，player1 与player2的差距
+        Integer[][] memo = new Integer[nums.length][nums.length];
+        return dfs(nums, 0, nums.length - 1, memo) >= 0;
+    }
+    public int dfs(int[] nums, int left, int right, Integer[][] memo) {
+        if (left > right) {return 0;}
+        if (memo[left][right] != null) {return memo[left][right];}
+      //player1只能选择left或者right，去讨论选择left，right时，player1 与 player2选择的差距， 找到player1 - player2最大的数字
+        memo[left][right] = Math.max(nums[left] - dfs(nums, left + 1, right, memo), nums[right] - dfs(nums, left, right - 1, memo));
+        return memo[left][right];
+    }
+}
+
+
+
+```
+
+![image-20220914141750245](/Users/youhao/Library/Application Support/typora-user-images/image-20220914141750245.png)
+
 
 
 ## 509. Fibonacci Number
