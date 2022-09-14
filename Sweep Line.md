@@ -138,7 +138,7 @@ class Solution {
 
 ## 57. Insert Interval
 
-## 1. Normal Insert
+### 1. Normal Insert
 
 ```java
 class Solution {
@@ -218,3 +218,56 @@ class Solution {
    总结，只要左边或者右边interval有剩余 就加入ArrayList中
 
    
+
+   ## 1288. Remove Covered Intervals
+
+   ### 1. Greedy Algorithm
+
+   ```java
+   class Solution {
+       public int removeCoveredIntervals(int[][] intervals) {
+           Arrays.sort(intervals, (a, b) -> (a[0] == b[0] ? b[1] - a[1] : a[0] - b[0]));
+           int count = 0;
+           int cur = 0;
+           for (int[] i : intervals) {
+               if (cur < i[1]) {
+                   cur = i[1];
+                   count++;
+               }
+           }
+           return count;
+       }
+   }
+   ```
+
+   
+
+   对于数组的每个index的start 进行升序排列， end在start相同情况下进行降序排列。因为start是升序的，所以我们只需要讨论cur和pre的end关系，pre的end是当前index之前中最大的end，如果当前的cur的end小于pre的end，说明会被cover。反之则更新pre的end为当前的end值。
+
+
+
+## 435. Non - overlapping Intervals
+
+### 1. Greedy
+
+```java
+class Solution {
+    public int eraseOverlapIntervals(int[][] intervals) {
+        Arrays.sort(intervals, (a, b) -> (a[1] - b[1]));
+        int count = 0;
+        int end = Integer.MIN_VALUE;
+        for (int[] i : intervals) {
+            if (i[0] >= end) {
+                end = i[1];
+              //count++找最多不重叠的区间数
+            }else {
+                count++;
+              //找最小重叠的区间数
+            }
+        }
+        return count;
+    }
+}
+```
+
+思路，先将所有的Interval按照end从小到大的顺序排列。 因为，贪心思想就是，当前end一定要比后面的小，给后面的区间留有更大的空间。pre end 是之前最大的end 如果当前start大于pre end，就说明它俩之间没有重叠。 更新end。在这个条件下能够求出最大数量不重叠区间。 反之，就能求出最小重叠区间数量。
