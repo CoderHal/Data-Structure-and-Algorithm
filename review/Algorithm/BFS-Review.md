@@ -161,3 +161,50 @@ tips :
 （2）用Map记录对应列数的ArrayList，key为列数， value为对应的那一列的节点
 
 （3）用minCol和maxCol记录最小列值，最大列值，方便后面res 添加每列节点时，从左到右依次加入
+
+
+
+## 127. Word Ladder
+
+### 1. BFS + HashMap
+
+Tips ：
+
+（1） 用标准的BFS进行遍历。 把整个过程当成树来看待。 我们需要将start看成root
+
+（2） root的子节点就是变换一个字母将start的字符串进行替换，从'a' -> 'b'
+
+（3）BFS遍历，去寻找子节点为end的情况，返回遍历的高度，这就是最小的路径
+
+（4） 如果end不在wordList中，直接返回 0
+
+
+
+Time 分析：
+
+N为total number of words, M 为length of each word
+
+可能需要遍历所有的words，所以利用Queue遍历，需要N
+
+在遍历过程中，我们要对word的每一位进行变换， 需要M
+
+变换的过程中，对特定位进行替换，需要M
+
+所以时间复杂度 O(M * M * N)
+
+### 2. Optimize
+
+![image-20220915161115982](/Users/youhao/Library/Application Support/typora-user-images/image-20220915161115982.png)
+
+Tips: 双向BFS
+
+（1）要设置beginSet 和 endSet，还有visitedSet
+
+（2）不同点是，我们在遍历过程中，需要不停转换起点位置，和终点位置。在过程中需要设置nextLine作为生成的新一行。
+
+（3）相遇即为结束。 比如从beginSet中的值，在字符变换的过程中，发现和endSet中的单词一样，这说明beginSet和endSet已经连接成功。
+
+（4）反复切换起点和终点的过程中，我们根据 新生成的nextLine和endSet去比较，哪边Size大，哪边作为EndSet，小的作为beginSet。这种优化能让beginSet的字母变换数量减少， endSet的搜索范围加大，找到相遇点的几率更大。
+
+
+
