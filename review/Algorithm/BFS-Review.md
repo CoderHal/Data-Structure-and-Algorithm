@@ -200,7 +200,7 @@ Tips: 双向BFS
 
 （1）要设置beginSet 和 endSet，还有visitedSet
 
-（2）不同点是，我们在遍历过程中，需要不停转换起点位置，和终点位置。在过程中需要设置nextLine作为生成的新一行。
+（2）不同点是，我们在遍历过程中，需要不停转换起点位置，和终点位置。在过程中需要设置nextLine作为生成的新一行。添加nextLine的过程中，如果visitedSet中存在了，说明已经遍历过这个单词了，就不需要再添加了，减少计算量。
 
 （3）相遇即为结束。 比如从beginSet中的值，在字符变换的过程中，发现和endSet中的单词一样，这说明beginSet和endSet已经连接成功。
 
@@ -208,3 +208,12 @@ Tips: 双向BFS
 
 
 
+![image-20220915163240297](/Users/youhao/Library/Application Support/typora-user-images/image-20220915163240297.png)
+
+
+
+## 490. The Maze
+
+### 1. BFS
+
+BFS讨论，在每次出队列时，将该节点一直往一个方向前进，如果碰到墙壁或者跑出迷宫就停止。将新的地点存入队列中，如果新地点是终点就返回。（加入一个visited数组，来标记已走过的点）
