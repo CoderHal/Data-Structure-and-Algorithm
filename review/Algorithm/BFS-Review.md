@@ -217,3 +217,57 @@ Tips: 双向BFS
 ### 1. BFS
 
 BFS讨论，在每次出队列时，将该节点一直往一个方向前进，如果碰到墙壁或者跑出迷宫就停止。将新的地点存入队列中，如果新地点是终点就返回。（加入一个visited数组，来标记已走过的点）
+
+
+
+# Dijstra
+
+## 505. The Maze II
+
+### 1.Dijkstra (similar with BFS)
+
+典型的SSSP单源最短路径算法，用于计算一个节点到其他所有节点的最短路径。主要特点是以起始点为中心向外层层扩展，直到扩展到终点为止。
+
+BFS也是层层扩展，但是和Dijkstra不同的是，BFS不会计算下一层的遍历顺序。Dijkstra他将这层和起点的距离计算出来，利用堆排序存储最小的值，计算出下一层的preference，找路程较小的
+
+```java
+class Solution {
+    private int[][] dir = new int[][]{{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+    public int shortestDistance(int[][] maze, int[] start, int[] destination) {
+        int[][] distance = new int[maze.length][maze[0].length];
+        for (int i = 0; i < maze.length; i++) {
+            Arrays.fill(distance[i], Integer.MAX_VALUE);
+        }
+        distance[start[0]][start[1]] = 0;
+        Dijkstra(maze, start, distance);
+        return distance[destination[0]][destination[1]] == Integer.MAX_VALUE ? -1 : distance[destination[0]][destination[1]];
+    }
+    
+    public void Dijkstra(int[][] maze, int[] start,int[][] distance) {
+        PriorityQueue<int[]> queue = new PriorityQueue<>((a, b) -> (a[2] - b[2]));
+        queue.add(new int[]{start[0], start[1], 0});
+        while (!queue.isEmpty()) {
+            int[] cur = queue.poll();
+            for (int[] d : dir) {
+                int row = cur[0] + d[0];
+                int col = cur[1] + d[1];
+                int count = 0;
+                while (row >= 0 && row < maze.length && col >= 0 && col < maze[0].length && maze[row][col] == 0) {
+                    row += d[0];
+                    col += d[1];
+                    count++;
+                }
+                int newRow = row - d[0];
+                int newCol = col - d[1];
+                int newDistance = count + cur[2];
+                
+                if (newDistance < distance[newRow][newCol]) {
+                    distance[newRow][newCol] = newDistance;
+                    queue.add(new int[]{newRow, newCol, newDistance});
+                }
+            }
+        }
+    }
+}
+```
+
